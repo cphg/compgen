@@ -1,0 +1,200 @@
+lectures:
+  - lecture_number: 1
+    date: 02/15/22
+    topic: Introduction and course overview
+    details: Course overview, GitHub for assignments, R markdown, VSCode
+    instructor: Nathan Sheffield
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 2
+    date: 02/17/22
+    topic: Statistics and probability review 1
+    details: Significance testing, Multiple-hypothesis correction, probability, distributions; Curse of dimensionality; Dimensionality reduction.
+    instructor: Stefan Bekiranov
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 3
+    date: 02/22/22
+    topic: Statistics and probability review2
+    details: Measurement, errors, mean, correlation, plots, ROC, matrix, vector, linear transformation
+    instructor: Chongzhi Zang
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 4
+    section: "Unit 1: Genome"
+    date: 02/24/22
+    topic: Fundamental string matching algorithms
+    details: Local vs. global alignment, Dynamic programming, Heuristic approaches, BLAST 
+    instructor: Aakrosh Ratan
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 5
+    date: 03/01/22
+    topic: Suffix trees, Burrows-wheeler transform and Suffix arrays
+    details: Short-read alignments
+    instructor: Aakrosh Ratan
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 6
+    date: 03/03/22
+    topic: Poisson processes, Bayes theorem, Normal distribution
+    details: Variant calling, Structural Variants
+    instructor: Aakrosh Ratan
+    links:
+      - url: null
+        title: Lecture slides
+    date: 03/08/22
+    topic: Spring Recess
+    details: 
+    instructor: 
+  - lecture_number: null
+    date: 03/10/22
+    topic: Spring Recess
+    details: 
+    instructor: 
+  - lecture_number: 7
+    date: 03/15/22
+    topic: De-bruijn graphs and String graphs
+    details: Genome assembly
+    instructor: Aakrosh Ratan
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 8
+    date: 03/17/22
+    topic: Hidden Markov Models (HMMs)
+    details: Gene-finding, CpG islands and Chromatin states
+    instructor: Aakrosh Ratan
+    links:
+      - url: null
+        title: Lecture slides
+      - url: resources/RABINER1989.pdf
+        title: Rabiner 1989 tutorial on HMMs
+  - lecture_number: 9
+    date: 03/22/22
+    topic: Linear models, Contingency tables and Likelihood based tests
+    details: Genome Wide Association Studies, QTLs, xQTLs 
+    instructor: Stefan Bekiranov
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 10
+    section: "Unit 2: Epigenome"
+    date: 03/24/22
+    topic: ChIP-seq basics
+    details: ChIP-seq, read mapping, IDR, peak calling
+    instructor: Chongzhi Zang
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 11
+    date: 03/29/22 
+    topic: Motif analysis
+    details: PWMs, information entropy, motif discovery, motif matching
+    instructor: Chongzhi Zang
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 12
+    date: 03/31/22
+    topic: Hierarchy and scales of genome structure
+    details: Histone modifications, broad peaks, chromatin domains, 3D genome
+    instructor: Chongzhi Zang
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 13
+    date: 04/05/22
+    topic: Data diagnostics
+    details: ATAC-seq count data, diagnostics, tests of normality, Quantile normalization, clip functions, Q-Q plots, batch correction
+    instructor: Nathan Sheffield
+    links:
+      - url: /slides/data-diagnostics
+        title: Lecture slides
+  - lecture_number: 14
+    date: 04/07/22
+    topic: Scalable computational algorithms
+    details: DNA methylation calling, epialleles, Big-Oh complexity, Efficiently processing large sequencing data
+    instructor: Nathan Sheffield
+    links:
+      - url: /slides/scalable-computational-algorithms
+        title: Lecture slides
+  - lecture_number: 15
+    date: 04/12/22
+    topic: Interval data structures and algorithms
+    details: Region set enrichment analysis; R-trees, binary search trees, B+ trees, augmented interval lists
+    instructor: Nathan Sheffield
+    links:
+      - title: Lecture slides
+        url: /slides/interval-data-structures
+  - lecture_number: 16
+    date: 04/14/22
+    section: "Unit 3: Transcriptome"
+    topic: Genomic data standards
+    details: GA4GH, interoperability, APIs
+    instructor: Nathan Sheffield
+    links:
+      - url: /slides/genomic-data-standards
+        title: Lecture slides
+  - lecture_number: 17
+    date: 04/19/22
+    topic: K-mer analysis
+    details: RNA pseudoalignment (Expectation Maximization, de Bruijn Graphs)
+    instructor: Nathan Sheffield
+    links:
+      - url: /slides/k-mer-analysis
+        title: Lecture slides
+  - lecture_number: 18
+    date: 04/21/22
+    topic: Dimensionality reduction
+    details: Limitations of single-cell RNA-seq data; Curse of dimensionality, PCA, NMF, tSNE, uMAP.
+    instructor: Stefan Bekiranov
+    links:
+      - url: null
+        title: Lecture slides
+    links:
+      - url: https://dx.doi.org/10.1038/44565
+        title: Learning the parts of objects by non-negative matrix factorization 
+  - lecture_number: 19
+    date: 04/26/22
+    topic: Differential expression analysis
+    details: Normalization, modeling count data, FDR
+    instructor: Stefan Bekiranov
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 20
+    date: 04/28/22
+    topic: High-dimensional data analysis and integration 
+    details: Clustering, PCA, networks
+    instructor: Chongzhi Zang
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 21
+    date: 05/03/22
+    topic: Encoding of genomic data, spatial genomics
+    details: One-hot encoding, simplex encoding, Hamming codes
+    instructor: Chongzhi Zang
+    links:
+      - url: null
+        title: Lecture slides
+  - lecture_number: 22
+    section: Final presentations
+    date: 05/05/22
+    topic: Final Presentations
+    details: 
+    instructor: 
+  - lecture_number: 23
+    date: 05/10/22
+    topic: Final Presentations
+    details: 
+    instructor: 
+
+
+

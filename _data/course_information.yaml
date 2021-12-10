@@ -14,4 +14,12 @@ course:
       url: https://med.virginia.edu/cphg/aakrosh-ratan/
     - name: Stefan Bekiranov
       url: https://med.virginia.edu/faculty/faculty-listing/sb3de/
-  description: "Students will learn foundations of computational methods for analysis of experimental data from genome, epigenome, and transcriptome sequencing experiments. The course will cover various biological data types (whole genome sequencing, ChIP-seq, ATAC-seq, RNA-seq, and DNA methylation profiling/bisulfite sequencing), algorithms, statistical and computational methods, and application areas in genomics and systems biology. Prior coursework/experience in linear algebra, UNIX, and R and Python programming required."
+  description: >
+    Students will learn foundations of computational methods for analysis of
+    experimental data from genome, epigenome, and transcriptome sequencing
+    experiments. The course will cover various biological data types (whole
+    genome sequencing, ChIP-seq, ATAC-seq, RNA-seq, and DNA methylation
+    profiling/bisulfite sequencing), algorithms, statistical and computational
+    methods, and application areas in genomics and systems biology. Prior
+    coursework/experience in linear algebra, UNIX, and R and Python programming
+    required.

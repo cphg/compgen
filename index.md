@@ -35,6 +35,10 @@ title: "welcome"
     <div class="col-2 fs-5 text-end">Location:</div>
     <div class="col-6 ">{{ course.location }}</div>
   </div>
+  <div class="row align-items-baseline">
+    <div class="col-2 fs-5 text-end">Description:</div>
+    <div class="col-10 ">{{ course.description }}</div>
+  </div>  
 </div>
 
 ## Lectures

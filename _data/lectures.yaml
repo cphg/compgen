@@ -114,7 +114,7 @@ lectures:
     details: ATAC-seq count data, diagnostics, tests of normality, Quantile normalization, clip functions, Q-Q plots, batch correction
     instructor: Nathan Sheffield
     links:
-      - url: /slides/data-diagnostics
+      - url: slides/data-diagnostics
         title: Lecture slides
   - lecture_number: 14
     date: 04/07/22
@@ -122,7 +122,7 @@ lectures:
     details: DNA methylation calling, epialleles, Big-Oh complexity, Efficiently processing large sequencing data
     instructor: Nathan Sheffield
     links:
-      - url: /slides/scalable-computational-algorithms
+      - url: slides/scalable-computational-algorithms
         title: Lecture slides
   - lecture_number: 15
     date: 04/12/22
@@ -131,7 +131,7 @@ lectures:
     instructor: Nathan Sheffield
     links:
       - title: Lecture slides
-        url: /slides/interval-data-structures
+        url: slides/interval-data-structures
   - lecture_number: 16
     date: 04/14/22
     section: "Unit 3: Transcriptome"
@@ -139,7 +139,7 @@ lectures:
     details: GA4GH, interoperability, APIs
     instructor: Nathan Sheffield
     links:
-      - url: /slides/genomic-data-standards
+      - url: slides/genomic-data-standards
         title: Lecture slides
       - title: "GA4GH: International policies and standards for data sharing across genomic research and healthcare"
         url: http://dx.doi.org/10.1016/j.xgen.2021.100029
@@ -149,7 +149,7 @@ lectures:
     details: RNA pseudoalignment (Expectation Maximization, de Bruijn Graphs)
     instructor: Nathan Sheffield
     links:
-      - url: /slides/k-mer-analysis
+      - url: slides/k-mer-analysis
         title: Lecture slides
       - title: Efficient counting of k-mers in DNA sequences using a bloom filter
         url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-333

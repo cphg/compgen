@@ -141,6 +141,8 @@ lectures:
     links:
       - url: /slides/genomic-data-standards
         title: Lecture slides
+      - title: "GA4GH: International policies and standards for data sharing across genomic research and healthcare"
+        url: http://dx.doi.org/10.1016/j.xgen.2021.100029
   - lecture_number: 17
     date: 04/19/22
     topic: K-mer analysis
@@ -149,6 +151,9 @@ lectures:
     links:
       - url: /slides/k-mer-analysis
         title: Lecture slides
+      - title: Efficient counting of k-mers in DNA sequences using a bloom filter
+        url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-333
+
   - lecture_number: 18
     date: 04/21/22
     topic: Dimensionality reduction

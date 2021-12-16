@@ -48,6 +48,7 @@ lectures:
     links:
       - url: null
         title: Lecture slides
+  - lecture_number: null
     date: 03/08/22
     topic: Spring Recess
     details: 

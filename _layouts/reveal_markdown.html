@@ -9,7 +9,18 @@
 				<link rel="stylesheet" href="../reveal.js-4.2.1/dist/theme/black.css">
 				<!-- Theme used for syntax highlighted code -->
 				<link rel="stylesheet" href="../reveal.js-4.2.1/plugin/highlight/monokai.css">
-		</head>
+				<style>
+				.row{
+				    display: flex;
+				}
+				.col{
+				    flex: 1;
+				}
+				.mermaid {
+					font: 1.2em;
+				}
+				</style>
+	</head>
 		<body>
 <div class="reveal">
 	<div class="slides">
@@ -38,5 +49,6 @@
 								plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
 						});
 				</script>
+				 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 		</body>
 </html>

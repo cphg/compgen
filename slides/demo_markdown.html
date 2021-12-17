@@ -1,0 +1,91 @@
+---
+layout: reveal_markdown
+title: "K-mer analysis"
+tags: slides 
+date: 2021-12-09
+---
+
+### Slide 1
+A paragraph with some text and a [link](http://hakim.se).
+---
+### Slide 2
+---
+### Slide 3
+
+You can embed latex by wrapping it in `$`
+
+$ \sum_{t}{Pr(q=t)(1-t)^h}\approx (1-e^{-hn/k})^{h} $
+
+---
+### Slide 4
+
+You can embed images:
+
+![](https://imgs.xkcd.com/comics/standards.png)
+---
+
+And you can have slides without titles.
+
+---
+
+And, look, pretty syntax highlighting!
+
+```Python
+# An amazing python function
+
+def add_one(x):
+	return x+1
+```
+
+For multiple languages!
+
+```R
+# An amazing R function
+
+function add_one(x){
+	return(x+1)
+}
+```
+
+---
+
+And you can use [mermaid diagrams, too](https://mermaid-js.github.io/)
+
+<div class="mermaid">
+flowchart LR
+  Note --> Project --> Product
+</div>
+
+
+---
+
+## You can use multiple columns
+
+<div class="row">
+	<div class="col">
+	Column 1 Content
+	</div>
+	<div class="col">
+	Column 2 Content
+	</div>
+	<div class="col">
+	Column 2 Content
+	</div>
+</div>
+
+
+
+---
+
+#### Combine columns with mermaid/latex
+
+<div class="row">
+	<div class="col mermaid">
+	graph TD;
+	  TCGA-->TCG;
+	  TCGA-->CGA;
+	</div>
+	<div class="col">
+		$ \sum_{t}{Pr(q=t)(1-t)^h}\approx (1-e^{-hn/k})^{h} $
+	</div>
+</div>

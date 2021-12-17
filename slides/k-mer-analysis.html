@@ -7,8 +7,129 @@ date: 2021-12-09
 
 ### Slide 1
 A paragraph with some text and a [link](http://hakim.se).
+
 ---
-### Slide 2
+### What are k-mers?
+
+> subsequences of length *k*.
+
+
+
+---
+<div class="row">
+<div class="col">
+<h2>3-mers</h2>
+<div class="mermaid">
+graph TD;
+  TCGA-->TCG;
+  TCGA-->CGA;
+</div>
+</div>
+<div class="col">
+<h2>2-mers</h2>
+<div class="mermaid">
+graph TD;
+  TCGA-->TC;
+  TCGA-->CG;
+  TCGA-->GA;
+</div>
+</div>
+</div>
+---
+How many 7-mers are there  
+in a sequence with $l=11$ bases?
+
+<div class="fragment">
+$x = l-k+1 = 5$
+
+```
+|ABCDEFGHIJK|
+|1-----7    | 1
+| 1-----7   | 2
+|  1-----7  | 3
+|   1-----7 | 4
+|    1-----7| 5
+```
+</div>
+---
+Human chromosome 1 has 248,956,422 bp.  
+
+> Assuming a random distribution of 4 bases, what is the expected frequency a given 7-mer on human chromosome 1?
+
+---
+
+$4^7 = 16384$ possible 7-mers  
+$l-k+1 = 248,956,416$ total 7-mers in chr1  
+$ 248,956,416 / 16384 \approx \mathbf{15195} $ 
+
+---
+## Kmer Counting
+
+<div class="mermaid">
+graph TD
+  GATTACAGATTCAG-->GAT;
+  GATTACAGATTCAG-->ATT;
+  GATTACAGATTCAG-->TTA;
+  GATTACAGATTCAG-->TAC;
+  GATTACAGATTCAG-->ACA;
+  GATTACAGATTCAG-->ATT;
+  GATTACAGATTCAG-->CAG;
+  GATTACAGATTCAG-->AGA;
+  GATTACAGATTCAG-->TTC;
+  GATTACAGATTCAG-->TCA;
+  GATTACAGATTCAG-->CAG;
+  GAT-->n([1]);
+  ATT-->n2([2]);
+  TTA-->n3([1]);
+  TAC-->n4([1]);
+  ACA-->n5([1]);
+  CAG-->n6([2]);
+  AGA-->n7([1]);
+  TTC-->n8([1]);
+  TCA-->n9([1]);
+</div>
+
+K-mer counting converts a sequence into a vector
+---
+<div class="mermaid">
+graph LR
+  GATTACAGATTCAG-->n1["1 2 1 1 1 1 2 1 1 1"];
+  CTGAGGACTCGACT-->n2["2 1 0 0 2 2 3 2 2 1"];;
+</div>
+
+
+---
+### Exponential growth
+
+$4^k$
+
+```
+> cbind(k=seq(1,20), combinations=4^seq(1, 20))
+       k  combinations
+ [1,]  1             4
+ [2,]  2            16
+ [3,]  3            64
+ [4,]  4           256
+ [5,]  5          1024
+ [6,]  6          4096
+ [7,]  7         16384
+ [8,]  8         65536
+ [9,]  9        262144
+[10,] 10       1048576
+[11,] 11       4194304
+[12,] 12      16777216
+[13,] 13      67108864
+[14,] 14     268435456
+[15,] 15    1073741824
+[16,] 16    4294967296
+[17,] 17   17179869184
+[18,] 18   68719476736
+[19,] 19  274877906944
+[20,] 20 1099511627776
+```
+
+High $k$ $\rightarrow$ high-dimensional vectors, sparsity
+
 ---
 ### Slide 3
 
@@ -28,13 +149,13 @@ And you can have slides without titles.
 
 ---
 
-And, look, prettysyntax highlighting!
+And, look, pretty syntax highlighting!
 
 ```Python
 # An amazing python function
 
 def add_one(x):
-	return (x+1)
+	return x+1
 ```
 
 For multiple languages!
@@ -42,6 +163,7 @@ For multiple languages!
 ```R
 # An amazing R function
 
-function add_one(x):
-	return (x+1)
+function add_one(x){
+	return(x+1)
+}
 ```

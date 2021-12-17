@@ -1,6 +1,6 @@
 # compgen
 
-This repository hosts the course website and slides for BIMS 8106 Foundations of Computational Genomics.
+This repository hosts the course website and slides for BIMS 8601 Foundations of Computational Genomics.
 
 ## Course information
 

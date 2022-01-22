@@ -13,7 +13,7 @@ lectures:
     details: Significance testing, Multiple-hypothesis correction, probability, distributions; Curse of dimensionality; Dimensionality reduction.
     instructor: Stefan Bekiranov
     links:
-      - url: null
+      - url: slides/statistics1
         title: Lecture slides
   - lecture_number: 3
     date: 02/22/22

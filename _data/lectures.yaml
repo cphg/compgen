@@ -17,7 +17,7 @@ lectures:
         title: Lecture slides
   - lecture_number: 3
     date: 02/22/22
-    topic: Statistics and probability review2
+    topic: Statistics and probability review 2
     details: Measurement, errors, mean, correlation, plots, ROC, matrix, vector, linear transformation
     instructor: Chongzhi Zang
     links:
@@ -78,7 +78,7 @@ lectures:
         title: Rabiner 1989 tutorial on HMMs
   - lecture_number: 9
     date: 03/22/22
-    topic: Linear models, Contingency tables and Likelihood based tests
+    topic: Linear models, Contingency tables, and Likelihood-based tests
     details: Genome Wide Association Studies, QTLs, xQTLs 
     instructor: Stefan Bekiranov
     links:
@@ -110,14 +110,22 @@ lectures:
       - url: null
         title: Lecture slides
   - lecture_number: 13
+    date: 04/12/22
+    topic: "Genomic intervals: formats, data structures and algorithms"
+    details: Genomic intervals; genomic interval file formats; interval operations; interval data structures (R-trees, B+ trees, NCList, AIList); interval search and enrichment
+    instructor: Nathan Sheffield
+    links:
+      - title: Lecture slides
+        url: slides/interval-data-structures
+  - lecture_number: 14
     date: 04/05/22
-    topic: Data diagnostics
-    details: ATAC-seq count data, diagnostics, tests of normality, Quantile normalization, clip functions, Q-Q plots, batch correction
+    topic: ATAC-seq diagnostics and harmonization
+    details: ATAC-seq count data; data diagnostics; clip functions; consensus peaks; tests of normality; quantile normalization; Q-Q plots; batch correction
     instructor: Nathan Sheffield
     links:
       - url: slides/data-diagnostics
         title: Lecture slides
-  - lecture_number: 14
+  - lecture_number: 15
     date: 04/07/22
     topic: Scalable computational algorithms
     details: DNA methylation calling, epialleles, Big-Oh complexity, Efficiently processing large sequencing data
@@ -125,19 +133,11 @@ lectures:
     links:
       - url: slides/scalable-computational-algorithms
         title: Lecture slides
-  - lecture_number: 15
-    date: 04/12/22
-    topic: Interval data structures and algorithms
-    details: Region set enrichment analysis; R-trees, binary search trees, B+ trees, augmented interval lists
-    instructor: Nathan Sheffield
-    links:
-      - title: Lecture slides
-        url: slides/interval-data-structures
   - lecture_number: 16
     date: 04/14/22
     section: "Unit 3: Transcriptome"
-    topic: Genomic data standards
-    details: GA4GH, interoperability, APIs
+    topic: Genomic data standards and reference genomes
+    details: Standards and interoperability; GA4GH; Reference genomes; refget; sequence collections; APIs; other standards
     instructor: Nathan Sheffield
     links:
       - url: slides/genomic-data-standards
@@ -147,7 +147,7 @@ lectures:
   - lecture_number: 17
     date: 04/19/22
     topic: K-mer analysis
-    details: RNA pseudoalignment (Expectation Maximization, de Bruijn Graphs)
+    details: RNA pseudoalignment; membership testers; Bloom filters
     instructor: Nathan Sheffield
     links:
       - url: slides/k-mer-analysis

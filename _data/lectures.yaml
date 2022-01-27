@@ -69,7 +69,7 @@ lectures:
   - lecture_number: 8
     date: 03/17/22
     topic: Hidden Markov Models (HMMs)
-    details: Gene-finding, CpG islands and Chromatin states
+    details: Gene-finding, CpG islands and Chromatin states, Gibbs sampling, Expectation maximization
     instructor: Aakrosh Ratan
     links:
       - url: null

@@ -13,12 +13,12 @@ lectures:
     details: Significance testing, Multiple-hypothesis correction, probability, distributions; Curse of dimensionality; Dimensionality reduction.
     instructor: Stefan Bekiranov
     links:
-      - url: null
+      - url: slides/statistics1
         title: Lecture slides
   - lecture_number: 3
     date: 02/22/22
     topic: Statistics and probability review 2
-    details: Measurement, errors, mean, correlation, plots, ROC, matrix, vector, linear transformation
+    details: statistical tests, p-value, type I and type II errors, multiple testing corrections, FDR, ROC, some linear algebra (linear transformation and matrix manipulation), Bayesian basics
     instructor: Chongzhi Zang
     links:
       - url: null

@@ -1,10 +1,120 @@
 ---
-layout: reveal
-title: "Data diagnostics"
+layout: reveal_markdown
+title: "Data diagnostics and harmonization"
 tags: slides 
 date: 2021-12-09
 ---
 
-<section id="{{ page.title }}" class="slide level1">
-<h1>{{ page.title }}</h1>
-</section>
+### {{ page.title }}
+
+---
+
+### ATAC-seq experiment
+
+<img src="images/buenrostro2013_fig1.jpg" height="600">
+
+---
+
+### ChIP-seq vs ATAC-seq
+
+<div class="row">
+<div class="col">
+
+#### ChIP-seq
+- uses an antibody
+- selects a specific factor
+</div>
+
+<div class="col">
+
+#### ATAC-seq
+- no antibody
+- all factors
+</div>
+
+</div>
+
+---
+
+### Review of basic algorithm for sequence-based genome data
+
+<div class="mermaid">
+flowchart LR
+  Sequences --> Alignment --> Counting --> x[Peak calling] --> Summary
+</div>
+
+---
+
+### How can you compare two samples?
+
+Potential issues: 
+1. Peak locations differ across samples
+2. Sequencing depth differs
+3. Sequences are relative to the available pool
+4. CNVs, repeats, NuMts, and other artifacts
+
+
+---
+
+### Problem 1
+
+Peak locations differ across samples
+
+Solution: Consensus peaks
+
+---
+
+### Consensus peaks 1: Union
+
+Simply merge all the peaks into one.
+
+<img src="images/data-diagnostics/union.svg" height="400" style="background:white">
+
+---
+
+But this leads to problems with lots of samples, or when samples vary significantly.
+
+<img src="images/data-diagnostics/union-problem.svg" height="400" style="background:white">
+
+
+---
+
+
+### Consensus peaks 2: Union-tile
+
+You could do the union approach, and then do a sliding window
+
+---
+
+### Consensus peaks 3: Algorithm
+
+<img src="images/data-diagnostics/Granja_Corces_ArchR_Sup9b.svg" height="400" style="background:white">
+
+---
+
+### Problem 2: Sequencing depth 
+<img src="images/data-diagnostics/alignment-depth.svg" height="400" style="background:white">
+
+---
+
+- RPKM: Reads per Kilobase per Million reads
+- FPKM: Fragments per Kilobase per Million reads
+
+---
+
+---
+
+### Problem 3: Sequencing depth 
+
+Clip functions
+
+$ x = min(x, quantile(x, 0.99)) $
+
+```R
+capAndScale = function(x):
+	cap = quantile(x, 0.99)
+	x[x>cap] = cap
+	return x/cap
+
+---
+

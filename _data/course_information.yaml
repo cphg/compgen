@@ -1,9 +1,9 @@
 course:
   title: Foundations of Computational Genomics
-  number: BIMS8106
+  number: BIMS8601
   term: Spring 2022
   times: Tue/Thurs 1:30pm-3:00pm
-  location: TBD
+  location: McKim Hall 1023 (BEC Classroom)
   instructor_of_record: Nathan Sheffield
   instructors:
     - name: Nathan Sheffield

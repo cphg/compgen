@@ -18,7 +18,7 @@ lectures:
   - lecture_number: 3
     date: 02/22/22
     topic: Statistics and probability review 2
-    details: Measurement, errors, mean, correlation, plots, ROC, matrix, vector, linear transformation
+    details: statistical tests, p-value, type I and type II errors, multiple testing corrections, FDR, ROC, some linear algebra (linear transformation and matrix manipulation), Bayesian basics
     instructor: Chongzhi Zang
     links:
       - url: null

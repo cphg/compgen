@@ -1,11 +1,11 @@
 lectures:
   - lecture_number: 1
     date: 02/15/22
-    topic: Introduction and course overview
+    topic: Course overview and introduction to computational genomics
     details: Course overview, GitHub for assignments, R markdown, VSCode
     instructor: Nathan Sheffield
     links:
-      - url: null
+      - url: slides/introduction
         title: Lecture slides
   - lecture_number: 2
     date: 02/17/22
@@ -152,6 +152,8 @@ lectures:
     links:
       - url: slides/k-mer-analysis
         title: Lecture slides
+      - url: https://github.com/nsheff/kmer-counting
+        title: K-mer assignment
       - title: Efficient counting of k-mers in DNA sequences using a bloom filter
         url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-333
 

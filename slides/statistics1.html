@@ -86,6 +86,37 @@ If X is a discrete random variable with probability distribution $p(x)$ and expe
 
 $Var(X) = \sum_{i} (x_{i} - \mu)^2 p(x_{i})$
 
+The variance is often denoted by $\sigma^2$ and the standard deviation by $\sigma$
+
+---
+### Variance and Covariance
+
+$Var(a + bX) = b^2 Var(X)$
+
+$Var(X) = E(X^2) - [E(X)]^2$
+
+$Cov(X, Y) = E[(X - \mu_{X})(Y - \mu_{Y})]$
+
+$U = a + \sum_{i=1}^{n} b_{i} X_{i}$ and $V = c + \sum_{j=1}^{m} d_{j} Y_{j}$
+
+$Cov(U,V) = \sum_{i=1}^{n} \sum_{j=1}^{m} b_{i} d_{j} Cov(X_i, Y_j)$
+
+---
+### Variance and Covariance
+
+$Var(a + \sum_{i=1}^{n} b_{i} X_{i}) = \sum_{i=1}^{n} \sum_{j=1}^{n} b_{i} b_{j} Cov(X_i, X_j)$ 
+
+If $X_{i}$ are independent, then $Cov(X_{i}, X_{j}) = 0$ for $i \ne j$.  In that case
+
+$Var(\sum_{i=1}^{n}) = \sum_{i=1}^{n} Var(X_{i})$ 
+
+The correlation coeffience, $\rho$, is defined as follows
+
+$\rho = \frac{Cov(X,Y)}{\sqrt{Var(X)Var(Y)}}$
+
+
+
+
 
 
 

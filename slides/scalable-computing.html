@@ -1,0 +1,89 @@
+---
+layout: reveal_markdown
+title: "Scalable computing in genomics"
+tags: slides 
+date: 2021-12-09
+---
+
+
+# {{ page.title }}
+---
+Remember this?
+<iframe src="https://databio.org/seqcosts/cost.html" width="1200" height="550"></iframe>
+<a style="font-size:0.6em" href="https://databio.org/seqcosts">databio.org/seqcosts</a>
+
+---
+Lower costs &rarr; More data
+
+<iframe src="https://databio.org/seqcosts/sra.html" width="950" height="550"></iframe>
+<a style="font-size:0.6em" href="https://databio.org/seqcosts">databio.org/seqcosts</a>
+
+---
+### Scalable computing in genomics
+#### Approaches
+
+1. Parallelization
+2. Optimization
+
+---
+## Parallelization
+
+> Splitting a compute task, and then completing each split simultaneously. 
+
+---
+### split-apply-combine
+
+MapReduce
+
+---
+### Scopes of parallelism
+
+
+
+---
+### Workflows
+
+> A workflow or pipeline is a repeatable sequence of tasks that process a piece of data. 
+
+
+<div class="mermaid">
+flowchart LR
+  Data --> Task1 --> Task2 --> Task3 --> Output
+</div>
+
+---
+### Parallel by sample/job
+
+- no shared memory; requires independence of jobs
+- HPC clusters are intended for this type of parallelization
+- restricted by size of HPC cluster
+- AWS Batch?
+
+---
+### Parallel by process
+
+- node-threaded parallelism
+- restricted to the cores on a single node
+- typically built-in to a tool, so limited by tool capacity
+
+---
+### Parallel by dependency
+
+- not necessarily node-threaded, but likely has shared file-system requirements
+- requires a dependency graph of workflow steps
+- requires a layer of task management above typical HPC usage
+- limited to independent workflow elements
+
+---
+### Scopes of parallelism: tradeoffs
+
+---
+### Workflow/pipeline engine/framework
+
+> A development toolkit that makes it easier to build workflows.
+
+- Snakemake
+- Nextflow
+- Common Workflow Language
+
+

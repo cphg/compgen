@@ -2,7 +2,7 @@ lectures:
   - lecture_number: 1
     date: 02/15/22
     topic: Course overview and introduction to computational genomics
-    details: Course overview, GitHub for assignments, R markdown, VSCode
+    details: Course overview, git/GitHub, R markdown, genomics, scalability
     instructor: Nathan Sheffield
     links:
       - url: slides/introduction
@@ -171,7 +171,7 @@ lectures:
   - lecture_number: 19
     date: 04/26/22
     topic: Differential expression analysis
-    details: Normalization, modeling count data, FDR
+    details: Normalization, modeling count data
     instructor: Stefan Bekiranov
     links:
       - url: null
@@ -179,7 +179,7 @@ lectures:
   - lecture_number: 20
     date: 04/28/22
     topic: High-dimensional data analysis and integration 
-    details: Clustering, PCA, networks
+    details: Clustering, WGCNA, networks
     instructor: Chongzhi Zang
     links:
       - url: null

@@ -114,6 +114,78 @@ The correlation coeffience, $\rho$, is defined as follows
 
 $\rho = \frac{Cov(X,Y)}{\sqrt{Var(X)Var(Y)}}$
 
+---
+### Sample Mean & Variance
+
+Denote $n$ as the sample size and assume $X_{1}, X_{2}, \dots, X_{n}$ are random variables (not fixed values!), the sample mean and variance are
+
+$\overline{X} = \frac{1}{n} \sum_{i=1}^{n} X_{i}$; $s^2 = \frac{1}{n-1} \sum_{i=1}^{n} (X_{i} - \overline{X})^2$
+
+Given $E(X_{i}) = \mu$ and $Var(X_{i}) = \sigma^2$
+
+$E(\overline{X}) = \mu$ and $Var(\overline{X}) = \frac{\sigma^2}{n}$
+
+---
+### Moment-Generating Function
+
+The moment-generating function (mgf) of a random variable $X$ is $M(t) = E(e^{tX})$
+
+$M(t) = \displaystyle \sum_{x} e^{tx} p(x)$; $M(t) = \int_{-\infty}^{\infty} e^{tx} f(x) dx$
+
+$$M^{(r)}(t) = \frac{d^{n}}{dt^{n}} \int_{-\infty}^{\infty} e^{tx} f(x) dx = \int_{-\infty}^{\infty} x^r e^{tx} f(x) dx$$
+
+$M^{(r)}(0) = E(X^r)$
+
+---
+### Moment-Generating Function
+
+If $X$ and $Y$ are independent random variables with mgf's $M_{X}$ and $M_{Y}$ and $Z= X + Y$ then $M_{Z}(t) = M_{X}(t)M_{Y}(t)$
+
+If $X$ has mgf $M_{X}(t)$ and $Y = a + bX$, then
+
+$M_{Y}(t) = e^{at}M_{X}(bt)$ 
+
+If $X$ follows a normal distribution with mean $\mu$ and standard deviation $\sigma$
+
+$M_{X}(t) = e^{\mu t + \sigma^2 t^2/2}$
+
+---
+### Cummulative Distribution Function
+
+The cummualative distribution function (cdf) of a continous random variable $X$ is
+
+$P(X \le x) = F(x) = \int_{-\infty}^{x} f(u) du$
+
+The cdf of standard normal with $\mu = 0$ and $\sigma = 1$ is
+
+$\Phi(x) = \int_{-\infty}^{x} \frac{1}{\sqrt{2 \pi}} e^{-u^2/2} du$ 
+
+---
+### Central Limit Theorem
+
+Let $X_{1}, X_{2},\dots$ be independent random variables with mean 0 and variance $\sigma^2$, common distribution function $G$ and moment-generating function $M$. Let $S_{n} = \sum_{i=1}^n X_{i}$, then
+
+$$\lim_{n \to \infty} P(\frac{S_{n}}{\sigma \sqrt{n}} \le x) = \Phi(x), -\infty < x < \infty$$
+
+Where $\Phi(x)$ is the cumulative distribution function of the standard normal with mean 0 and variance 1.
+
+---
+### Use of Distributions in Functional Genomics
+
+1. Null models for hypothesis testing
+
+2. Noise or background models for site detection and differential enrichment analysis 
+
+3. Error models in regression/machine learning
+
+For example, error model for a random sample
+
+$X_{i} = \mu + \epsilon_{1} + \epsilon_{2} + \epsilon_{3} \cdots = \mu + \epsilon$
+
+where $\epsilon \sim N(0, \sigma^2)$ expected from CLT
+
+  
+
 
 
 

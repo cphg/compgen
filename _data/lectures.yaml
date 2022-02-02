@@ -10,7 +10,7 @@ lectures:
   - lecture_number: 2
     date: 02/17/22
     topic: Statistics and probability review 1
-    details: Significance testing, Multiple-hypothesis correction, probability, distributions; Curse of dimensionality; Dimensionality reduction.
+    details: Random Variables, Probability Distributions, Expectation, Variance, Moment-Generating Functions, Central Limit Theorem
     instructor: Stefan Bekiranov
     links:
       - url: slides/statistics1

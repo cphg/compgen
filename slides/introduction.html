@@ -5,106 +5,349 @@ tags: slides
 date: 2021-12-09
 ---
 
-# {{ page.title }}
+## {{ page.title }}
 ---
-### Course overview
+## Course overview
 
 - Course website: https://cphg.github.io/compgen/
+- Scribing assignments
+- Programming assignments: GitHub classroom
+- Final presentations
 
 ---
-### Assignments
+## git and GitHub in 5 slides
+---
+### git/GitHub serve multiple purposes
+1. Backup
+2. Version control
+3. Distributing/sharing code
+4. Testing
+5. Communication
+---
+### Basics of git repos
+1. A git repository is a folder with a `.git` subfolder
+2. The `.git` subfolder stores an index of snapshots
+3. Commits track the repository, not individual files.
+4. Git uses a model of distributed *clones*
+---
+<div class="row">
+<div class="col">
+	Centralized (svn)
+	<img src="images/introduction/centralized.png" style="margin-top:140px">
+</div>
+<div class="col">
+	Distributed (git)
+	<img src="images/introduction/distributed.png">
+</div>
+</div>
+<span class="small"><a href="https://git-scm.com/">ProGit</a></span>
+---
+### Basics of git branching
+1. Branches are pointers to commits. They are cheap.
+2. Combine branches with either *merge* or *rebase*.
+3. Branching workflows can be opinionated<br>(*e.g*, gitflow, threeflow, trunk development)
+---
+<div class="row">
+<div class="col">
 
-- GitHub classroom
+<img src="images/introduction/basic-branching-4.png" width="425" style="margin-bottom:65px">
+
+<pre><code class="small" style="line-height:1em">$ git checkout -b hotfix
+Switched to a new branch 'hotfix'
+$ vim index.html
+$ git commit -a -m 'Fix broken email address'
+[hotfix 1fb7853] Fix broken email address
+ 1 file changed, 2 insertions(+)
+</code></pre>
+
+</div>
+<div class="col fragment">
+<img src="images/introduction/basic-branching-5.png" width="425">
+
+<pre><code class="small">$ git checkout master
+$ git merge hotfix
+Updating f42c576..3a0874c
+Fast-forward
+ index.html | 2 ++
+ 1 file changed, 2 insertions(+)
+</code></pre>
+
+</div>
+</div>
+<span class="small"><a href="https://git-scm.com/">ProGit</a></span>
+
+
+
 
 ---
-###
+## Introduction to computational genomics
 
-
+This intro will cover:
+1. Definitions of genomics and related fields
+2. Brief history of genomics
+3. Core biological concepts and technology
+4. Overview of sequencing technologies
+5. The genomic data explosion and computation
+6. How genomics links to business, ethics, and health
 ---
-# Introduction to computational genomics
+### Genomics is the study of genomes What is a genome?
 
----
-### Central dogma
+> A complete set of genetic information.
 
-A paragraph with some text and a [link](http://hakim.se).
----
+### What is genetic?
+
+> Relating to origin.
+
 ### What is genomics?
 
+> The study of the instructions needed to originate an organism.
+
 ---
-### Units
+### Early history of genomics
+
+- Discovery of DNA (1871)
+- Discovery of nucleotides (1910)
+- DNA is the genetic material (1944)
+- Discovery of structure of DNA (1953)
+- The central dogma (1957)
+
+<span class="small">See https://www.yourgenome.org/facts/timeline-history-of-genomics</span>
+---
+<!--
+<div class="row">
+<div class="col">
+1871: Discovery of DNA
+<img
+	src="images/introduction/avery_macleod_mccarty_experiment_02_yourgenome.png"
+	height="520"
+	style="background:white; padding: 10px; margin: 0px"><br>
+<span class="small">Avery et al. 1944</span>
+</div>
+<div class="col">
+1910: Nucleotides 
+<img
+	src="images/introduction/bases.png"
+	height="320"
+	style="background:white; padding: 10px; margin: 0px"><br>
+<span class="small">Kossell 1910</span>
+</div>
+</div>
+<span class="small">Image credits: Genome Research Limited, nobelprize.org</span> -->
 
 <div class="row">
-	<div class="col">
-		Genomics
-	</div>
-	<div class="col">
-		Epigenomics
-	</div>
-	<div class="col">
-		Transcriptomics
-	</div>
+<div class="col">
+1944: DNA is genetic
+<img
+	src="images/introduction/avery_macleod_mccarty_experiment_02_yourgenome.png"
+	height="520"
+	style="background:white; padding: 10px; margin: 0px"><br>
+<span class="small">Avery et al. 1944</span>
 </div>
+<div class="col">
+1957: Central dogma
+<img
+	src="images/introduction/dna_central_dogma_yourgenome.png"
+	height="520"
+	style="background:white; padding: 10px; margin: 0px"><br>
+<span class="small">Crick 1957</span>
+</div>
+</div>
+<span class="small">Image credits: Genome Research Limited</span>
 
 ---
-Genomics is intertwined with sequencing
+### Genomics is intertwined with sequencing technology
+
+> DNA sequencing is the process of determining the *sequence* of nucleotides (ACTG) in a strand of DNA
+
+DNA sequencing = measurement  (like a microscope)
 
 ---
-### A brief history of the human genome
+### History of genome sequencing
+- Sanger sequencing (1977-1980)
+- The [Human Genome Project](https://www.genome.gov/human-genome-project) (1990-2003)
+- The [ENCODE project](https://www.genome.gov/Funded-Programs-Projects/ENCODE-Project-ENCyclopedia-Of-DNA-Elements) (2003-2021)
+- Sequencing by synthesis (2008-2012)
+- Single-molecule sequencing
+- 100k genomes sequenced
 
-- Discovery of structure of DNA (1953)
-- Sanger sequencing introduced, wins Nobel Prize (1977-1980)
-- The [Human Genome Project](https://www.genome.gov/human-genome-project) (1990-2003).
-- The [ENCODE project](https://www.genome.gov/Funded-Programs-Projects/ENCODE-Project-ENCyclopedia-Of-DNA-Elements)  (2003-2021) was the successor
-- Public human genome funding comes from the [National Human Genome Research Institute](https://www.genome.gov).
+---
 
+
+
+<div class="row">
+<div class="col">
+1977: Sanger sequencing
+<img
+	src="images/introduction/Radioactive_Fluorescent_Seq.jpg"
+	height="520"
+	style="background:white; padding: 10px; margin: 0px"><br>
+<span class="small">Chain Termination Method</span>
+</div>
+<div class="col">
+2001: Human genome
+<img
+	src="images/introduction/Logo_HGP.jpg"
+	height="320"
+	style="background:white; padding: 10px; margin-top: 90px"><br>
+<span class="small"></span>
+</div>
+</div>
+<span class="small">Image credits: Wikipedia</span>
+
+---
+### 2008: Sequencing by synthesis
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/v10bUR2aL5g?start=35" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+<div class="row">
+<div class="col">
+2009: SMRT
+<img
+	src="images/introduction/avery_macleod_mccarty_experiment_02_yourgenome.png"
+	height="520"
+	style="background:white; padding: 10px; margin: 0px"><br>
+<span class="small">PacBio</span>
+</div>
+<div class="col">
+2016: Nanopore
+<img
+	src="images/introduction/dna_central_dogma_yourgenome.png"
+	height="520"
+	style="background:white; padding: 10px; margin: 0px"><br>
+<span class="small">Oxford Nanopore</span>
+</div>
+</div>
+<span class="small">Image credits: Genome Research Limited</span>
 ---
 ### Sequencing costs
 
-<iframe src="https://databio.org/seqcosts/cost.html" width="920" height="550"></iframe>
+<iframe src="https://databio.org/seqcosts/cost.html" width="1250" height="550"></iframe>
 <a style="font-size:0.6em" href="https://databio.org/seqcosts">databio.org/seqcosts</a>
----
-
-And you can have slides without titles.
 
 ---
+### Other types of sequencing
+- Bionano: Saphyr system
+- Polony sequencing
+- Roche 454 "Pyrosequencing"
 
-And you can use [mermaid diagrams, too](https://mermaid-js.github.io/)
+### Contrasting sequencing platforms
 
-<div class="mermaid">
-flowchart LR
-  Note --> Project --> Product
-</div>
+- Size of machine
+- Length of reads
+- Number of reads
+- Cost of machine, cost of reads
+- Accuracy of reads
+- Technician time
 
+---
+### Sequencing
+
+- Sequencing technology doesn't just measure DNA
+
+Genome &rarr; transcriptome &rarr; epigenome
+
+
+<div class="fragment">Convert what you want to measure to DNA, then use DNA sequencing technology.</div>
+
+---
+### Transcriptomics
+
+> The study of the RNA molecules produced by a cell.
+
+---
+### Epigenomics
+
+> The study of the chemical modification and physical conformation of cellular DNA and bound proteins
 
 ---
 
-## You can use multiple columns
+<img src="images/introduction/rosa2013_chromatin.png" width="550"><br>
+<span class="small">Rosa et al. 2013</span>
 
+
+
+---
+### Units
 <div class="row">
 	<div class="col">
-	Column 1 Content
+		<b>Genomics</b>
+		<li class="small">sequence alignment</li>
+		<li class="small">genome assembly</li>
+		<li class="small">variant calling</li>
 	</div>
 	<div class="col">
-	Column 2 Content
+		<b>Epigenomics</b>
+		<li class="small">short-read reference mapping</li>
+		<li class="small">string models </li>
+		<li class="small">genomic intervals</li>
 	</div>
 	<div class="col">
-	Column 2 Content
+		<b>Transcriptomics</b>
+		<li class="small">dimensionality reduction</li>
+		<li class="small">k-mer algorithms</li>
+		<li class="small">differential expression</li>
 	</div>
-</div>
+</div><br><br>
+
+### Focus
+
+Algorithms and methods motivated by biology
+
+
+<!-- 
+- Public human genome funding comes from the [National Human Genome Research Institute](https://www.genome.gov).
+
+ -->
+
+
 
 
 
 ---
+### Genomics today
 
-#### Combine columns with mermaid/latex
+- Genomics and health
+- Genomics and business
+- Genomics and evolution
+- Genomics and privacy
+- Genomics and ethics
+- Genomics and computing
 
-<div class="row">
-	<div class="col mermaid">
-	graph TD;
-	  TCGA-->TCG;
-	  TCGA-->CGA;
-	</div>
-	<div class="col">
-		$ \sum_{t}{Pr(q=t)(1-t)^h}\approx (1-e^{-hn/k})^{h} $
-	</div>
+---
+### Genomics and health
+- Genome-wide association studies (GWAS)
+- "Mendelian" traits
+- Complex traits
+- epimutations, cancer classification
+
+---
+### Genomics and privacy
+- Crypt4GH
+- Gerstein's anonymization
+
+---
+### Genomics and law
+- BRCA patent
+- Anti genetic discrimination laws
+
+---
+### Genomics and ethics
+- genetically modified babies
+
+---
+### Genomics and computing
+
+---
+### Conclusion
+
+It's a super interesting time to be studying genomics.<br>
+
+<div class="fragment">
+	The world is starving for people who can apply advanced computation to growing genomic data.
+</div><br>
+
+
+<div class="fragment">
+	Looking forward to a fun and enlightening semester.
 </div>

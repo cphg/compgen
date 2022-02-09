@@ -2,11 +2,15 @@ lectures:
   - lecture_number: 1
     date: 02/15/22
     topic: Course overview and introduction to computational genomics
-    details: Course overview, GitHub for assignments, R markdown, VSCode
+    details: Course overview, git/GitHub, history of genomics and sequencing technology, genomic data scale, popular topics in genomics, computing in genomics
     instructor: Nathan Sheffield
     links:
       - url: slides/introduction
         title: Lecture slides
+      - url: https://www.sciencedirect.com/science/article/pii/S0012160604008231
+        title: Friedrich Miescher and the discovery of DNA
+      - url: https://kbroman.org/github_tutorial/
+        title: Karl Broman's guide to git and GitHub
   - lecture_number: 2
     date: 02/17/22
     topic: Statistics and probability review 1
@@ -176,7 +180,7 @@ lectures:
   - lecture_number: 19
     date: 04/26/22
     topic: Differential expression analysis
-    details: Normalization, modeling count data, FDR
+    details: Normalization, modeling count data
     instructor: Stefan Bekiranov
     links:
       - url: null
@@ -184,7 +188,7 @@ lectures:
   - lecture_number: 20
     date: 04/28/22
     topic: High-dimensional data analysis and integration 
-    details: Clustering, PCA, networks
+    details: Clustering, WGCNA, networks
     instructor: Chongzhi Zang
     links:
       - url: null

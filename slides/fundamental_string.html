@@ -1,0 +1,675 @@
+---
+layout: aakrosh_markdown
+title: "String matching algorithms"
+---
+
+# Fundamental String Algorithms
+
+![dna](images/fundamental_string/title_slide.png) <!-- .element height="80%" width="80%" -->
+
+---
+
+## Unit 1: Genome
+
+* Important current biological problems
+  * Align/model genomes and sequences
+  * Genome assembly
+  * Motif discovery $\ldots$
+* Fundamental techniques and data structures
+  * Dynamic Programming
+  * Hidden Markov Models
+  * De Bruijn graphs $\ldots$
+
+---
+
+## Sequence alignment / comparative genomics
+
+* Aligning two sequences
+* Local/global alignment
+* Exact matching
+* Database search
+
+---
+
+## All species share common ancestry
+
+![Tree of life](images/fundamental_string/tree_of_life.svg) <!-- .element height="80%" width="80%" -->
+
+<small>Source : [Wikipedia](https://commons.wikimedia.org/wiki/File:Phylogenetic_tree.svg)</small>
+
+Note: A phylogenetic tree of living things, based on RNA data and proposed by Carl Woese, showing the separation of bacteria, archaea, and eukaryotes. Trees constructed with other genes are generally similar, although they may place some early-branching groups very differently, thanks to long branch attraction. The exact relationships of the three domains are still being debated, as is the position of the root of the tree. It has also been suggested that due to lateral gene transfer, a tree may not be the best representation of the genetic relationships of all organisms. For instance some genetic evidence suggests that eukaryotes evolved from the union of some bacteria and archaea (one becoming an organelle and the other the main cell).
+
+---
+
+## Extant and extinct
+
+![extinctions](images/fundamental_string/dinosaurs.png.webp) <!-- .element height="80%" width="80%" -->
+
+<small>Source : [PMC7528100](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7528100)</small>
+
+---
+
+## Observation of gene-order and orientation
+
+![alignments](images/fundamental_string/gene_order.html.webp)
+
+<small>Source : [12748633](https://doi.org/10.1038/nature01644)</small>
+
+Note: An orthologous gene is a gene in different species that evolved from a common ancestor by speciation. Normally orthologous genes retain the same function in the course of evolution. Strong conservation of local gene order and spacing allows genome-wide multiple alignments. A 50kb segment of Saccharomyces cerevisiae chromosome VII aligned with orthologous contigs from each of the other three species. Predicted ORFs are shown as arrows pointing in the direction of transcription.  
+
+---
+
+## Genome-wide alignments reveal orthologous segments
+
+![ACE2](images/fundamental_string/ace2.png)
+
+Note: This signal can be used to determine orthologous genes in other species
+
+---
+
+## Comparative genomics reveals functional elements
+
+![ARX](images/fundamental_string/ARX.png)
+
+---
+
+![human_chicken](images/fundamental_string/human_vs_chicken.png)
+
+How do we actually align two sequences?
+
+---
+
+## Outline
+
+* Introduction to sequence alignment
+* Introduction to dynamic programming
+* Dynamic programming for sequence alignments
+* Variants of the dynamic programming formulation
+* Exact matching
+* Database search
+
+---
+
+## Genomes change over time 
+
+![changes](images/fundamental_string/changes.svg) <!-- .element height="80%" width="30%" -->
+
+
+---
+
+## Goals of genome alignment
+
+![changes](images/fundamental_string/changes.2.svg) <!-- .element height="80%" width="30%" -->
+
+---
+
+## Goals of genome alignment
+
+![changes](images/fundamental_string/changes.3.svg) <!-- .element height="80%" width="80%" -->
+
+---
+
+## Formalizing the problem
+
+* Define a set of evolutionary operations
+  * Assumption : Symmetric operations
+* Define optimality criterion
+  * min (# of operations) $\ldots$
+* Design algorithm that achieves optimality
+  * Assumptions influence performance
+  
+Note: The evolutionary operation we are going to consider are insertion, deletion and substitutions. Minimum cost of operations can be another optimality criterion. When comparing human and mouse, we do not try to infer the bases in the ancestor of the human and mouse, but we reverse the time direction of a branch and then think of operation that might have occurred. Also remember that it is Impossible to infer exact series of operations (Occams razor). We want to design an algorithm that achieves optimality or at least can approximate it. If we can provide concrete bounds on that approximation then that is the ideal case.
+
+---
+
+## Longest common substring
+
+Given two possibly related string $x$ and $y$, what is the longest common substring (no gaps)?
+
+```text
+x : TCACCTGACCTCCAGGC
+y : TCATGACCGCCATGGC
+```
+
+```text
+x : TCACCTGACCTCCAGGC
+      xxx|||||x|||xx  
+y :   TCATGACCGCCATGGC
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+---
+
+## Longest common substring
+
+Given two possibly related string $x$ and $y$, what is the longest common substring (no gaps)?
+
+```python
+max_run_length = 0
+
+for i in range(0, len(x)):
+    maxr = longest_run(x, i, min(len(x), i+len(y)), 
+                       y, 0, min(len(y), len(x)-i))
+    if maxr > max_run_length: max_run_length = maxr
+
+for i in range(0, len(y)):
+    maxr = longest_run(x, 0, len(y)-i, y, i, len(y))
+    if maxr > max_run_length: max_run_length = maxr
+
+print(max_run_length)
+```
+
+Note: So this requires comparing all letters at each offset, and it would be quadratic in the length of the shorter sequence
+
+---
+
+## Longest common subsequence
+
+Given two possibly related string $x$ and $y$, what is the longest common subsequence (gaps allowed)
+
+```text
+x : TCACCTGACCTCCAGGC
+y : TCATGACCGCCATGGC
+```
+
+```text
+x : TCACCTGACCTCCA-GGC
+    |||  |||||x||| |||
+y : TCA--TGACCGCCATGGC
+```
+
+* Related to edit distance (minimum number of operations required to transform one string into the other). 
+* Number of changes needed for $x \rightarrow y$ 
+* Uniform scoring function
+
+Note: For now let's keep this simplistic assumption that all mismatches and gaps are equally penalized, but remember that this is simplistic. We make these sort of simplistic assumptions while developing algorithms, similar to using brute-force to see if a problem is tractable.
+
+---
+
+## Brute-force approach
+
+* $|x|=n,\ |y|=m, \ n > m$
+* Longest alignment : $n+m$ entries
+* Alignment is a gap-placement algorithm
+* ${n+m \choose n}$ ways of placing gaps in $y \approx 2^{m+n}$
+
+![viz](images/fundamental_string/large_values_viz.png) <!-- .element height="30%" width="30%" -->
+
+Note: Enumerating and scoring them is not an option. Need a polynomial algorithm to find the best alignment amongst exponential number of alignments. Whenever you want to explore an exponential search space in polynomial time, a technique you  should think of is dynamic programming. 
+
+---
+
+## Computing Fibonacci numbers
+
+* F(0) = 1
+* F(1) = 1
+* F(2) = F(1) + F(0) 
+* $\ldots$
+* F(n) = F(n-1) + F(n-2)
+
+Note: Fibonacci sequences appear in biological setting ssuch as branching in trees, arrangement of leaves on a stem, the fruitlets of a pineapple. Kepler pointed out the presence of the Fibonacci sequence in nature, using it to explain the (golden ratio-related) pentagonal form of some flowers.
+
+---
+
+## Computing Fibonacci numbers
+
+```python
+def fibonacci(n):
+  if n==1 or n==0:
+    return 1
+  return fibonacci(n-1) + fibonacci(n-2)
+```
+
+![F7](images/fundamental_string/f7.png)
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+---
+
+## Time Complexity
+
+<section>
+<small>
+\[\begin{aligned}
+T(n) &amp; = T(n-1) + T(n-2) + 1 \\
+&amp; < 2 \times T(n-1) + 1 \\
+&amp; < 4 \times T(n-2) + 3 \\
+&amp;  \ldots \\
+&amp; < 2^k \times T(n-k) + (2^k - 1) \\
+&amp; = \ldots \\
+&amp; < 2^n \times T(0) + (2^n - 1) \\
+&amp; = 2^n + 2^n - 1 \\
+&amp; = O(2^n)
+\end{aligned} \]
+</small>
+</section>
+
+Note: In reality the time complexity of this recurrence is O(1.618^n)
+
+
+---
+
+## Computing Fibonacci numbers 
+
+```python
+def fibonacci(n):
+  fib_table[1] = 1
+  fib_table[2] = 1
+  for i in range(3,n+1):
+    fib_table[i] = fib_table[i-1] + fib_table[i-2]
+  return fib_table[n]
+```
+
+![F7](images/fundamental_string/f7_memoize.png) <!-- .element height="60%" width="60%" -->
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+Note: What is the time complexity here? O(n). This is a dynamic programming algorithm: basically recursion, but with intentional evaluation order, usually filling out a table systematically.
+
+---
+
+## Dynamic Programming in theory
+
+* Hallmarks of dynamic programming
+  * Optimal substructure
+  * Overlapping sub-problems
+* For optimization problems
+  * Optimal choice is made locally
+  * Score is added through the search space
+  * Traceback common, find optimal path based on the individual choices
+
+Note: Optimal substructure: Optimal solution to problems contains optimal solution to sub-problems. Overlapping sub-problems : Limited number of distinct sub-problems, repeated many times. Another set of algorithms that operate on problems with optimal substructure are called greedy algorithms. Faster, easier to set up, but often you are not guaranteeing optimal solution, and when looking at subproblems, you are never revising your solution. An example is the Dijkstra’s shortest path algorithm 
+
+---
+
+## Sequence alignment: problem structure
+
+* Define $OPT(i,j)$ = min cost of aligning prefix strings $x_1, x_2, \ldots, x_i$ and $y_1, y_2, \ldots, y_j$
+
+* Case1. $OPT(i,j)$ matches $x_i - y_j$
+  * match or mismatch for $x_i – y_j$ + $OPT(x_{i-1}, y_{j-1})$
+
+* Case2a. $OPT(i,j)$ leaves $x_i$ unmatched
+  * gap for $x_i$ + $OPT(x_{i-1}, y_j)$
+
+* Case 2b. $OPT(i,j)$ leaves $y_j$ unmatches
+  * gap for $y_j$ + $OPT(x_i, y_{j-1})$
+
+Note: Optimal solution to problems contains optimal solution to sub-problems, as defined here, so sequence alignment certainly has optimal substructure
+
+---
+
+## Overlapping subproblems
+
+![additivescores](images/fundamental_string/recursive.svg) <!-- .element height="70%" width="70%" -->
+
+---
+
+## Dynamic Programming 
+
+* Create a large table indexed by $(i,j)$
+* Decide on the recursion formula
+* Decide on optimal traversal order
+* Compute each sub-alignment once
+* Remember the choices 
+
+Note: Use memoization (storing the results of expensive function calls and returning the cached result) for sub-problem if they are reused. If the subproblems are not reused, then maybe DP is not the right choice as an algorithm. Computation order matters, and most times bottom up will work though it is not obvious a lot of the times. Once you have the set up, then start filling the table, find the optimal score. Traceback to find the optimal solution.
+
+---
+
+## So how does this look?
+
+![matrix](images/fundamental_string/dpmatrix.svg)
+
+---
+
+## Exploring the search space
+
+![matrix](images/fundamental_string/dpmatrix2.svg)
+
+---
+
+## Exploring the search space
+
+![matrix](images/fundamental_string/dpmatrix3.svg)
+
+---
+
+##  Computing alignment recursively
+
+* Local update rules, only look at neighboring cells
+* Computing the score of a cell from smaller neighbors
+
+`$$M(i,j) = max \left\{ 
+                \begin{array}{1} 
+                  M(i-1,j) - gap\\
+                  M(i-1, j-1) + score\\
+                  M(i, j-1) -gap
+                \end{array}
+              \right\} $$`
+
+
+* Compute scores for prefixes of increasing length
+
+---
+
+## Example
+
+![matrix](images/fundamental_string/nw1.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Example
+
+![matrix](images/fundamental_string/nw2.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Example
+
+![matrix](images/fundamental_string/nw3.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Example
+
+![matrix](images/fundamental_string/nw4.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Example
+
+![matrix](images/fundamental_string/nw5.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw5.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw6.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw7.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw8.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw9.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw10.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw11.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw12.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw13.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Returning the actual path
+
+![matrix](images/fundamental_string/nw14.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Sequence alignment
+
+* Allow gaps 
+  * Insertions and deletions
+  * unit cost for each character deleted or inserted
+* Varying penalties for edit operations
+  * Transitions vs. Transitions
+* Affine gap
+* Frame-aware gap 
+
+Note: Time needed O(mn) and space needed O(mn)
+
+---
+
+## Insight : Gaps change diagonals
+
+![matrix](images/fundamental_string/nw14.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Linear-time bound DP
+
+![matrix](images/fundamental_string/nw15.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Linear-space bound DP
+
+
+![matrix](images/fundamental_string/nw16.svg) <!-- .element height="40%" width="40%" -->
+
+
+---
+
+## Linear-space bound DP
+
+![matrix](images/fundamental_string/nw17.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Linear-space bound DP
+
+![matrix](images/fundamental_string/nw18.svg) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Linear-space bound DP
+
+* Best score can be computed in linear space 
+    * use just one column/row
+* Traceback? 
+    * Using a divide and conquer approach 
+    * A [description with pseudocode](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/linspace.pdf) from Carl Kingsford at CMU
+    * Manuscript from [Myers and Miller](http://www.cs.ucf.edu/courses/cap5510/fall2009/SeqAlign/Linear_Space_Alignment.pdf)
+---
+
+## Local alignments
+
+A local alignment of string $s$ and $t$ is an alignment of a substring of $s$ with a substring of $t$
+
+* Why local alignments?
+  * Small domains of a gene may be only conserved portions
+  * Looking for a small gene in a large chromosome
+  * Large segments often undergo rearragments
+
+---
+
+## Local alignment vs Global alignment
+
+![global_local](images/fundamental_string/global_local.svg) <!-- .element height="50%" width="50%" -->
+
+---
+
+## Global Alignment (Needleman-Wunsch algorithm)
+
+**Initialization:** F(0,0) = 0
+
+**Iteration:**
+
+`$$F(i,j) = max \left\{ 
+                \begin{array}{1} 
+                  F(i-1,j) - gap\\
+                  F(i-1, j-1) + score\\
+                  F(i, j-1) -gap
+                \end{array}
+              \right\} $$`
+
+**Termination:** Bottom right
+
+---
+
+## Local alignment (Smith-Waterman algorithm)
+
+**Initialization:** F(i,0) = F(0,j) = 0
+
+**Iteration:**
+
+`$$F(i,j) = max \left\{
+                \begin{array}{1}
+                  0\\
+                  F(i-1,j) - gap\\
+                  F(i-1, j-1) + score\\
+                  F(i, j-1) -gap
+                \end{array}
+              \right\} $$`
+
+**Termination:** Anywhere
+
+---
+
+## More variations 
+
+* Semi-global alignment
+  * At least one of the sequences to the end 
+* Different gap penalties
+  * Affine gap penalties 
+  * Length mod 3 penalties for protein coding regions
+
+Recurrence equation with modifications can accomodate these variations
+
+---
+
+## Linear time exact matching 
+
+* gene in chromosome (local alignment is expensive)
+
+* Karp-Rabin algorithm
+  * Insight : if $|\sum|= d$, a string represents a number in base $d$  
+  * AGCT = 0123
+---
+
+## Karp-Rabin algorithm
+
+Insight: Interpret string as numbers: fast comparisons
+
+![karp-robin](images/fundamental_string/rk1.svg)
+
+---
+
+## Karp-Rabin algorithm
+
+Compute next number based on the previous one 
+
+![karp-robin](images/fundamental_string/rk2.svg)
+
+* Shift middle digits of the number to the left
+* Remove the higher order bit
+* Add the low order bit
+
+---
+
+## Karp-Rabin algorithm
+
+* Reduce the number of comparisons using hashing
+* Mapping keys $k$ from large universe $U$ (of string/numbers) into a smaller space $[1..m]$
+* Many hash functions possible with theoretical and practical properties
+  * Reproducibility: $x=y \rightarrow h(x) = h(y)$
+  * Uniform output distribution: $x \ne y \rightarrow P(h(x) = h(y)) = 1/m$
+* Worst case runtime $O(mn)$
+
+Note: if every position is a match or false-positive
+
+---
+
+## BLAST and inexact matching
+
+* Sequence alignment
+  * Sequences have some common ancestry
+  * Find optimal alignment between two sequences
+  * Evolutionary interpretation: min # events, ...
+* Sequence database search
+  * Given a query and target sequences: which sequences are related to the query
+  * Individual alignments need not be perfect 
+  * Most sequences are completely unrelated to query
+
+---
+
+## BLAST
+
+* Exploit the nature of the problem
+  * Prescreen sequences for common stretches
+  * Preprocess the database if it is offline
+
+* Key insights
+  * Semi-numerical string matching like Karp-Rabin
+  * Neighborhood search
+
+---
+
+## Blast algorithm overview 
+
+![blast](images/fundamental_string/blast.svg) <!-- .element height="70%" width="70%" -->
+
+Note: * Split query into overlapping words of length W. * Find neighborhood words for each word until threshold T. * Look in table where these neighbor words occur: seeds S. * Extend seeds S until score drops off under X. * Report significance and alignment of each match
+
+---
+
+## Why does BLAST work?
+
+* Pigeonhole principle
+  *  if $n$ items are put into $m$ containers, with $n>m$, then at least one container must contain more than one item
+* Applying to alignments
+  * Two sequences, each 9 amino-acids, with 7 identities
+  * 3 amino-acids perfectly conserved
+
+---
+
+## Extensions to the basic algorithm
+
+* Filtering : Low complexity regions 
+
+* Two hit BLAST
+  * Two smaller W-mers more likely than a long one
+
+* Non-consecutive k-mers
+  * No reason to use only consecutive symbols
+  * RGIKW $\rightarrow$ R\*IK\*, RG\*\*W, $\ldots$
+  * How to choose positions for *:
+    * Random
+    * Learn from data
+
+---
+
+## Assignment
+
+* https://github.com/cphg/sequence_alignment
+* Implement local alignment of two sequences
+* Skeleton code is provided in python 
+* Simple test cases are also provided 
+
+
+---

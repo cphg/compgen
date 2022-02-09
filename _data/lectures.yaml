@@ -30,8 +30,13 @@ lectures:
     details: Local vs. global alignment, Dynamic programming, Heuristic approaches, BLAST 
     instructor: Aakrosh Ratan
     links:
-      - url: null
+      - url: slides/fundamental_string.html
         title: Lecture slides
+      - url: resources/BLAST.pdf
+        title: Basic Local Alignment Search Tool
+      - url: https://github.com/cphg/sequence_alignment
+        title: Alignment assignment
+
   - lecture_number: 5
     date: 03/01/22
     topic: Suffix trees, Burrows-wheeler transform and Suffix arrays

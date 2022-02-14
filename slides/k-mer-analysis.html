@@ -1,19 +1,25 @@
 ---
 layout: reveal_markdown
-title: "K-mer analysis"
+title: "K-mer analysis and membership testers"
 tags: slides 
 date: 2021-12-09
 ---
 
-### Slide 1
-A paragraph with some text and a [link](http://hakim.se).
+
+## {{ page.title }}
+---
+## Lecture overview
+
+- What are k-mers and why are they useful?
+- RNA pseudoalignment
+- Membership testers
+  - Bloom filters
+  - Hash functions
 
 ---
 ### What are k-mers?
 
 > subsequences of length *k*.
-
-
 
 ---
 <div class="row">
@@ -54,16 +60,59 @@ $x = l-k+1 = 5$
 ---
 Human chromosome 1 has 248,956,422 bp.  
 
-> Assuming a random distribution of 4 bases, what is the expected frequency a given 7-mer on human chromosome 1?
+> Assuming a random distribution of 4 bases, what is the expected count of a given 7-mer on human chromosome 1?
 
 ---
 
-$4^7 = 16384$ possible 7-mers  
+$l = 248,956,422$ size of chr1  
 $l-k+1 = 248,956,416$ total 7-mers in chr1  
+
+$4^7 = 16384$ possible 7-mer types  
 $ 248,956,416 / 16384 \approx \mathbf{15195} $ 
 
 ---
-## Kmer Counting
+## Kmers and motifs
+<div class="row">
+<div class="col">
+<h2>K-mer</h2>
+<div class="mermaid">
+graph TD;
+  TCGA-->TCG;
+  TCGA-->CGA;
+</div>
+</div>
+<div class="col">
+<h2>Motif</h2>
+
+<img src="images/k-mer-analysis/motif.png" height="200">
+</div>
+</div>
+
+
+- A k-mer is like a simplified motif with no weights
+- K-mers are faster to compute and require less data
+- K-mers represent a single instance, rather than a set
+---
+## Applications of K-mers
+- Alignment seeds (fast RNA counting)
+- Counting for relationships (e.g. metagenomics)
+- Dinucleotide/codon analysis, background models
+- Sequence assembly (De Bruijn graphs)
+- Simplified transcription factor binding
+
+
+
+---
+## RNA Psuedoalignment
+
+---
+## RNA Psuedoalignment
+
+---
+## RNA Psuedoalignment
+
+---
+## K-mer Counting
 
 <div class="mermaid">
 graph TD
@@ -90,8 +139,8 @@ graph TD
 </div>
 
 K-mer counting converts a sequence into a vector
----
-<div class="mermaid">
+
+<div class="mermaid fragment">
 graph LR
   GATTACAGATTCAG-->n1["1 2 1 1 1 1 2 1 1 1"];
   CTGAGGACTCGACT-->n2["2 1 0 0 2 2 3 2 2 1"];;
@@ -131,47 +180,60 @@ $4^k$
 High $k$ $\rightarrow$ high-dimensional vectors, sparsity
 
 ---
-### Slide 3
+### Hashing
 
-You can embed latex by wrapping it in `$`
+> A hash function maps an object to a finite space
 
-$ \sum_{t}{Pr(q=t)(1-t)^h}\approx (1-e^{-hn/k})^{h} $
-
+- must be deterministic
+- should be very fast to compute
+- should reduce collisions
 ---
-### Slide 4
-
-You can embed images:
-
-![](https://imgs.xkcd.com/comics/standards.png)
----
-
-And you can have slides without titles.
+![](images/k-mer-analysis/hash_function.png)
 
 ---
 
-And, look, pretty syntax highlighting!
+### Hash tables
+- provide $O(1)$ complexity for item access
+- Can store large objects for lookup with a key
 
-```Python
-# An amazing python function
+---
+### Cryptographic hash function
+- a subset of hash functions with particular purposes:
+  - designed to go one way (hard to de-hash)
+  - designed to avoid collisions
+  - relies on the avalanche effect (small change in inputs leads to large change in output)
 
-def add_one(x):
-	return x+1
-```
-
-For multiple languages!
-
-```R
-# An amazing R function
-
-function add_one(x){
-	return(x+1)
-}
-```
 
 ---
 
 ## Bloom filters
 
+- Probabilistic membership testers using hash tables
+- Guarantee an item *is not* in the set, but not if it is (false positives allowed)
+- Elements cannot be removed from the set
+- Are very fast and memory efficient
+---
+![](images/k-mer-analysis/bloom_filters.svg)
+---
+## Properties of bloom filters
+
+- Size: how many elements in the bit vector?
+- Number of hash functions
+- Hash functions themselves
+---
+## Classic hash functions 
+
+...
 
 ---
+## hash function tweaks
+
+- deliberate nonuniformity
+- tradeoff of number of functions and speed, and fill rate
+- Kirsch-Mitzenmacher optimization
+- counting filters
+- cuckoo filters
+
+--
+## MinHash
 

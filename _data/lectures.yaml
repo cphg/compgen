@@ -119,7 +119,7 @@ lectures:
       - url: null
         title: Lecture slides
   - lecture_number: 13
-    date: 04/12/22
+    date: 04/05/22
     topic: "Genomic intervals: formats, data structures and algorithms"
     details: Genomic intervals; genomic interval file formats; interval operations; interval data structures (R-trees, B+ trees, NCList, AIList); interval search and enrichment
     instructor: Nathan Sheffield
@@ -127,7 +127,7 @@ lectures:
       - title: Lecture slides
         url: slides/interval-data-structures
   - lecture_number: 14
-    date: 04/05/22
+    date: 04/07/22
     topic: ATAC-seq diagnostics and harmonization
     details: ATAC-seq count data; data diagnostics; clip functions; consensus peaks; tests of normality; quantile normalization; Q-Q plots; batch correction
     instructor: Nathan Sheffield
@@ -135,7 +135,7 @@ lectures:
       - url: slides/data-diagnostics
         title: Lecture slides
   - lecture_number: 15
-    date: 04/07/22
+    date: 04/12/22
     topic: Scalable computational algorithms
     details: DNA methylation calling, epialleles, Big-Oh complexity, Efficiently processing large sequencing data
     instructor: Nathan Sheffield

@@ -43,12 +43,14 @@ lectures:
 
   - lecture_number: 5
     date: 03/01/22
-    topic: Suffix trees, Burrows-wheeler transform and Suffix arrays
+    topic: Suffix trees, Suffix arrays, and Burrows-wheeler transform
     details: Short-read alignments
     instructor: Aakrosh Ratan
     links:
-      - url: null
+      - url: slides/short_read.html
         title: Lecture slides
+      - url: resources/ShortReadAlignment.pdf
+        title: Survey of sequence alignment algorithms
   - lecture_number: 6
     date: 03/03/22
     topic: Poisson processes, Bayes theorem, Normal distribution

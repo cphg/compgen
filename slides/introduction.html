@@ -11,8 +11,8 @@ date: 2021-12-09
 
 - Course website: https://cphg.github.io/compgen/
 - Scribing assignments
-- Programming assignments: GitHub classroom
 - Final presentations
+- Programming assignments: GitHub
 
 ---
 ## git and GitHub in 5 slides
@@ -22,7 +22,7 @@ date: 2021-12-09
 2. Version control
 3. Distributing/sharing code
 4. Testing
-5. Communication
+5. Communication and collaboration
 ---
 ### Basics of git repos
 1. A git repository is a folder with a `.git` subfolder
@@ -92,15 +92,25 @@ This intro will cover:
 ---
 ### Genomics is the study of genomes What is a genome?
 
+<div class="fragment">
+
 > A complete set of genetic information.
 
 ### What is genetic?
+
+</div>
+<div class="fragment">
 
 > Relating to origin.
 
 ### What is genomics?
 
+</div>
+<div class="fragment">
+
 > The study of the instructions needed to originate an organism.
+
+</div>
 
 ---
 ### Early history of genomics
@@ -136,12 +146,33 @@ This intro will cover:
 
 <div class="row">
 <div class="col">
+1910: Nucleotides
+<img
+	src="images/introduction/bases.png"
+	height="320"
+	style="background:white; padding: 10px; margin: 0px"><br>
+<span class="small">Albrecht Kossel Nobel Prize:<br><a href="https://www.nobelprize.org/prizes/medicine/1910/summary/">The Chemical Composition of the Cell Nucleus</a></span>
+</div>
+<div class="col">
 1944: DNA is genetic
 <img
 	src="images/introduction/avery_macleod_mccarty_experiment_02_yourgenome.png"
 	height="520"
 	style="background:white; padding: 10px; margin: 0px"><br>
 <span class="small">Avery et al. 1944</span>
+</div>
+</div>
+<span class="small">Image credits: Nobel, Genome Research Limited</span>
+
+---
+<div class="row">
+<div class="col">
+1953: Structure of DNA
+<img
+	src="images/introduction/dna_structure.png"
+	height="520"
+	style="background:white; padding: 10px; margin: 0px"><br>
+<span class="small"><a href="https://www.nature.com/articles/171737a0">Watson and Crick</a>, <i>Nature</i>, 1953</span>
 </div>
 <div class="col">
 1957: Central dogma
@@ -153,6 +184,7 @@ This intro will cover:
 </div>
 </div>
 <span class="small">Image credits: Genome Research Limited</span>
+
 
 ---
 ### Genomics is intertwined with sequencing technology
@@ -199,47 +231,63 @@ DNA sequencing = measurement  (like a microscope)
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/v10bUR2aL5g?start=35" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+<a href="https://www.youtube.com/embed/v10bUR2aL5g?start=35" class="small">Illumina</a>
+
+---
+### Single-molecule sequencing
+
+<div class="row">
+<div class="col">
+<img src="images/introduction/pavlovic2020.png" height=620>
+</div>
+<div class="col">
+<li>2004: Helicos</li>
+<li>2009: SMRT</li>
+<li>2009: Nanoball</li>
+<li>2016: Nanopore</li>
+
+<span class="small"><a href="https://doi.org/10.1016/B978-0-12-816664-2.00009-8">Pavlovic et al. 2020. Microbiomics.</a></span>
+</div>
+</div>
+
 ---
 <div class="row">
 <div class="col">
-2009: SMRT
-<img
-	src="images/introduction/avery_macleod_mccarty_experiment_02_yourgenome.png"
-	height="520"
-	style="background:white; padding: 10px; margin: 0px"><br>
-<span class="small">PacBio</span>
-</div>
-<div class="col">
-2016: Nanopore
-<img
-	src="images/introduction/dna_central_dogma_yourgenome.png"
-	height="520"
-	style="background:white; padding: 10px; margin: 0px"><br>
-<span class="small">Oxford Nanopore</span>
-</div>
-</div>
-<span class="small">Image credits: Genome Research Limited</span>
----
-### Sequencing costs
-
-<iframe src="https://databio.org/seqcosts/cost.html" width="1250" height="550"></iframe>
-<a style="font-size:0.6em" href="https://databio.org/seqcosts">databio.org/seqcosts</a>
-
----
-### Other types of sequencing
-- Bionano: Saphyr system
-- Polony sequencing
-- Roche 454 "Pyrosequencing"
 
 ### Contrasting sequencing platforms
 
 - Size of machine
 - Length of reads
 - Number of reads
-- Cost of machine, cost of reads
+- Cost of machine
+- Cost of reads
 - Accuracy of reads
 - Technician time
 
+</div>
+<div class="col">
+<img src="images/introduction/levy2016.png" height=340>
+<span class="small"><a href="https://doi.org/10.1146/annurev-genom-083115-022413">Levy and Myers 2016</a></span>
+
+<h4>Other systems</h4>
+<div class="small">
+	<li><a href="http://www.biorxiv.org/content/early/2016/04/13/048603">Bionano: Saphyr system</a></li>
+	<li><a href="https://en.wikipedia.org/wiki/Pyrosequencing">Roche 454 Pyrosequencing</a></li>
+	<li><a href="https://www.thermofisher.com/us/en/home/brands/ion-torrent.html">ThermoFisher IonTorrent</a></li>
+	<li><a href="https://en.wikipedia.org/wiki/Polony_sequencing">Polony sequencing</a>
+</div>
+</div>
+</div>
+
+
+
+
+---
+
+### Sequencing costs
+
+<iframe src="https://databio.org/seqcosts/cost.html" width="1250" height="550"></iframe>
+<a style="font-size:0.6em" href="https://databio.org/seqcosts">databio.org/seqcosts</a>
 ---
 ### Sequencing
 
@@ -255,6 +303,10 @@ Genome &rarr; transcriptome &rarr; epigenome
 
 > The study of the RNA molecules produced by a cell.
 
+<span class="fragment">
+Complementary DNA (cDNA) is a DNA copy of a messenger RNA (mRNA) molecule produced by reverse transcriptase, a DNA polymerase that can use either DNA or RNA as a template. (Encyclopedia of Genetics)
+</span>
+
 ---
 ### Epigenomics
 
@@ -263,7 +315,8 @@ Genome &rarr; transcriptome &rarr; epigenome
 ---
 
 <img src="images/introduction/rosa2013_chromatin.png" width="550"><br>
-<span class="small">Rosa et al. 2013</span>
+<span class="small">Protocols: Bisulfite-seq, ChIP-seq, ATAC-seq, Hi-C</span>
+<br><span class="small">Rosa et al. 2013</span>
 
 
 
@@ -300,10 +353,6 @@ Algorithms and methods motivated by biology
 
  -->
 
-
-
-
-
 ---
 ### Genomics today
 
@@ -315,33 +364,115 @@ Algorithms and methods motivated by biology
 - Genomics and computing
 
 ---
-### Genomics and health
-- Genome-wide association studies (GWAS)
-- "Mendelian" traits
-- Complex traits
-- epimutations, cancer classification
+### Genomics and health: traits
+![](images/introduction/polygenic.svg)
+---
+### Genomics and health: GWAS
+![](images/introduction/GWAS_Fact-sheet2020.jpg)
+---
+### Genomics and health: GWAS
+
+ <video width="960" height="620" controls autoplay="true">
+  <source src="http://cloud.databio.org.s3.amazonaws.com/courses/GWAS_slideshow.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video> 
+
 
 ---
-### Genomics and privacy
-- Crypt4GH
-- Gerstein's anonymization
+### Genomics and health: gene/environment
+![](images/introduction/gene-by-env.svg)
+---
+### Genomics and health:<br>personalized medicine
+![](images/introduction/all_of_us.png)
+---
+### Genomics and health: epigenetics
+- epimutations
+- cancer classification
+- clinical epigenetic assays
+---
+### Genomics and business
+- Genome-stratified clinical trials
+- mRNA vaccines: Pfizer, Moderna
+- Clinical genetic tests
+- Direct-to-consumer (DTC) genetic testing:
+	- 23andme, ancestry.com, etc.
+---
+### Genomics and law
+- Celera and the Human Genome Project
+	- intended to patent human genes in the race to finish the genome
+---
+### Genomics and law
+- Uni. of Utah/NIEHS/Myriad patent BRCA1 (1994)
+- Myriad sold diagnostic tests for BCRA genes
+- Supreme Court struck down gene patents (2013)
+
+> A naturally occurring DNA segment is a product of nature and not patent eligible merely because it has been isolated, but cDNA is patent eligible because it is not naturally occurring.
+---
+### Genomics and law
+- Lawrence Berkeley Laboratory tested employees without consent
+- Norman-Bloodsaw v. Lawrence Berkeley Laboratory (1998)
+
+> Holds that unauthorized employer testing for sensitive medical information [specifically including genetic testing] violates employees' right to informational privacy
 
 ---
 ### Genomics and law
-- BRCA patent
-- Anti genetic discrimination laws
+- In the US: The Genetic Information Nondiscrimination Act of 2008
 
+> To prohibit discrimination on the basis of genetic information with respect to health insurance and employment.
+
+See also: [Genetic Information Nondiscrimination Act](https://www.eeoc.gov/statutes/genetic-information-nondiscrimination-act-2008)
 ---
 ### Genomics and ethics
+- genetic ownership (patents, family dynamics)
+- genetic discrimination (employment, insurance)
 - genetically modified babies
+- identification and privacy
 
 ---
-### Genomics and computing
+### Genomics and privacy: Crypt4GH
 
+![](images/introduction/Crypt4GH_comic.png)
+
+See also: [Genome.gov on Genomic Privacy](https://www.genome.gov/about-genomics/policy-issues/Privacy)
+---
+### Computing is everywhere in genomics
+
+<div class="row">
+	<div class="col small">
+		<li>Genome assembly</li>
+		<li>Genome alignment</li>
+		<li>Variant identification</li>
+		<li>Variant associations</li>
+		<li>Phylogenetics</li>
+		<li>Viral evolution</li>
+		<li>Comparative genomics</li>
+		<li>Microbiome</li>		
+	</div>
+	<div class="col small">
+		<li>Data privacy and encryption</li>
+		<li>Data models</li>
+		<li>Data integration</li>
+		<li>Data sharing</li>
+		<li>Data compression</li>
+		<li>Data storage</li>
+		<li>Computing reproducibility</li>
+		<li>Single-cell sequencing</li>
+	</div>
+	<div class="col small">
+		<li>Genomic data structures</li>
+		<li>Outcome prediction</li>
+		<li>Disease subtyping</li>
+		<li>Gene prediction</li>
+		<li>Gene network regulation</li>
+		<li>Cell-type definition</li>
+		<li>Epigenetics</li>
+		<li>Metagenomics</li>
+	</div>
+</div>
 ---
 ### Conclusion
 
-It's a super interesting time to be studying genomics.<br>
+It's an interesting time for computational genomics.<br>
 
 <div class="fragment">
 	The world is starving for people who can apply advanced computation to growing genomic data.

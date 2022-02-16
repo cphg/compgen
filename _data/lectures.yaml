@@ -25,7 +25,7 @@ lectures:
     details: statistical tests, p-value, type I and type II errors, multiple testing corrections, FDR, ROC, some linear algebra (linear transformation and matrix manipulation), Bayesian basics
     instructor: Chongzhi Zang
     links:
-      - url: null
+      - url: slides/statistics2
         title: Lecture slides
   - lecture_number: 4
     section: "Unit 1: Genome"

@@ -112,6 +112,8 @@ lectures:
     links:
       - url: null
         title: Lecture slides
+      - url: https://www.nature.com/articles/nbt0406-423.pdf
+        title: What are DNA sequence motifs?
   - lecture_number: 12
     date: 03/31/22
     topic: Hierarchy and scales of genome structure

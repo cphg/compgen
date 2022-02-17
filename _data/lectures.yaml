@@ -19,6 +19,7 @@ lectures:
     links:
       - url: slides/statistics1
         title: Lecture slides
+      - url: resources/BIMS_8601_Homework1.pdf  
   - lecture_number: 3
     date: 02/22/22
     topic: Statistics and probability review 2

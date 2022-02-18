@@ -53,12 +53,18 @@ lectures:
         title: Survey of sequence alignment algorithms
   - lecture_number: 6
     date: 03/03/22
-    topic: Poisson processes, Bayes theorem, Normal distribution
+    topic: Bayes theorem, Likelihood, and Expectation-Maximization
     details: Variant calling, Structural Variants
     instructor: Aakrosh Ratan
     links:
-      - url: null
+      - url: slides/variant_calling.html
         title: Lecture slides
+      - url: https://stephens999.github.io/fiveMinuteStats/beta.html
+        title: Beta distribution
+      - url: https://stephens999.github.io/fiveMinuteStats/dirichlet.html
+        title: Dirichlet distribution
+      - url: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1828-7
+        title: Structural variant detection
   - lecture_number: null
     date: 03/08/22
     topic: Spring Recess

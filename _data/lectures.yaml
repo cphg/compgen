@@ -31,6 +31,8 @@ lectures:
         title: Lecture slides
       - url: https://amstat.tandfonline.com/doi/pdf/10.1080/00031305.2016.1154108
         title: ASA Statement on Statistical Significance and P-Values
+      - url: https://www.nature.com/articles/nbt1209-1135.pdf
+        title: How does multiple testing correction work?
   - lecture_number: 4
     section: "Unit 1: Genome"
     date: 02/24/22

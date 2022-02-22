@@ -24,7 +24,7 @@ lectures:
   - lecture_number: 3
     date: 02/22/22
     topic: Statistics and probability review 2
-    details: statistical tests, p-value, type I and type II errors, multiple testing corrections, FDR, ROC, PRC
+    details: statistical tests, p-value, type I and type II errors, multiple testing corrections, FDR, ROC
     instructor: Chongzhi Zang
     links:
       - url: slides/statistics2

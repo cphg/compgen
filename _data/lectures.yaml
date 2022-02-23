@@ -87,7 +87,7 @@ lectures:
     details: Genome assembly
     instructor: Aakrosh Ratan
     links:
-      - url: null
+      - url: slides/genome_assembly.html
         title: Lecture slides
   - lecture_number: 8
     date: 03/17/22

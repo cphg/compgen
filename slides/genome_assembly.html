@@ -1,0 +1,227 @@
+---
+layout: aakrosh_markdown
+title: "De-bruijn graphs and String graphs"
+---
+
+## De-bruijn graphs and String graphs
+
+![assemble](images/genome_assembly/title.jpg) <!-- .element height="80%" width="80%" -->
+
+[PMC122589](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC122589/)
+Acknowledgement: Many slides borrowed with permission from Dr. Ben Langmead, JHU
+---
+
+## Shotgun sequencing and genome assembly
+
+<iframe width="659" height="371" src="https://www.youtube.com/embed/pfgnrOOwqSU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<a href="https://www.youtube.com/embed/pfgnrOOwqSU" class="small">HHMI</a>
+
+Note: Shotgun sequencing is the method that was used by the private genome project. Shotgun sequencing requires multiple copies of the genome, which are effectively blown up into millions of small fragments. Each fragment is then sequenced. The small fragments are assembled using an immense amount of computer power to match overlapping sections. The drawback of this method comes when dealing with repeat sequences. Often there is no way of knowing how long the repeat sequence is. Or in which of the many different possible positions the fragments overlap. Even the incredibly powerful software used to shotgun sequence the human genome couldn't cope with this. So Celera, the private company which relied on this approach, had to use the public data to fill in the gaps left by the repeats.
+
+---
+
+## Shotgun sequencing
+
+![intro](images/genome_assembly/introduction1.svg)
+
+---
+
+## Shotgun sequencing
+
+![intro](images/genome_assembly/introduction2.svg)
+
+---
+
+## Shotgun sequencing
+
+![intro](images/genome_assembly/introduction3.svg)
+
+---
+
+## Genome assembly
+
+![intro](images/genome_assembly/introduction4.svg)
+
+---
+
+## Genome assembly
+
+![intro](images/genome_assembly/introduction5.svg)
+
+---
+
+## Coverage 
+
+![intro](images/genome_assembly/introduction6.svg)
+
+---
+
+## Pairwise overlaps
+
+![intro](images/genome_assembly/pairwise.png) <!-- .element width="80%" height="80%" -->
+
+Note: Even in this case, why could there be differences? 1. sequencing errors, 2. ploidy (humans have 2 copies of each chromosome, and those copies can be different). Real assemblers have to account for ploidy, but we are going to ignore it to simplify issues in this lecture.
+
+---
+
+## More is better
+
+![intro](images/genome_assembly/more.png) <!-- .element width="80%" height="80%" -->
+
+Note: If we assume that sequencing of reads is random, then as more reads are sequenced, more start points for the reads and hence larger overlaps are reasonable.
+
+---
+
+## Two approaches to short read assembly
+
+![intro](images/genome_assembly/alternatives.png) <!-- .element width="80%" height="80%" -->
+
+---
+
+## Overlap Layout Consensus
+
+![intro](images/genome_assembly/olc.png) <!-- .element width="80%" height="80%" -->
+
+---
+
+## Overlap
+
+Finding all overlaps is like building a directed graph where directed edges connect overlapping nodes (reads). The suffix of source is similar to the prefix of sink
+
+![intro](images/genome_assembly/graph1.svg) <!-- .element width="50%" height="50%" -->
+
+---
+
+## Overlap
+
+Finding all overlaps is like building a directed graph where directed edges connect overlapping nodes (reads). The suffix of source is similar to the prefix of sink
+
+![intro](images/genome_assembly/graph2.svg) <!-- .element width="50%" height="50%" -->
+
+---
+
+## Finding overlaps
+
+![intro](images/genome_assembly/find_overlaps.png) <!-- .element width="80%" height="80%" -->
+
+Note: Count k occurences of P in O(n) time and it does not need T.
+
+---
+
+## Example digraph
+
+Sequence : GCATTATATATTGCGCGTACGGCGCCGCTACA\
+read length : 7\
+minimum overlap : 3
+
+![intro](images/genome_assembly/digraph1.svg) <!-- .element width="95%" height="95%" -->
+
+Note: In order to keep the presentation uncluttered, we are not showing the treatment of the reverse complements
+
+---
+
+## Overlap Layout Consensus
+
+![intro](images/genome_assembly/olc2.png) <!-- .element width="90%" height="90%" -->
+
+---
+
+## Layout
+
+The overlap graph is big and messy. But the picture gets clearer after removing transitively-inferrible edges
+
+![intro](images/genome_assembly/simplify.png) <!-- .element width="90%" height="90%" -->
+
+---
+
+## Layout
+
+Remove transitively-inferrible edges, starting with edges that skip one node.
+
+![intro](images/genome_assembly/digraph1.svg) <!-- .element width="95%" height="95%" -->
+
+![intro](images/genome_assembly/digraph2.svg) <!-- .element width="95%" height="95%" class="fragment" data-fragment-index="1" -->
+
+---
+
+## Layout
+
+Remove transitively-inferrible edges, starting with edges that skip one node.
+
+![intro](images/genome_assembly/digraph1.svg) <!-- .element width="95%" height="95%" -->
+
+![intro](images/genome_assembly/digraph3.svg) <!-- .element width="95%" height="95%" -->
+
+---
+
+## Layout
+
+![intro](images/genome_assembly/layout.png) <!-- .element width="95%" height="95%" -->
+
+Note: Can someone tell me what could be the cause of the branches?
+
+---
+
+## Repeats
+
+![intro](images/genome_assembly/repeats.png) <!-- .element width="95%" height="95%" -->
+
+---
+
+## Layout
+
+In practice, layout step also has to deal with spurious subgraphs, e.g. because of sequencing error
+
+![intro](images/genome_assembly/spurious.png) <!-- .element width="95%" height="95%" -->
+
+Note: Mismatch could be due to sequencing error or repeat. Since the path through b ends abruptly we might conclude it’s an error and prune b.
+
+---
+
+## Overlap Layout Consensus
+
+![intro](images/genome_assembly/olc3.png) <!-- .element width="90%" height="90%" -->
+
+---
+
+
+## Consensus
+
+![intro](images/genome_assembly/consensus.png) <!-- .element width="80%" height="80%" -->
+
+Note: At each position, ask: what nucleotide (and/or gap) is here? Complications: (a) sequencing error, (b) ploidy. 
+
+---
+
+## Overlap Layout Consensus
+
+![intro](images/genome_assembly/olc4.png) <!-- .element width="80%" height="80%" -->
+
+Note: Main drawback of OLC is Building overlap graph can be slow, specially forNGS data where we have billions of reads.
+
+---
+
+## Two approaches to short read assembly
+
+![intro](images/genome_assembly/alternatives2.png) <!-- .element width="80%" height="80%" -->
+
+---
+
+## *k*-mer
+
+---
+
+## Genome assembly statistics
+
+https://mathweb.ucsd.edu/~gptesler/283/slides/shotgun_w19-handout.pdf
+Assume reads are distributed uniformly through the genome
+
+* G - genome size
+* N - number of reads
+* L - length of read
+* average coverage = $\lambda$ = NL/G 
+
+* How many contigs can will generate
+
+---

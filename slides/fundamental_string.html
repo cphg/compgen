@@ -1,16 +1,15 @@
 ---
 layout: aakrosh_markdown
-title: "String matching algorithms"
+title: "Fundamental string matching algorithms"
+tags: slides
 ---
 
-# Fundamental String Algorithms
-
+# {{page.title}}
 ![dna](images/fundamental_string/title_slide.png) <!-- .element height="80%" width="80%" -->
 
 ---
 
 ## Unit 1: Genome
-
 * Important current biological problems
   * Align/model genomes and sequences
   * Genome assembly
@@ -20,37 +19,29 @@ title: "String matching algorithms"
   * Hidden Markov Models
   * De Bruijn graphs $\ldots$
 
----
-
-## Sequence alignment / comparative genomics
-
-* Aligning two sequences
-* Local/global alignment
-* Exact matching
-* Database search
+Note: Today we are going to discuss alignment of sequences under various settings. Several of you use short-read alignments, and we will focus on methods to accomplish that in the next lecture. In this lecture we will take discuss some of the algorithms that came into being before the deluge of data that came before MPS. 
 
 ---
 
 ## All species share common ancestry
-
 ![Tree of life](images/fundamental_string/tree_of_life.svg) <!-- .element height="80%" width="80%" -->
 
 <small>Source : [Wikipedia](https://commons.wikimedia.org/wiki/File:Phylogenetic_tree.svg)</small>
 
-Note: A phylogenetic tree of living things, based on RNA data and proposed by Carl Woese, showing the separation of bacteria, archaea, and eukaryotes. Trees constructed with other genes are generally similar, although they may place some early-branching groups very differently, thanks to long branch attraction. The exact relationships of the three domains are still being debated, as is the position of the root of the tree. It has also been suggested that due to lateral gene transfer, a tree may not be the best representation of the genetic relationships of all organisms. For instance some genetic evidence suggests that eukaryotes evolved from the union of some bacteria and archaea (one becoming an organelle and the other the main cell).
+Note: A phylogenetic tree of living things, based on ribosomal RNA data and proposed by Carl Woese in 1977, showing the separation of bacteria, archaea, and eukaryotes. Trees constructed with other genes are generally similar, although they may place some early-branching groups very differently, thanks to long branch attraction. The exact relationships of the three domains are still being debated, as is the position of the root of the tree. It has also been suggested that due to lateral gene transfer, a tree may not be the best representation of the genetic relationships of all organisms. For instance some genetic evidence suggests that eukaryotes evolved from the union of some bacteria and archaea (one becoming an organelle and the other the main cell).
 
 ---
 
 ## Extant and extinct
-
 ![extinctions](images/fundamental_string/dinosaurs.png.webp) <!-- .element height="80%" width="80%" -->
 
 <small>Source : [PMC7528100](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7528100)</small>
 
+Note: Phylogenetic studies of fossil organisms typically use morphological data. And using those data we can see that species, extinct or extant share common ancestry. 
+
 ---
 
 ## Observation of gene-order and orientation
-
 ![alignments](images/fundamental_string/gene_order.html.webp)
 
 <small>Source : [12748633](https://doi.org/10.1038/nature01644)</small>
@@ -60,7 +51,6 @@ Note: An orthologous gene is a gene in different species that evolved from a com
 ---
 
 ## Genome-wide alignments reveal orthologous segments
-
 ![ACE2](images/fundamental_string/ace2.png)
 
 Note: This signal can be used to determine orthologous genes in other species
@@ -68,53 +58,60 @@ Note: This signal can be used to determine orthologous genes in other species
 ---
 
 ## Comparative genomics reveals functional elements
-
 ![ARX](images/fundamental_string/ARX.png)
 
 ---
 
+## How do we actually align two sequences?
 ![human_chicken](images/fundamental_string/human_vs_chicken.png)
-
-How do we actually align two sequences?
 
 ---
 
 ## Outline
-
-* Introduction to sequence alignment
-* Introduction to dynamic programming
-* Dynamic programming for sequence alignments
-* Variants of the dynamic programming formulation
-* Exact matching
-* Database search
+1. Introduction to sequence alignment
+2. Introduction to dynamic programming
+3. Dynamic programming for sequence alignments
+4. Variants of the dynamic programming formulation
+5. Exact matching
+6. Database search
 
 ---
 
 ## Genomes change over time 
+![changes](images/fundamental_string/changes.svg) <!-- .element height="30%" width="30%" -->
 
-![changes](images/fundamental_string/changes.svg) <!-- .element height="80%" width="30%" -->
+---
 
+## Goal of genome alignment
+
+![changes](images/fundamental_string/changes.2.svg) <!-- .element height="30%" width="30%" -->
 
 ---
 
 ## Goals of genome alignment
-
-![changes](images/fundamental_string/changes.2.svg) <!-- .element height="80%" width="30%" -->
-
----
-
-## Goals of genome alignment
-
 ![changes](images/fundamental_string/changes.3.svg) <!-- .element height="80%" width="80%" -->
 
 ---
 
 ## Formalizing the problem
+![changes](images/fundamental_string/changes.3.svg) <!-- .element height="50%" width="50%" -->
 
 * Define a set of evolutionary operations
   * Assumption : Symmetric operations
 * Define optimality criterion
-  * min (# of operations) $\ldots$
+  * min (\# of operations) $\ldots$
+* Design algorithm that achieves optimality
+  * Assumptions influence performance
+
+---
+
+## Formalizing the problem
+![changes](images/fundamental_string/changes.4.svg) <!-- .element height="50%" width="50%" -->
+
+* Define a set of evolutionary operations
+  * Assumption : Symmetric operations
+* Define optimality criterion
+  * min (\# of operations) $\ldots$
 * Design algorithm that achieves optimality
   * Assumptions influence performance
   
@@ -122,9 +119,27 @@ Note: The evolutionary operation we are going to consider are insertion, deletio
 
 ---
 
+## Algorithmic complexity
+
+Big-O notation: upper bound on complexity 
+![bigO](images/fundamental_string/bigo.svg) <!-- .element height="50%" width="50%" -->
+
+<small>Recommended reading: Chapter 3, "Growth of functions" in [The Big Book](https://search.lib.virginia.edu/?mode=basic&q=keyword:+{Introduction+to+Algorithms}&pool=uva_library)</small>
+
+Note: We will often want to talk about how long does an algorithm take to complete given an input of size $n$?, or How much space does an algorithm need to complete given an input of size $n$. To the right of n0, the value of the function is always lower than g(n) by a constant factor. Upper bound on coplexity signifies the worst-case performance of the algorithm, and makes it easy to compare different algorithms because the notation tells clearly how the algorithm scales when input size increases. Typically we are tying to see if we can change g(n), but in some cases reducing the factor can lead to large gains. g(n) is often referred to as the order of growth. 
+
+---
+
+## Order of growth
+![complexity](images/fundamental_string/growth.pdf)
+
+Note: Constant runtime is represented by O(1), linear growth is O(n), logarithmic growth is O(log n), log-linear growth is O(n log n), quadratic growth is O(n^2), exponential growth is O(2^n), factorial growth is O(n!).
+
+---
+
 ## Longest common substring
 
-Given two possibly related string $x$ and $y$, what is the longest common substring (no gaps)?
+Given two possibly related strings $x$ and $y$, what is the longest common substring (no gaps)?
 
 ```text
 x : TCACCTGACCTCCAGGC
@@ -133,7 +148,7 @@ y : TCATGACCGCCATGGC
 
 ```text
 x : TCACCTGACCTCCAGGC
-      xxx|||||x|||xx  
+         |||||  
 y :   TCATGACCGCCATGGC
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -165,7 +180,10 @@ Note: So this requires comparing all letters at each offset, and it would be qua
 
 ## Longest common subsequence
 
-Given two possibly related string $x$ and $y$, what is the longest common subsequence (gaps allowed)
+* A subsequence is a sequence that appears in the same relative order, but not necessarily contiguous
+  * abc, abg, bdf, $\ldots$ are subsequences of abcdefg
+
+* Given two possibly related string $x$ and $y$, what is the longest common subsequence? 
 
 ```text
 x : TCACCTGACCTCCAGGC
@@ -178,11 +196,7 @@ x : TCACCTGACCTCCA-GGC
 y : TCA--TGACCGCCATGGC
 ```
 
-* Related to edit distance (minimum number of operations required to transform one string into the other). 
-* Number of changes needed for $x \rightarrow y$ 
-* Uniform scoring function
-
-Note: For now let's keep this simplistic assumption that all mismatches and gaps are equally penalized, but remember that this is simplistic. We make these sort of simplistic assumptions while developing algorithms, similar to using brute-force to see if a problem is tractable.
+Note: It differs from the longest common substring problem: unlike substrings, subsequences are not required to occupy consecutive positions within the original sequences. This problem is related to the edit distance, minimum number of operations required to transform one string into the other. This is getting closer to the problem that we want to tackle for alignment of sequences. For now let's keep this simplistic assumption that all mismatches and gaps are equally penalized, but remember that this is simplistic. We make these sort of simplistic assumptions while developing algorithms, similar to using brute-force to see if a problem is tractable.
 
 ---
 
@@ -201,11 +215,18 @@ Note: Enumerating and scoring them is not an option. Need a polynomial algorithm
 
 ## Computing Fibonacci numbers
 
-* F(0) = 1
-* F(1) = 1
-* F(2) = F(1) + F(0) 
-* $\ldots$
-* F(n) = F(n-1) + F(n-2)
+<div class="row">
+<div class="col">
+$F(0) = 1\\\\\\
+F(1) = 1\\\\\\
+F(2) = F(1) + F(0) \\\\\\
+\ldots\\\\\\
+F(n) = F(n-1) + F(n-2)$
+</div>
+<div class="col">
+<iframe width="640" height="360" src="https://www.youtube.com/embed/B5p2A5mazEs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</div>
 
 Note: Fibonacci sequences appear in biological setting ssuch as branching in trees, arrangement of leaves on a stem, the fruitlets of a pineapple. Kepler pointed out the presence of the Fibonacci sequence in nature, using it to explain the (golden ratio-related) pentagonal form of some flowers.
 
@@ -220,8 +241,7 @@ def fibonacci(n):
   return fibonacci(n-1) + fibonacci(n-2)
 ```
 
-![F7](images/fundamental_string/f7.png)
-<!-- .element: class="fragment" data-fragment-index="1" -->
+![F7](images/fundamental_string/f7.png) <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ---
 
@@ -259,15 +279,13 @@ def fibonacci(n):
   return fib_table[n]
 ```
 
-![F7](images/fundamental_string/f7_memoize.png) <!-- .element height="60%" width="60%" -->
-<!-- .element: class="fragment" data-fragment-index="1" -->
+![F7](images/fundamental_string/f7_memoize.png) <!-- .element height="60%" width="60%" class="fragment" data-fragment-index="1" -->
 
 Note: What is the time complexity here? O(n). This is a dynamic programming algorithm: basically recursion, but with intentional evaluation order, usually filling out a table systematically.
 
 ---
 
 ## Dynamic Programming in theory
-
 * Hallmarks of dynamic programming
   * Optimal substructure
   * Overlapping sub-problems
@@ -280,9 +298,8 @@ Note: Optimal substructure: Optimal solution to problems contains optimal soluti
 
 ---
 
-## Sequence alignment: problem structure
-
-* Define $OPT(i,j)$ = min cost of aligning prefix strings $x_1, x_2, \ldots, x_i$ and $y_1, y_2, \ldots, y_j$
+## Sequence alignment: structure
+Define $OPT(i,j)$ = min cost of aligning prefix strings $x_1, x_2, \ldots, x_i$ and $y_1, y_2, \ldots, y_j$
 
 * Case1. $OPT(i,j)$ matches $x_i - y_j$
   * match or mismatch for $x_i – y_j$ + $OPT(x_{i-1}, y_{j-1})$
@@ -298,13 +315,11 @@ Note: Optimal solution to problems contains optimal solution to sub-problems, as
 ---
 
 ## Overlapping subproblems
-
 ![additivescores](images/fundamental_string/recursive.svg) <!-- .element height="70%" width="70%" -->
 
 ---
 
 ## Dynamic Programming 
-
 * Create a large table indexed by $(i,j)$
 * Decide on the recursion formula
 * Decide on optimal traversal order
@@ -316,25 +331,21 @@ Note: Use memoization (storing the results of expensive function calls and retur
 ---
 
 ## So how does this look?
-
 ![matrix](images/fundamental_string/dpmatrix.svg)
 
 ---
 
 ## Exploring the search space
-
 ![matrix](images/fundamental_string/dpmatrix2.svg)
 
 ---
 
 ## Exploring the search space
-
 ![matrix](images/fundamental_string/dpmatrix3.svg)
 
 ---
 
 ##  Computing alignment recursively
-
 * Local update rules, only look at neighboring cells
 * Computing the score of a cell from smaller neighbors
 
@@ -345,104 +356,86 @@ Note: Use memoization (storing the results of expensive function calls and retur
                   M(i, j-1) -gap
                 \end{array}
               \right\} $$`
-
-
-* Compute scores for prefixes of increasing length
+* Compute scores for prefixes of increasing length$\ \ \ \ \ \ $
 
 ---
 
 ## Example
-
 ![matrix](images/fundamental_string/nw1.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Example
-
 ![matrix](images/fundamental_string/nw2.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Example
-
 ![matrix](images/fundamental_string/nw3.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Example
-
 ![matrix](images/fundamental_string/nw4.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Example
-
 ![matrix](images/fundamental_string/nw5.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw5.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw6.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw7.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw8.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw9.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw10.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw11.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw12.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw13.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Returning the actual path
-
 ![matrix](images/fundamental_string/nw14.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Sequence alignment
-
 * Allow gaps 
   * Insertions and deletions
   * unit cost for each character deleted or inserted
@@ -455,40 +448,32 @@ Note: Time needed O(mn) and space needed O(mn)
 
 ---
 
-## Insight : Gaps change diagonals
-
+## Insight : A gap changes the diagonal
 ![matrix](images/fundamental_string/nw14.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Linear-time bound DP
-
 ![matrix](images/fundamental_string/nw15.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Linear-space bound DP
-
-
 ![matrix](images/fundamental_string/nw16.svg) <!-- .element height="40%" width="40%" -->
-
 
 ---
 
 ## Linear-space bound DP
-
 ![matrix](images/fundamental_string/nw17.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Linear-space bound DP
-
 ![matrix](images/fundamental_string/nw18.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Linear-space bound DP
-
 * Best score can be computed in linear space 
     * use just one column/row
 * Traceback? 
@@ -498,7 +483,6 @@ Note: Time needed O(mn) and space needed O(mn)
 ---
 
 ## Local alignments
-
 A local alignment of string $s$ and $t$ is an alignment of a substring of $s$ with a substring of $t$
 
 * Why local alignments?
@@ -509,14 +493,12 @@ A local alignment of string $s$ and $t$ is an alignment of a substring of $s$ wi
 ---
 
 ## Local alignment vs Global alignment
-
 ![global_local](images/fundamental_string/global_local.svg) <!-- .element height="50%" width="50%" -->
 
 ---
 
 ## Global Alignment (Needleman-Wunsch algorithm)
-
-**Initialization:** F(0,0) = 0
+**Initialization:** $F(0,0) = 0$
 
 **Iteration:**
 
@@ -533,8 +515,7 @@ A local alignment of string $s$ and $t$ is an alignment of a substring of $s$ wi
 ---
 
 ## Local alignment (Smith-Waterman algorithm)
-
-**Initialization:** F(i,0) = F(0,j) = 0
+**Initialization:** $F(i,0) = F(0,j) = 0$
 
 **Iteration:**
 
@@ -552,7 +533,6 @@ A local alignment of string $s$ and $t$ is an alignment of a substring of $s$ wi
 ---
 
 ## More variations 
-
 * Semi-global alignment
   * At least one of the sequences to the end 
 * Different gap penalties
@@ -563,27 +543,32 @@ Recurrence equation with modifications can accomodate these variations
 
 ---
 
+## Assignment
+* https://github.com/cphg/sequence_alignment
+* Implement local alignment of two sequences that can use affine gap penalties
+* Skeleton code is provided in python 
+* Simple test cases are also provided 
+* Clone the repo, implement the `smith_waterman` function in `align_sequences.py`
+* You can test your work by running `python3 testdriver`
+* The assignment is due by 5 PM on March 5th, 2022
+
+---
+
 ## Linear time exact matching 
-
 * gene in chromosome (local alignment is expensive)
-
 * Karp-Rabin algorithm
   * Insight : if $|\sum|= d$, a string represents a number in base $d$  
   * AGCT = 0123
 ---
 
 ## Karp-Rabin algorithm
-
-Insight: Interpret string as numbers: fast comparisons
-
+Insight: Interpret string as numbers for fast comparisons
 ![karp-robin](images/fundamental_string/rk1.svg)
 
 ---
 
 ## Karp-Rabin algorithm
-
 Compute next number based on the previous one 
-
 ![karp-robin](images/fundamental_string/rk2.svg)
 
 * Shift middle digits of the number to the left
@@ -649,12 +634,9 @@ Note: * Split query into overlapping words of length W. * Find neighborhood word
 ---
 
 ## Extensions to the basic algorithm
-
 * Filtering : Low complexity regions 
-
 * Two hit BLAST
   * Two smaller W-mers more likely than a long one
-
 * Non-consecutive k-mers
   * No reason to use only consecutive symbols
   * RGIKW $\rightarrow$ R\*IK\*, RG\*\*W, $\ldots$
@@ -665,11 +647,14 @@ Note: * Split query into overlapping words of length W. * Find neighborhood word
 ---
 
 ## Assignment
-
 * https://github.com/cphg/sequence_alignment
-* Implement local alignment of two sequences
+* Implement local alignment of two sequences that can use affine gap penalties
 * Skeleton code is provided in python 
 * Simple test cases are also provided 
-
+* Clone the repo, implement the `smith_waterman` function in `align_sequences.py`
+* You can test your work by running `python3 testdriver`
+* The assignment is due by 5 PM on March 5th, 2022
 
 ---
+
+

@@ -103,6 +103,8 @@ Note: This signal can be used to determine orthologous genes in other species
 * Design algorithm that achieves optimality
   * Assumptions influence performance
 
+Note: The evolutionary operation we are going to consider are insertion, deletion and substitutions. Minimum cost of operations can be another optimality criterion. When comparing human and mouse, we do not try to infer the bases in the ancestor of the human and mouse, but we reverse the time direction of a branch and then think of operation that might have occurred. Also remember that it is Impossible to infer exact series of operations (Occams razor). We want to design an algorithm that achieves optimality or at least can approximate it. If we can provide concrete bounds on that approximation then that is the ideal case.
+
 ---
 
 ## Formalizing the problem
@@ -115,7 +117,6 @@ Note: This signal can be used to determine orthologous genes in other species
 * Design algorithm that achieves optimality
   * Assumptions influence performance
   
-Note: The evolutionary operation we are going to consider are insertion, deletion and substitutions. Minimum cost of operations can be another optimality criterion. When comparing human and mouse, we do not try to infer the bases in the ancestor of the human and mouse, but we reverse the time direction of a branch and then think of operation that might have occurred. Also remember that it is Impossible to infer exact series of operations (Occams razor). We want to design an algorithm that achieves optimality or at least can approximate it. If we can provide concrete bounds on that approximation then that is the ideal case.
 
 ---
 
@@ -152,6 +153,8 @@ x : TCACCTGACCTCCAGGC
 y :   TCATGACCGCCATGGC
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
+
+Note: abcd vs. dbca. abcd vs bcad
 
 ---
 
@@ -228,7 +231,7 @@ F(n) = F(n-1) + F(n-2)$
 </div>
 </div>
 
-Note: Fibonacci sequences appear in biological setting ssuch as branching in trees, arrangement of leaves on a stem, the fruitlets of a pineapple. Kepler pointed out the presence of the Fibonacci sequence in nature, using it to explain the (golden ratio-related) pentagonal form of some flowers.
+Note: Fibonacci sequences appear in biological setting such as branching in trees, arrangement of leaves on a stem, the fruitlets of a pineapple. Kepler pointed out the presence of the Fibonacci sequence in nature, using it to explain the (golden ratio-related) pentagonal form of some flowers.
 
 ---
 
@@ -272,6 +275,7 @@ Note: In reality the time complexity of this recurrence is O(1.618^n)
 
 ```python
 def fibonacci(n):
+  fib_table = {}
   fib_table[1] = 1
   fib_table[2] = 1
   for i in range(3,n+1):
@@ -298,7 +302,12 @@ Note: Optimal substructure: Optimal solution to problems contains optimal soluti
 
 ---
 
-## Sequence alignment: structure
+## Sequence alignments: Overlapping subproblems
+![additivescores](images/fundamental_string/recursive.svg) <!-- .element height="70%" width="70%" -->
+
+---
+
+## Sequence alignment: optimal substructure
 Define $OPT(i,j)$ = min cost of aligning prefix strings $x_1, x_2, \ldots, x_i$ and $y_1, y_2, \ldots, y_j$
 
 * Case1. $OPT(i,j)$ matches $x_i - y_j$
@@ -314,22 +323,6 @@ Note: Optimal solution to problems contains optimal solution to sub-problems, as
 
 ---
 
-## Overlapping subproblems
-![additivescores](images/fundamental_string/recursive.svg) <!-- .element height="70%" width="70%" -->
-
----
-
-## Dynamic Programming 
-* Create a large table indexed by $(i,j)$
-* Decide on the recursion formula
-* Decide on optimal traversal order
-* Compute each sub-alignment once
-* Remember the choices 
-
-Note: Use memoization (storing the results of expensive function calls and returning the cached result) for sub-problem if they are reused. If the subproblems are not reused, then maybe DP is not the right choice as an algorithm. Computation order matters, and most times bottom up will work though it is not obvious a lot of the times. Once you have the set up, then start filling the table, find the optimal score. Traceback to find the optimal solution.
-
----
-
 ## So how does this look?
 ![matrix](images/fundamental_string/dpmatrix.svg)
 
@@ -342,6 +335,17 @@ Note: Use memoization (storing the results of expensive function calls and retur
 
 ## Exploring the search space
 ![matrix](images/fundamental_string/dpmatrix3.svg)
+
+---
+
+## Dynamic Programming 
+* Create a large table indexed by $(i,j)$
+* Decide on the recursion formula
+* Decide on optimal traversal order
+* Compute each sub-alignment once
+* Remember the choices 
+
+Note: Use memoization (storing the results of expensive function calls and returning the cached result) for sub-problem if they are reused. If the subproblems are not reused, then maybe DP is not the right choice as an algorithm. Computation order matters, and most times bottom up will work though it is not obvious a lot of the times. Once you have the set up, then start filling the table, find the optimal score. Traceback to find the optimal solution.
 
 ---
 
@@ -440,7 +444,7 @@ Note: Use memoization (storing the results of expensive function calls and retur
   * Insertions and deletions
   * unit cost for each character deleted or inserted
 * Varying penalties for edit operations
-  * Transitions vs. Transitions
+  * Transitions vs. Transversions
 * Affine gap
 * Frame-aware gap 
 
@@ -559,6 +563,7 @@ Recurrence equation with modifications can accomodate these variations
 * Karp-Rabin algorithm
   * Insight : if $|\sum|= d$, a string represents a number in base $d$  
   * AGCT = 0123
+
 ---
 
 ## Karp-Rabin algorithm
@@ -601,6 +606,8 @@ Note: if every position is a match or false-positive
   * Individual alignments need not be perfect 
   * Most sequences are completely unrelated to query
 
+Note: Basic Local Alignment Search Tool
+
 ---
 
 ## BLAST
@@ -618,6 +625,8 @@ Note: if every position is a match or false-positive
 ## Blast algorithm overview 
 
 ![blast](images/fundamental_string/blast.svg) <!-- .element height="70%" width="70%" -->
+
+<small>[The Statistics of Sequence Similarity Scores](https://www.ncbi.nlm.nih.gov/BLAST/tutorial/Altschul-1.html)</small>
 
 Note: * Split query into overlapping words of length W. * Find neighborhood words for each word until threshold T. * Look in table where these neighbor words occur: seeds S. * Extend seeds S until score drops off under X. * Report significance and alignment of each match
 

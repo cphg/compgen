@@ -4,47 +4,67 @@ title: "Suffix trees, Suffix arrays, Burrows-Wheeler transform"
 ---
 
 ## Suffix trees, Suffix arrays, Burrows-Wheeler transform
-
 ![title](images/short_reads/title.png)
 
 Acknowledgement: Many slides borrowed with permission from Dr. Ben Langmead, JHU
 
 ---
 
-## Dynamic Programming
+## Science update!
+![comparison](images/short_reads/magnifica.png)
+<small>[*Thiomargarita magnifica*](https://www.biorxiv.org/content/10.1101/2022.02.16.480423v1.full.pdf), [Science commentary](https://www.science.org/content/article/largest-bacterium-ever-discovered-has-unexpectedly-complex-cells)</small>
 
+Note: By definition, microbes are supposed to be so small they can only be seen with a microscope. But a newly described bacterium living in Caribbean mangroves never got that memo. Its threadlike single cell is visible to the naked eye, growing up to 2 centimeters—as long as a peanut—and 5000 times bigger than many other microbes. What’s more, this giant has a huge genome that’s not free floating inside the cell as in other bacteria, but is instead encased in a membrane, an innovation characteristic of much more complex cells, like those in the human body.oversize bacterium is bigger than fruit flies and nematodes. that cell includes two membrane sacs, one of which contains all the cell’s DNA.  
+
+---
+
+## Homework 
+### Affine gap penalty function
+
+$$S = O + k*E$$
+
+```text
+match = 1
+mismatch = 1
+gap-open = 1
+gap-extend = 0.5
+
+AC--TA
+ACGTTA
+```
+
+### Email the align_sequences.py file <!-- .element: class="fragment" data-fragment-index="1" -->
+
+---
+
+## Aligning two strings
 ![DP](images/fundamental_string/nw14.svg) <!-- .element height="40%" width="40%" -->
 
-Note: Guaranteed optimal, but slow. BLAST "seed and extend" to find good matches to a DB
+---
+
+## Querying a database
+![Blast](images/fundamental_string/blast.svg) <!-- .element height="70%" width="70%" -->
 
 ---
 
 ## Massively-parallel sequencing
-
-![MSP](images/short_reads/msp.png) <!-- .element height="60%" width="60%" -->
+![MSP](images/short_reads/msp.png) <!-- .element height="70%" width="70%" -->
 
 [PMID: 27184599](https://www.nature.com/articles/nrg.2016.49) 
 
 ---
 
 ## Short-read alignment
-
 * Input
   * Shorter sequences 
   * A sequencing run creates large number of reads 
   * Enough to cover genome multiple times
-
 * Output
   * Position of each read $r$ of length $m$ in the reference. 
 
-* Can we use BLAST?
-
-Note: Approximate answer to: where in genome did read originate? Assuming BLAST returns the result for a read in 1 sec. For 10 million reads: 10 million seconds = 116 days. Algorithms for exact string matching are more appropriate
-
 ---
 
-## GATTACA in the human genome
-
+## `GATTACA` in the human genome
 * Brute-force
   * Scan each *k*-mer in the reference
 * Analysis:
@@ -53,17 +73,16 @@ Note: Approximate answer to: where in genome did read originate? Assuming BLAST 
   * Number of comparisons: 21,000,000,000
   * Assuming each comparison takes 1/1,000,000,000 of a second
     * Running time: 0.24 days (for one 7bp read)
-* Need to build indices of the genome to speed things up...
 
+Note: And a possible solution is an index
+ 
 ---
 
 ## Indices
-
 * Considerations
   * Space for the index
   * Time required to build index
   * Time required for searching
-
 * Approaches
   * Hash-table based 
     * BFAST, MAQ, MOSIAK, SHRiMP, SOAP, $\ldots$
@@ -73,33 +92,35 @@ Note: Approximate answer to: where in genome did read originate? Assuming BLAST 
 ---
 
 ## Word position table
-
-* Build an inverted index of every *k*-mer in the genome
 * Encoding : A=$00_2$, C=$01_2$, G=$10_2$, T=$11_2$
-* GATTACA = $10001111000100_2$ = $9156_{10}$
+* Build an inverted index of every *k*-mer in the genome
+* `GATTACA` = $10001111000100_2$ = $9156_{10}$
 
-![word](images/short_reads/word.png) <!-- .element height="20%" width="20%" -->
-
-Note: Why don't we choose G=$11_2$? Constant searching time
+![word](images/short_reads/word_position.svg) <!-- .element height="40%" width="40%" -->
 
 ---
 
 ## Word position table
-
 * Length $k$
   * \# of possible *k*-mers: $4^k$
 * $k=7, 4^7 = 16,384$
 * $k=20, 4^{20} = 1,099,511,627,776$
-* 3B 20-mers in genome
+* $\approx$3 billion $20$-mers in genome
 * Even if we build it, 99.7% of it is empty
 * We don't know which cells are empty
-
 Note: 1,099,511,627,776 impossible to store in RAM
 
 ---
 
-## Hashing
+![word](images/short_reads/word_position.svg) <!-- .element height="40%" width="40%" -->
 
+---
+
+![word](images/short_reads/word_position_packed.svg) <!-- .element height="70%" width="70%" -->
+
+---
+
+## Hashing
 * Use a function to shrink the range
   * Map a number $n$ in $[0,R]$ to $h$ in $[0,H]$
     * $H \ll R$
@@ -111,19 +132,17 @@ Note: 1,099,511,627,776 impossible to store in RAM
 ---
 
 ## Hashing
-
 * Store elements with the same key in a bucket chained together
   * good hash evenly distributes the values
 * Looking up a value scans the entire bucket
 
 ![hash](images/short_reads/hashing.png)
 
-Note: Tricky to develop good hash functions. Repetitive sequences can be a challenge both in terms of development of such data structures and analysis of runtimes. So lets take a look at some data structures that make use of some information about the sequence
+Note: Repetitive sequences can be a challenge both in terms of development of such data structures and analysis of runtimes. It is tricky to develop good hash functions, since we do not know the sequence at the onset. So lets take a look at some data structures that make use of some information about the sequence
 
 ---
 
 ## Tries 
-
 * A trie is the smallest tree representing a collection of strings or keys such that
   * each edge is labeled with a character $c \in \sum$
   * for a given node, at most one child edge has label $c$, for any $c \in \sum$
@@ -133,7 +152,6 @@ Note: Tricky to develop good hash functions. Repetitive sequences can be a chall
 ---
 
 ## Example of a trie
-
 Keys: instant, internet, internal
 
 ![trie](images/short_reads/trie.png) <!-- .element height="80%" width="30%" -->
@@ -143,19 +161,17 @@ Note: Now let us try to match "interesting", which will fail. Try matching "inst
 ---
 
 ## Tries
-
 * Checking for presence of $P$ ($|P| = n$) traverses $\leq n$ edges
-* Query time for $|P|$, is $O(n)$.
+* Query time for $P$, is $O(n)$.
 * Trie can represent a *k*-mer index
 
 ![trie](images/short_reads/trie_kmers.png) <!-- .element height="80%" width="70%" -->
 
-Note: If we use hash tables to represent edges between node and its children. The idea of using trees is powerful as it allows a good handle on repeats. This method of building a trie will use upto 4 children at each node. Where do you start search? Do we have to store aux. values?
+Note: If we use hash tables to represent edges between node and its children. The idea of using trees is powerful as it allows a good handle on repeats. This method of building a trie will use upto 4 children at each node. Where do you start search when looking for a substring? Do we have to store aux. values?
 
 ---
 
 ## Suffix trie
-
 * $|T| = m$
 * Number of characters = $m (m + 1) / 2$
 
@@ -166,17 +182,17 @@ Note: What is the problem with this formulation? A suffix can be a prefix of ano
 ---
 
 ## Suffix trie
-
 * Add special terminal character $\\$$ to the end of $T$
 * $ \\$ < A < C < G < T $
 * Guarantees : No suffix is a prefix of any other suffix
 
 ![trie](images/short_reads/suffix_trie_term.svg)
 
+Note: Look at aba (2nd row and 3rd row from the bottom)
+
 ---
 
 ## Suffix trie
-
 $T = abaaba$
 
 ![suffix trie](images/short_reads/suffix_trie_example.png) <!-- .element height="30%" width="30%" -->
@@ -185,8 +201,7 @@ Note: Each path from root to leaf represents a suffix, and each suffix is repres
 
 ---
 
-## Constructing Suffix trie
-
+## Constructing suffix trie
 ```code
 def suffix_trie(t):
     '''Build suffix trie from t.'''
@@ -204,7 +219,6 @@ def suffix_trie(t):
 ---
 
 ## Querying a suffix trie
-
 $T = abaaba$, $P=baa$, Is $P$ a substring of $T$?
 
 ![suffix trie](images/short_reads/suffix_trie_query.png) <!-- .element height="30%" width="30%" -->
@@ -214,7 +228,6 @@ Note: If we “fall off ” the trie -- i.e. there is no outgoing edge for next 
 ---
 
 ## Querying a suffix trie
-
 ```code
 def is_substring(st, p):
     '''Return true if p appears as a substring of t'''
@@ -240,21 +253,20 @@ False
 ---
 
 ## Revisiting construction
-
-* $|T| = m$
-* $m (m + 1) / 2$ chars
-
+$|T| = m, m (m + 1) / 2$ chars
 
 ```code
-def is_substring(st, p):
-    '''Return true if p appears as a substring of t'''
-    cur = st
-    for c in p:
-        if c not in cur:
-            return False
-        cur = cur[c]
-    return True
-
+def suffix_trie(t):
+    '''Build suffix trie from t.'''
+    t += '$'
+    root = {}
+    for i in range(len(t)):
+        cur = root
+        for c in t[i:]:
+            if c not in cur:
+                cur[c] = {}
+            cur = cur[c]
+    return root
 ```
 
 Note: The code line 'if c not in cur' adds 1 node, and runs at most m(m+1)/2 times. In reality actual growth is closer to this worst case and increases O(m^2).
@@ -262,7 +274,6 @@ Note: The code line 'if c not in cur' adds 1 node, and runs at most m(m+1)/2 tim
 ---
 
 ## Suffix trie: making it smaller
-
 Insight: Non-branching paths can be coalesced
 
 ![smaller](images/short_reads/suffix_trie_smaller.png) <!-- .element width="65%" height="65%" -->
@@ -270,7 +281,6 @@ Insight: Non-branching paths can be coalesced
 ---
 
 ## Suffix tree
-
 ![smaller](images/short_reads/suffix_trie_smaller2.png) <!-- .element width="65%" height="65%" -->
 
 Note: Now the number of nodes is O(m), but the edges are not.
@@ -278,7 +288,6 @@ Note: Now the number of nodes is O(m), but the edges are not.
 ---
 
 ## Suffix tree
-
 Insight: $|T| = m$ 
 
 ![smaller](images/short_reads/suffix_trie_smaller3.png) <!-- .element width="65%" height="65%" -->
@@ -288,7 +297,6 @@ Note: Space is now O(m). It was O(m^2) for the suffix trie
 ---
 
 ## Suffix tree
-
 Insight: Leaves can hold offsets in $T$. 
 
 ![smaller](images/short_reads/suffix_trie_smaller4.png) <!-- .element width="70%" height="70%" -->
@@ -296,7 +304,6 @@ Insight: Leaves can hold offsets in $T$.
 ---
 
 ## Constructing a suffix tree 
-
 * Build suffix trie, coalesce non-branching paths, relabel edges
   * $O(m^2)$ time, $O(m^2)$ space
 * Build single-edge tree representing longest suffix, augment to include the 2nd-longest, $\ldots$
@@ -308,7 +315,6 @@ Insight: Leaves can hold offsets in $T$.
 ---
 
 ## Querying a suffix tree
-
 * Same process as for trie, but coalesced edges have to be handled.
 * Suffix tree
   * $|T| = m, |P| = n, k = $ \# of occurrences
@@ -319,7 +325,6 @@ Insight: Leaves can hold offsets in $T$.
 ---
 
 ## Suffix trees
-
 * [MUMmer](https://github.com/mummer4/mummer)
 * [REPuter](https://bioinformaticshome.com/tools/DNA-sequence-analysis/descriptions/REPuter.html)
 
@@ -328,7 +333,6 @@ Insight: Leaves can hold offsets in $T$.
 ---
 
 ## Suffix arrays
-
 ![SA](images/short_reads/SA.png) <!-- .element width="50%" height="50%" -->
 
 Suffix array of $T$ is an array of integers in $[0, m)$ specifying lexicographic (alphabetical) order of $T$’s suffixes
@@ -336,7 +340,6 @@ Suffix array of $T$ is an array of integers in $[0, m)$ specifying lexicographic
 ---
 
 ## Querying a suffix array
-
 $T = abaaba$, Is $P$ a substring of $T$?
 
 Insights: 
@@ -348,7 +351,6 @@ Insights:
 ---
 
 ## Suffix arrays 
-
 * Query time: SA: $O(n~log m)$, Suffix tree: $O(n)$
 * Index size: SA: $\approx 12 GB$, Suffix tree: $> 45 GB$
 
@@ -357,7 +359,6 @@ Insights:
 ---
 
 ## Building suffix arrays
-
 ![SA_construction](images/short_reads/sa_construction.png)
 
 * Build suffix tree
@@ -367,7 +368,6 @@ Insights:
 ---
 
 ## Burrows-Wheeler transform
-
 * Initially developed for compression
 * Reversible permutation of the characters of a string
 
@@ -376,7 +376,6 @@ Insights:
 ---
 
 ## Burrows-Wheeler transform
-
 ```code
 def rotate(sequence, n):
     return sequence[n:] + sequence[:n]
@@ -400,7 +399,6 @@ def BWT(sequence):
 ---
 
 ## Insight: BWT provides "structure"
-
 $BWT(T)$ orders the characters of $T$ according to alphabetical order of their right context (characters that come after it)
 
 ![BWT_insight](images/short_reads/BWT_insight.png)
@@ -408,7 +406,6 @@ $BWT(T)$ orders the characters of $T$ according to alphabetical order of their r
 ---
 
 ## Example
-
 ![example](images/short_reads/BWT_example.png) <!-- .element width="40%" height="40%" -->
 
 Burrows M, Wheeler DJ: A block sorting lossless data compression algorithm. Digital Equipment Corporation, Palo Alto, CA 1994, Technical Report 124; 1994
@@ -416,7 +413,6 @@ Burrows M, Wheeler DJ: A block sorting lossless data compression algorithm. Digi
 ---
 
 ## Insight: BWT is related to suffix arrays
-
 BWM = sort rotations of $T$
 
 ![example](images/short_reads/BWT_SA.png)
@@ -424,7 +420,6 @@ BWM = sort rotations of $T$
 ---
 
 ## BWT from SA
-
 $BWT[i] = T[SA[i] - 1]$ if $i > 0$
 
 ![example](images/short_reads/BWT_SA.png)
@@ -432,7 +427,6 @@ $BWT[i] = T[SA[i] - 1]$ if $i > 0$
 ---
 
 ## BWT from SA
-
 ```code
 def suffix_array(T):
     """Given T, return the suffix array SA(T)."""
@@ -463,49 +457,41 @@ def BWT(T):
 ---
 
 ## Reversing the BWT
-
 ![reversing](images/short_reads/BWT_reversing.png)
 
 ---
 
 ## Reversing the BWT
-
 ![reversing](images/short_reads/inverting1.svg)
 
 ---
 
 ## Reversing the BWT
-
 ![reversing](images/short_reads/inverting2.svg)
 
 ---
 
 ## Reversing the BWT
-
 ![reversing](images/short_reads/inverting3.svg)
 
 ---
 
 ## Reversing the BWT
-
 ![reversing](images/short_reads/inverting4.svg)
 
 ---
 
 ## Reversing the BWT
-
 ![reversing](images/short_reads/inverting5.svg)
 
 ---
 
 ## Reversing the BWT
-
 ![reversing](images/short_reads/inverting6.svg)
 
 ---
 
 ## Reversing the BWT
-
 ```code
 def invert_BWT(bw):
     '''Given BWT(T) return T.'''
@@ -530,7 +516,6 @@ def invert_BWT(bw):
 ---
 
 ## Insight : LF mapping
-
 * The $i^{th}$ occurrence of $c$ in the last column of the BWM is the same exact character as the $i^{th}$ occurrence of $c$ in the first column.
 
 ![LF](images/short_reads/LF1.png)
@@ -538,7 +523,6 @@ def invert_BWT(bw):
 ---
 
 ## Insight : LF mapping
-
 * The $i^{th}$ occurrence of $c$ in the last column of the BWM is the same exact character as the $i^{th}$ occurrence of $c$ in the first column.
 
 ![LF](images/short_reads/LF2.png)
@@ -546,7 +530,6 @@ def invert_BWT(bw):
 ---
 
 ## FM index
-
 * combining BWT with a few auxilliary data structures
 * core of the index is $F$ and $L$ from BWM
 * $L$ is the same size as $T$
@@ -556,7 +539,6 @@ def invert_BWT(bw):
 ---
 
 ## How to query?
-
 * $P = aba$
 * $T = abaaba$
 
@@ -565,31 +547,26 @@ def invert_BWT(bw):
 ---
 
 ## How to query?
-
 ![query](images/short_reads/query2.png)
 
 ---
 
 ## How to query?
-
 ![query](images/short_reads/query3.png)
 
 ---
 
 ## How to query?
-
 ![query](images/short_reads/query4.png)
 
 ---
 
 ## How to query?
-
 ![query](images/short_reads/query5.png)
 
 ---
 
 ## How to query?
-
 When $P$ does not occur in $T$, we eventually fail to find next character in $L$
 
 ![query](images/short_reads/query6.png)
@@ -597,7 +574,6 @@ When $P$ does not occur in $T$, we eventually fail to find next character in $L$
 ---
 
 ## Scanning $L$ is slow
-
 Idea : pre-calculate cumulative #a's,b's in $L$ up to every row
 
 ![query](images/short_reads/fastrank1.png)
@@ -605,7 +581,6 @@ Idea : pre-calculate cumulative #a's,b's in $L$ up to every row
 ---
 
 ## Scanning $L$ is slow
-
 Idea : pre-calculate cumulative #a's,b's in $L$ up to every row
 
 ![query](images/short_reads/fastrank2.png)
@@ -615,7 +590,6 @@ Tally is too big ($m \times |\sum|$)
 ---
 
 ## Scanning $L$ is slow
-
 Idea : pre-calculate cumulative #a's,b's in $L$ up to every $i^{th}$ row
 
 ![query](images/short_reads/fastrank3.png)
@@ -623,7 +597,6 @@ Idea : pre-calculate cumulative #a's,b's in $L$ up to every $i^{th}$ row
 ---
 
 ## Occurences in $T$
-
 If we had suffix array, we could look up the offsets, but we do not. 
 
 ![query](images/short_reads/lookup1.png)
@@ -633,7 +606,6 @@ Note: we are trying to avoid storing $m$ integers.
 ---
 
 ## Occurences in $T$
-
 Again, what if we only store some SA elements?
 
 ![query](images/short_reads/lookup2.png)
@@ -641,7 +613,6 @@ Again, what if we only store some SA elements?
 ---
 
 ## Occurences in $T$
-
 Again, what if we only store some SA elements?
 
 ![query](images/short_reads/lookup3.png) <!-- .element width="50%" height="50%" -->
@@ -653,7 +624,6 @@ Again, what if we only store some SA elements?
 ---
 
 ## FM Index
-
 $|T|=m, |P|=n$
 
 ![FM](images/short_reads/fm.png) <!-- .element width="70%" height="70%" -->
@@ -663,7 +633,6 @@ $O(n)$ to find occurence of $P$ in $T$
 ---
 
 ## FM index 
-
 Components of index
 
 * $F : |\sum| integers$
@@ -678,7 +647,6 @@ Note:_a is the fraction of SA elements kept, b is the fraction of tallies kept
 ---
 
 ## Suffix index bounds
-
 ![bounds](images/short_reads/bounds.png)
 
 ---

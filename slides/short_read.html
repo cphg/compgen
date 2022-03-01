@@ -61,6 +61,9 @@ ACGTTA
   * Enough to cover genome multiple times
 * Output
   * Position of each read $r$ of length $m$ in the reference. 
+* Motivation
+  * Resequencing
+  * More is better!!
 
 ---
 
@@ -269,7 +272,7 @@ def suffix_trie(t):
     return root
 ```
 
-Note: The code line 'if c not in cur' adds 1 node, and runs at most m(m+1)/2 times. In reality actual growth is closer to this worst case and increases O(m^2).
+Note: The code line 'if c not in cur' adds 1 node, and runs at most m(m+1)/2 times. In reality actual growth is closer to this worst case and increases O(m^2). Think of a^n b^n where n=2m.
 
 ---
 
@@ -364,6 +367,7 @@ Insights:
 * Build suffix tree
 * Traverse in alphabetical order
 * On reaching leaf, append suffix to array
+* [Construction of suffix arrays](https://academic.oup.com/bib/article/15/2/138/212729)
 
 ---
 
@@ -463,31 +467,37 @@ def BWT(T):
 
 ## Reversing the BWT
 ![reversing](images/short_reads/inverting1.svg)
+$T=abaaba$
 
 ---
 
 ## Reversing the BWT
 ![reversing](images/short_reads/inverting2.svg)
+$T=abaaba$
 
 ---
 
 ## Reversing the BWT
 ![reversing](images/short_reads/inverting3.svg)
+$T=abaaba$
 
 ---
 
 ## Reversing the BWT
 ![reversing](images/short_reads/inverting4.svg)
+$T=abaaba$
 
 ---
 
 ## Reversing the BWT
 ![reversing](images/short_reads/inverting5.svg)
+$T=abaaba$
 
 ---
 
 ## Reversing the BWT
 ![reversing](images/short_reads/inverting6.svg)
+$T=abaaba$
 
 ---
 
@@ -617,9 +627,9 @@ Again, what if we only store some SA elements?
 
 ![query](images/short_reads/lookup3.png) <!-- .element width="50%" height="50%" -->
 
-* $a$ at end of row 3 corresponds to $a$ at the beginning of row 2
-* Row 2 of suffix array = 2
-* Missing value in row 3 = 2 (row 2’s SA val) + 1 (# steps to row 2) = 3
+* $a$ at end of row 4 corresponds to $a$ at the beginning of row 3
+* Row 3 of suffix array = 2
+* Missing value in row 3 = 2 (row 3’s SA val) + 1 (# steps to row 4) = 3
 
 ---
 

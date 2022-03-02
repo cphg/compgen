@@ -111,7 +111,7 @@ lectures:
     section: "Unit 2: Epigenome"
     date: 03/24/22
     topic: Regulatory DNA, Transcription factors, Sequence motifs 
-    details: PWMs, information entropy, motif discovery, motif matching
+    details: PWMs, information entropy, motif finding algorithms
     instructor: Chongzhi Zang
     links:
       - url: null

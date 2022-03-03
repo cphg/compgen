@@ -3,26 +3,22 @@ layout: aakrosh_markdown
 title: "Bayes theorem, Likelihood, and Expectation-Maximization"
 ---
 
-## Bayes theorem, Likelihood, and Expectation-Maximization
-
+## {{page.title}}
 ![alignment](images/variant_calling/title.png)
 
 ---
 
 ## Alignments expose differences
-
 ![alignment](images/variant_calling/alignment.svg)
 
 ---
 
 ## Types of differences
-
 ![variants](images/variant_calling/variant_types.png)
 
 ---
 
 ## Why are we interested in differences?
-
 1. Association with traits and phenotypes
 2. $\ldots$
 
@@ -31,7 +27,6 @@ Notes: understanding gene function, understanding what makes us human, understan
 ---
 
 ## SNVs 
-
 * $N$ total reads
 * $N-K$ match the reference allele (A)
 * $K$ match the alternate allele (B)
@@ -40,87 +35,286 @@ Notes: understanding gene function, understanding what makes us human, understan
   * heterozygous (AB)
   * homozygous alternate (BB)
 
+Notes: What is the difference between SNV and SNP?
+
 ---
 
 ## SNVs
-
 * Method based on frequency threshold
   * $K/N$ in $[0, 0.2) \rightarrow$ homozygous reference 
   * $K/N$ in $[0.2, 0.8) \rightarrow$ heterozygous
   * $K/N$ in $[0.8, 1.0] \rightarrow$ homozygous alternate
-
 * Limitations?
 
 Note: Such heuristics were used in some of the earliest variant callers such as VarScan. Limitations include that this does not account for any sources of bias, assumes the separability of the three states, does not account for differences in copy number and assumes that the coverage is uniform, which rules out exome sequencing or amplicon sequencing and data from cancer genomes.
 
 ---
 
-## Revisiting some probability
-
-Let $X$ be a random variable. The probability for the event $X = x$ for some value $x$ is $P(X = x)$ or $p(x)$. Let Y be another random variable.
-
-### Probability rules
-
-* Sum rule: $P(X) = \sum_Y P(X,Y)$
-* Product rule: $P(X,Y) = P(Y|X) P(X)$ 
-
-Note: The sum rule just says that if you've sliced up the probability of X according to which Y it occurs with, then to reconstitute the probability of X, just add up the probability of the slices. The product rule just shows you how you convert a conditional probability to a joint probability.
-
----
-
-![adventures](images/variant_calling/coin.jpeg) <!-- .element height="60%" width="60%" -->
-
+![adventures](images/variant_calling/coin.jpeg) <!-- .element height="50%" width="50%" -->
 
 ---
 
 ## Revisiting binomial distribution
-
 * Coin flips: $P(H) = \mu$, $P(T) = 1-\mu$
 * $X$ be the random variable representing the number of heads
 * $X$ has a binomial distribution, $X ∼ Bin(N, \mu)$ 
 * Probability of exactly $k$ heads in $n$ trials $$P(X=k | N,\mu) = {n \choose k} \mu^k (1-\mu)^{n-k}$$ 
 
-```code
-N = 100
-mu = 0.5
-table(rbinom(100, 1, 0.5))
-```
-```text
- 0  1 
-59 41 
-```
-
 Note: The binomial distribution with parameters n and mu is the discrete probability distribution of the number of successes in a sequence of n independent yes (e.g., "heads" or "reference allele") or no (e.g., "tails", or "alternate allele") experiments, each of which yields success with probability mu. Remember we studied this in the statistical review. Now let's say that we have an observation of 59 H, 41 T, can we say something about mu?
 
 ---
 
-## Binomial likelihood model
+## Estimating probabilities
+* Coin flips: $P(H) = \mu$, $P(T) = 1-\mu$
+* We want to learn $\mu$
+* Training data from $n$ flips
+  * $\alpha_H + \alpha_T = n$
+* What is $\hat{\mu}$?
 
-* Suppose we run $T$ experiments where we toss the same coin $N={1,2,\ldots,N_T}$ times and come up with counts of heads $x = {1,2,\ldots,x_T}$
+$$\hat{\mu} = \frac{\alpha_H}{\alpha_H + \alpha_T}$$ <!-- .element : class="fragment" data-fragment-index="1" -->
+
+Note: This approach is quite reasonable, and very intuitive. It is a good approach when we have plenty of training data. However, this can produce unreliable estimates when we have small amounts of data
+
+---
+
+## Maximum Likelihood Estimation
+```R
+x <- seq(1,4000)
+data <- sample(c(0,1),length(x),replace=TRUE,prob=c(0.3,0.7))
+mu <- rep(NA, length(x))
+for (i in x) { mu[i] = sum(data[1:i])/i }
+plot(x, mu)
+abline(h=0.7)
+```
+![MLE](images/variant_calling/MLE1.png) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Maximum Likelihood Estimation
+```R
+x <- seq(1,4000)
+data <- sample(c(0,1),length(x),replace=TRUE,prob=c(0.3,0.7))
+mu <- rep(NA, length(x))
+for (i in x) { mu[i] = sum(data[1:i])/i }
+plot(x, mu)
+abline(h=0.7)
+```
+![MLE](images/variant_calling/MLE2.png) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Including priors
+$$\hat{\mu} = \frac{\alpha_H + \gamma_H}{(\alpha_H + \gamma_H) + (\alpha_T + \gamma_T)}$$ 
+
+* Incorporates our prior assumption in the ratio $\frac{\gamma_H}{\gamma_T}$
+* We can express our degree of certainty of the priors by increasing $\gamma_H + \gamma_T$
+* If $\gamma_H = \gamma_T = 0$, then this is the same as MLE
+
+---
+
+## Including priors
+```R
+x <- seq(1,4000)
+data <- sample(c(0,1),length(x),replace=TRUE,prob=c(0.3,0.7))
+gamma0 <- 50
+gamma1 <- 50
+mu <- rep(NA, length(x))
+for (i in x) { mu[i] = (sum(data[1:i]) + gamma1)/(i + gamma0 + gamma1) }
+plot(x, mu, ylim=c(0,1))
+abline(h=0.7)
+```
+
+![MAP](images/variant_calling/MAP1.png) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Including priors
+```R
+x <- seq(1,4000)
+data <- sample(c(0,1),length(x),replace=TRUE,prob=c(0.3,0.7))
+gamma0 <- 25
+gamma1 <- 75
+mu <- rep(NA, length(x))
+for (i in x) { mu[i] = (sum(data[1:i]) + gamma1)/(i + gamma0 + gamma1) }
+plot(x, mu, ylim=c(0,1))
+abline(h=0.7)
+```
+
+![MAP](images/variant_calling/MAP2.png) <!-- .element height="40%" width="40%" -->
+
+---
+
+## Maximum Likelihood Estimation
+$$\hat{\mu} = \arg \max_{\mu} P(D|\mu)$$
+
+Note: The intuition underlying this principle is that we are more likely to observe data D if we are in a world where the appearance of this data is highly probable. Therefore, we should estimate \mu by assigning it whatever value maximizes the probability of having observed D. 
+
+---
+
+## Maximum Likelihood Estimation
+$$P(D = \alpha_H, \alpha_T|\mu) = \mu^{\alpha_H} (1 - \mu)^{\alpha_T}$$
+
+$$\begin{eqnarray} 
+\hat{\mu} &=& \arg \max_{\mu} P(D|\mu) \\\\\\
+&=& \arg \max_{\mu} ln\ P(D|\mu)\\\\\\
+&=& \arg \max_{\mu} \ell(\mu)
+\end{eqnarray}$$ <!-- .element : class="fragment" data-fragment-index="1" -->
+
+Note: The quantity P(D|θ) is often called the data likelihood, or the data likelihood function because it expresses the probability of the observed data D as a function of θ. This likeli- hood function is often written L(θ) = P(D|θ).
+
+---
+
+## Maximum Likelihood Estimation
+$$\begin{eqnarray} 
+\frac{\partial\ \ell(\mu)}{\partial \mu} &=& \frac{\partial\ ln\ P(D|\mu)}{\partial \mu}\\\\\\
+&=& \frac{\partial\ ln\[\mu^{\alpha_H} (1 - \mu)^{\alpha_T}\]}{\partial \mu}\\\\\\ 
+&=& \alpha_H \frac{\partial\ ln\ \mu}{\partial \mu} + \alpha_T \frac{\partial\ ln\ (1-\mu)}{\partial \mu}\\\\\\
+&=& \alpha_H \frac{\partial\ ln\ \mu}{\partial \mu} + \alpha_T \frac{\partial\ ln\ (1-\mu)}{\partial (1- \mu)} \frac{\partial (1-\mu)}{\partial \mu}\\\\\\
+&=& \alpha_H \frac{1}{\mu} - \alpha_T \frac{1}{1-\mu}
+\end{eqnarray}$$
+
+Note: Set this to 0 and you will get your value for \hat{\mu}
+
+---
+
+## Maximum Likelihood Estimation
+$$\frac{\partial\ \ell(\mu)}{\partial \mu} = 0$$
+
+$$\hat{\mu} = \frac{\alpha_H}{\alpha_H + \alpha_T}$$ <!-- .element : class="fragment" data-fragment-index="1" -->
+
+---
+
+## Maximum a Posteriori Probability Estimation (MAP)
+$$\hat{\mu} = \arg \max_{\mu} P(\mu|D)$$
+
+Note: we should choose the value of \mu that is most probable, given the observed data D and our prior assumptions summarized by P(\mu).
+
+---
+
+## Maximum a Posteriori Probability Estimation (MAP)
+$$\begin{eqnarray} 
+\hat{\mu} &=& \arg \max_{\mu} P(\mu|D)\\\\\\
+&=&  \arg \max_{\mu} \frac{P(D|\mu)P(\mu)}{P(D)}\\\\\\
+&=&  \arg \max_{\mu} P(D|\mu)P(\mu)
+\end{eqnarray}$$
+
+Note: MLE looks to maximise P(D|\mu), but here we maximise that and our priors. P(D) is not dependent on \mu.
+
+---
+
+## Maximum a Posteriori Probability Estimation (MAP)
+$P(\mu) = Beta(\beta_T, \beta_H) = \frac{\mu^{\beta_H-1} (1-\mu)^{\beta_T-1}}{B(\beta_T, \beta_H)}$
+
+$$\begin{eqnarray}
+\hat{\mu} &=& \arg \max_{\mu} P(D|\mu)P(\mu)\\\\\\
+&=& \arg \max_{\mu} \mu^{\alpha_H} (1 - \mu)^{\alpha_T}  \frac{\mu^{\beta_H-1} (1-\mu)^{\beta_T-1}}{B(\beta_T, \beta_H)}\\\\\\
+&=& \arg \max_{\mu} \mu^{\alpha_H+\beta_H-1} (1-\mu)^{\alpha_T+\beta_T-1}
+\end{eqnarray}$$ <!-- .element : class="fragment" data-fragment-index="1" -->
+
+Note: When data is generated by multiple i.i.d. draws of a Bernoulli random variable,  the most common form of prior is a Beta distribution. Beta distribution has a functional form that is the same as the data likelihood P(D|θ) in our problem, so that when we multiply these two forms together to get the quantity P(D|θ)P(θ) , this product is easily expressed as yet another expression of this same functional form. The denominator is a normalization term which assures the probability integrates to one, but which is independent of \mu.
+
+---
+
+## Maximum a Posteriori Probability Estimation (MAP)
+$$\hat{\mu} = \frac{\alpha_H + \beta_H - 1}{(\alpha_H + \beta_H - 1) + (\alpha_T+\beta_T-1)}$$ 
+
+---
+
+![bayes](images/variant_calling/bayes.jpg)
+Note: Bayes' theorem spelt out in blue neon at the offices of HP Autonomy in Cambridge
+
+---
+
+## Bayes theorem
+* Consider a diagnostic test for prostate cancer
+  * 1% of patients have PCa
+  * 80% of the patients are diagnosed with PCa when they have it
+  * 10% of the patients are diagnosed with PCa when they don't have it
+
+|               | has PCa (1%) | doesn't have PCa |
+| ------------- | ------------ | ---------------- |
+| Test Positive | 80%          |  10%             |
+| Test Negative | 20%          |  90%             |
+
+---
+
+## Bayes theorem
+|               | has PCa (1%) | doesn't have PCa (99%) |
+| ------------- | ------------ | ---------------- |
+| Test Positive | 80%          |  10%             |
+| Test Negative | 20%          |  90%             |
+
+What’s the chance a patient has CaP if they get a positive result?
+
+* Chance of a true positive = 0.008
+* Chance of getting any type of positive result = 0.107
+* Chance of the patient having CaP if they get a positive result = 0.008/0.107 = 7.47\%
+
+Note: Chance of a true positive = chance you have cancer * chance test caught it = 0.01 * 0.8 = 0.008. Chance of a false positive = 0.99 * 0.1 = 0.099. Chance of getting any type of positive result = chance of a true positive plus the chance of a false positive = 0.008 + 0.099 = 0.107
+
+---
+
+## Bayes theorem
+$A,B$ = events, $P(B) \neq 0$
+$P(A)$ = probability of observing $A$ 
+$P(B)$ = probability of observing $B$
+$P(B|A)$ = probability of event $B$ occurring given that $A$ is true.
+$P(A|B)$ = probability of event $A$ occurring given that $B$ is true.
+$$P(A|B) = \frac{P(B|A) . P(A)}{P(B)}$$
+
+---
+
+## Bayes theorem: Bayesian interpretation
+* Probability : degree of belief
+* $P(A)$ = initial degree of belief in $A$
+* $P(A|B)$ = degree of belief after incorporating that $B$ is true
+* $\frac{P(B|A)}{P(B)}$ = support B provides for $A$
+$$P(A|B) = \frac{P(B|A) . P(A)}{P(B)}$$
+
+Note: In the Bayesian interpretation, probability measures a "degree of belief". Bayes' theorem links the degree of belief in a proposition before and after accounting for evidence.
+
+---
+
+![adventures](images/variant_calling/coin.jpeg) <!-- .element height="50%" width="50%" -->
+
+---
+
+## Binomial likelihood model
+* Suppose we run $T$ experiments where we toss the same coin $N={N_1,N_2,\ldots,N_T}$ times and come up with counts of heads $x = {x_1,x_2,\ldots,x_T}$
 * Assume tosses are independent and identically distributed
 * What is the probability of observing the head counts given the coin and $\mu$?
 
 $$P(x_{1:T}|N_{1:T},\mu) = \prod_{i=1}^{T} Bin(x_i|N_i,\mu)$$
 
-Note: Likelihood
+Note: We can read this as P(Data|\mu)
 
 ---
 
 ## Maximum likelihood estimation
-
 * What is $\mu$, given the evidence?
 * Likelihood
 $$P(x_{1:T}|N_{1:T},\mu) = \prod_{i=1}^{T} Bin(x_i|N_i,\mu)$$
+
+---
+
+## Maximum likelihood estimation
+* What is $\mu$, given the evidence?
+* Log-likelihood
+$$log\ P(x_{1:T}|N_{1:T},\mu) = \sum_{i=1}^{T} log\ Bin(x_i|N_i,\mu)$$
+
+---
+
+## Maximum likelihood estimation
+* What is $\mu$, given the evidence?
 * Log-likelihood
 $$log\ P(x_{1:T}|N_{1:T},\mu) = \sum_{i=1}^{T} log\ Bin(x_i|N_i,\mu)$$
 * $\hat{\mu} = \frac{\sum_{i=1}^{T} x_i}{\sum_{i=1}^{T} N_i}$
 
-Note: We can estimate this model parameter using MLE. Take log of the likelihood. Take the derivative wrt $p$. Equate it to 0. Solve for $p$
+Note: We can estimate this model parameter using MLE. Take log of the likelihood. Take the derivative wrt $\mu$. Equate it to 0. Solve for $\mu$
 
 ---
 
 ## Maximum likelihood estimation
-
 ```code
 N = sample(1:200, 6, replace=TRUE)
 N 
@@ -152,7 +346,6 @@ mu
 ---
 
 ## Priors
-
 * MLE uses the evidence to estimate parameters ($\mu$)
 * What if the sample size is small? Or we have missing data?
 * Prior distribution for binomial parameter $p$
@@ -165,7 +358,6 @@ Note: We might overfit the MLE. Why is that a problem? Can we capture a more nat
 ---
 
 ## Bayesian statistics
-
 counts of heads $x = {1,2,\ldots,x_T}$ for $N={1,2,\ldots,N_T}$ times and a prior distribution on $\mu$
 
 $$P(x_{1:T}|N_{1:T},\mu) = \prod_{i=1}^{T} Bin(x_i|N_i,\mu)$$
@@ -177,105 +369,18 @@ Note: So now we have the likelihood and the prior. We want the posterior, is our
 
 ---
 
-![bayes](images/variant_calling/bayes.jpg)
-
-Note: Bayes' theorem spelt out in blue neon at the offices of HP Autonomy in Cambridge
-
----
-
-## Bayes theorem
-
-* Consider a diagnostic test for prostate cancer
-  * 1% of patients have PCa
-  * 80% of the patients are diagnosed with PCa when they have it
-  * 10% of the patients are diagnosed with PCa when they don't have it
-
-|               | has PCa (1%) | doesn't have PCa |
-| ------------- | ------------ | ---------------- |
-| Test Positive | 80%          |  10%             |
-| Test Negative | 20%          |  90%             |
-
----
-
-## Bayes theorem
-
-|               | has PCa (1%) | doesn't have PCa (99%) |
-| ------------- | ------------ | ---------------- |
-| Test Positive | 80%          |  10%             |
-| Test Negative | 20%          |  90%             |
-
-What’s the chance a patient has CaP if they get a positive result?
-
-* Chance of a true positive = 0.008
-* Chance of getting any type of positive result = 0.107
-* Chance of the patient having CaP if they get a positive result = 0.008/0.107 = 7.47\%
-
-Note: Chance of a true positive = chance you have cancer * chance test caught it = 0.01 * 0.8 = 0.008. Chance of a false positive = 0.99 * 0.1 = 0.099. Chance of getting any type of positive result = chance of a true positive plus the chance of a false positive = 0.008 + 0.099 = 0.107
-
----
-
-## Bayes theorem
-
-$A,B$ = events, $P(B) \neq 0$
-
-$P(A)$ = probability of observing $A$ 
-
-$P(B)$ = probability of observing $B$
-
-$P(B|A)$ = probability of event $B$ occurring given that $A$ is true.
-
-$P(A|B)$ = probability of event $A$ occurring given that $B$ is true.
-
-$$P(A|B) = \frac{P(B|A) . P(A)}{P(B)}$$
-
----
-
-## Bayes theorem: Bayesian interpretation
-
-* Probability : degree of belief
-* $P(A)$ = initial degree of belief in $A$
-* $P(A|B)$ = degree of belief after incorporating that $B$ is true
-* $\frac{P(B|A)}{P(B)}$ = support B provides for $A$
-
-$$P(A|B) = \frac{P(B|A) . P(A)}{P(B)}$$
-
-Note: In the Bayesian interpretation, probability measures a "degree of belief". Bayes' theorem links the degree of belief in a proposition before and after accounting for evidence.
-
----
-
-![adventures](images/variant_calling/coin.jpeg) <!-- .element height="60%" width="60%" -->
-
----
-
 ## Bayesian statistics
-
 counts of heads $x = {1,2,\ldots,x_T}$ for $N={1,2,\ldots,N_T}$ times and a prior distribution on $\mu$
 
 $$P(x_{1:T}|N_{1:T},\mu) = \prod_{i=1}^{T} Bin(x_i|N_i,\mu)$$
 $P(\mu) = Beta(\mu | \alpha, \beta)$
 
-We want $P(\mu | x)$, but we have $P(\mu|p)$ and $P(\mu)$
-
-$$P(A|B) = \frac{P(B|A) . P(A)}{P(B)}$$ <!-- .element: class="fragment" data-fragment-index="1" -->
-
-$$P(A|B) \propto P(B|A) . P(A)$$ <!-- .element: class="fragment" data-fragment-index="1" -->
-
----
-
-## Bayesian statistics
-
-counts of heads $x = {1,2,\ldots,x_T}$ for $N={1,2,\ldots,N_T}$ times and a prior distribution on $\mu$
-
-$$P(x_{1:T}|N_{1:T},\mu) = \prod_{i=1}^{T} Bin(x_i|N_i,\mu)$$
-$P(\mu) = Beta(\mu | \alpha, \beta)$
-
-We want $P(\mu | x)$, but we have $P(\mu|p)$ and $P(\mu)$
+We want $P(\mu | x)$, but we have $P(x|\mu)$ and $P(\mu)$
 
 $$P(\mu | x) \propto \prod_{i=1}^{T} Bin(x_i|N_i,\mu) \times Beta(\mu | \alpha, \beta)$$
 ---
 
 ## Posterior for Beta-Binomial
-
 $$P(\mu | x) \propto \prod_{i=1}^{T} Bin(x_i|N_i,\mu) \times Beta(\mu | \alpha, \beta)$$
 
 Beta is a [conjugate prior](https://stephens999.github.io/fiveMinuteStats/bayes_conjugate.html) for the binomial, the product of binomial and Beta has the form of a Beta
@@ -291,7 +396,6 @@ Note: For some likelihood functions, if you choose a certain prior, the posterio
 ---
 
 ## MAP estimate
-
 $$\begin{eqnarray} 
 P(\mu | x) &\propto& \prod_{i=1}^{T} Bin(x_i|N_i,\mu) \times Beta(\mu | \alpha, \beta) \\\\\\
 &=& \prod_{i=1}^{T} Beta(\mu | x_i + \alpha, N_i - x_i + \beta )
@@ -309,13 +413,11 @@ Note: MAP refers to the mode of the posterior distribution and the mode of a Bet
 ---
 
 ## Mapping mutation calling on sequencing data
-
 Suppose we run $T$ experiments where we toss the same coin $N={1,2,\ldots,N_T}$ times and come up with counts of heads $x = {1,2,\ldots,x_T}$.
 
 ---
 
 ## Using multiple coins
-
 Suppose we now have three types of coins $fair, heads, tails$. We still run $T$ experiments, but now each experiment involves first picking one of the three coins from a hat.
 
 * $N={1,2,\ldots,N_T}$
@@ -327,11 +429,9 @@ Suppose we now have three types of coins $fair, heads, tails$. We still run $T$ 
 ---
 
 ##  Latent state model
-
 * What is the proportion of each coin type in the hat?
   * $\pi_k$ is the probability of drawing coin type $k$
   * $\sum_{k=1}^{K} \pi_k= 1$
-
 * Which coin did each referee draw?
   * Let $Z_i = k$ be the type of coin in the $i^{th}$ experiment
   * $Z_i$ is a latent variable such that $P(Z_i = k | \pi_{1:K}) = \pi_k$
@@ -341,7 +441,6 @@ Note: K is the number of coin types. Dirichlet distribution is a conjugate prior
 ---
 
 ## Mixture of binomials
-
 * What is the $\mu$ for each type of coin
   * For a single coin, $P(x_i |  N_i, \mu) = Bin(x_i | N_i, \mu)$
   * Define the likelihood for a 3-component mixture of binomials with 3 parameters $\mu_{1:K}$ ($\mu_{fair}, \mu_{heads}, \mu_{tails}$)
@@ -410,23 +509,18 @@ Log-posterior = Log-likelihood + Log priors
 ---
 
 ## Mapping mutation calling on sequencing data
-
 Suppose we run $T$ experiments where we first select one of 3 coins and then toss the coin $N={1,2,\ldots,N_T}$ times and come up with counts of heads $x = {1,2,\ldots,x_T}$.
 
 ---
 
 ## Mapping mutation calling on sequencing data
-
 Suppose we run $T$ experiments where we first select one of 3 coins and then toss the coin $N={1,2,\ldots,N_T}$ times and come up with counts of heads $x = {1,2,\ldots,x_T}$.
 
 * Genomic loci $1,\ldots,T$. 
 * For each locus $i$
-  * Depth (total reads): N_i
-  * Count of reference base: x_i
-  * Count of variant base: N_i − x_i
+  * Depth (total reads): $N_i$, Count of reference base: $x_i$, Count of variant base: $N_i − x_i$
 * Parameters
-  * Probability of genotypes: $\pi_{AA}, \pi_{AB}, \pi_{BB}$
-  * Probability of reference base for 3 genotypes: $\mu_{AA}, \mu_{AB}, \mu_{BB}$
+  * Probability of genotypes: $\pi_{AA}, \pi_{AB}, \pi_{BB}$, Probability of reference base for 3 genotypes: $\mu_{AA}, \mu_{AB}, \mu_{BB}$
 * Latent variable
   * Probability that locus $i$ has genotype $k: \gamma(Z_i = k)$
 

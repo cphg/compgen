@@ -110,26 +110,26 @@ lectures:
   - lecture_number: 10
     section: "Unit 2: Epigenome"
     date: 03/24/22
-    topic: ChIP-seq basics
-    details: ChIP-seq, read mapping, IDR, peak calling
-    instructor: Chongzhi Zang
-    links:
-      - url: null
-        title: Lecture slides
-  - lecture_number: 11
-    date: 03/29/22 
-    topic: Motif analysis
-    details: PWMs, information entropy, motif discovery, motif matching
+    topic: Regulatory DNA, Transcription factors, Sequence motifs 
+    details: PWMs, information entropy, motif finding algorithms
     instructor: Chongzhi Zang
     links:
       - url: null
         title: Lecture slides
       - url: https://www.nature.com/articles/nbt0406-423.pdf
         title: What are DNA sequence motifs?
+  - lecture_number: 11
+    date: 03/29/22 
+    topic: ChIP-seq, Epigenome profiles, Peak detection
+    details: ChIP-seq, read mapping, epigenomic profile construction, narrow peak calling 
+    instructor: Chongzhi Zang
+    links:
+      - url: null
+        title: Lecture slides
   - lecture_number: 12
     date: 03/31/22
-    topic: Hierarchy and scales of genome structure
-    details: Histone modifications, broad peaks, chromatin domains, 3D genome
+    topic: Epigenomic domains, Hierarchy and scales of genome structure
+    details: Histone modifications, broad peak calling, chromatin domains, 3D genome basics
     instructor: Chongzhi Zang
     links:
       - url: null
@@ -203,16 +203,16 @@ lectures:
         title: Lecture slides
   - lecture_number: 20
     date: 04/28/22
-    topic: High-dimensional data analysis and integration 
-    details: Clustering, WGCNA, networks
+    topic: Spatial omics, Encoding of genomic data
+    details: MERFISH, spatial transcriptomics, simplex encoding, Hamming codes
     instructor: Chongzhi Zang
     links:
       - url: null
         title: Lecture slides
   - lecture_number: 21
     date: 05/03/22
-    topic: Encoding of genomic data, spatial genomics
-    details: One-hot encoding, simplex encoding, Hamming codes
+    topic: Clustering, transcriptomic data integration
+    details: Clustering, regulatory networks, transcriptional regulation
     instructor: Chongzhi Zang
     links:
       - url: null

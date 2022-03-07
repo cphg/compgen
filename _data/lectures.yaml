@@ -118,6 +118,8 @@ lectures:
         title: Lecture slides
       - url: https://www.nature.com/articles/nbt0406-423.pdf
         title: What are DNA sequence motifs?
+      - url: resources/10.1.1.121.7056.pdf
+        title: MEME paper
   - lecture_number: 11
     date: 03/29/22 
     topic: ChIP-seq, Epigenome profiles, Peak detection
@@ -126,6 +128,10 @@ lectures:
     links:
       - url: null
         title: Lecture slides
+      - url: null
+        title: ChIP-seq review
+      - url: null
+        title: MACS
   - lecture_number: 12
     date: 03/31/22
     topic: Epigenomic domains, Hierarchy and scales of genome structure
@@ -134,6 +140,10 @@ lectures:
     links:
       - url: null
         title: Lecture slides
+      - url: null
+        title: 
+      - url: null
+        title: 
   - lecture_number: 13
     date: 04/05/22
     topic: "Genomic intervals: formats, data structures and algorithms"

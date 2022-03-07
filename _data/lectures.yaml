@@ -119,7 +119,7 @@ lectures:
       - url: https://www.nature.com/articles/nbt0406-423.pdf
         title: What are DNA sequence motifs?
       - url: resources/10.1.1.121.7056.pdf
-        title: MEME paper
+        title: Bailey & Elkan MEME paper
   - lecture_number: 11
     date: 03/29/22 
     topic: ChIP-seq, Epigenome profiles, Peak detection

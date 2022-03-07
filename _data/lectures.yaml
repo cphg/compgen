@@ -219,6 +219,10 @@ lectures:
     links:
       - url: null
         title: Lecture slides
+      - url: null
+        title: MERFISH paper
+      - url: https://bmg.med.virginia.edu/events/seminar-series/
+        title: BMG seminar by Siyuan Wang on 4/28
   - lecture_number: 21
     date: 05/03/22
     topic: Clustering, transcriptomic data integration
@@ -227,6 +231,8 @@ lectures:
     links:
       - url: null
         title: Lecture slides
+      - url: null
+        title: 
   - lecture_number: 22
     section: Final presentations
     date: 05/05/22

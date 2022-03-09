@@ -91,6 +91,8 @@ lectures:
         title: Lecture slides
       - url: https://github.com/cphg/genome_assembler
         title: Assembler assignment
+      - url: https://academic.oup.com/bib/article/19/1/23/2339783?login=false
+        title: Review of de novo whole-genome assembly
   - lecture_number: 8
     date: 03/17/22
     topic: Hidden Markov Models (HMMs)

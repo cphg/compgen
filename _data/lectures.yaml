@@ -89,6 +89,8 @@ lectures:
     links:
       - url: slides/genome_assembly.html
         title: Lecture slides
+      - url: https://github.com/cphg/genome_assembler
+        title: Assembler assignment
   - lecture_number: 8
     date: 03/17/22
     topic: Hidden Markov Models (HMMs)

@@ -10,7 +10,7 @@
    viewBox="0 0 847.21401 1185.8789"
    version="1.1"
    id="svg1356"
-   sodipodi:docname="digraph3.svg"
+   sodipodi:docname="digraph4.svg"
    inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -123,7 +123,7 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="0.35063663"
-     inkscape:cx="916.90363"
+     inkscape:cx="648.81983"
      inkscape:cy="788.56564"
      inkscape:window-width="1280"
      inkscape:window-height="747"
@@ -501,30 +501,6 @@
        id="text1010">TATATTG</text>
   </g>
   <g
-     id="edge13"
-     class="edge"
-     transform="translate(518.57364,1877.043)">
-    <title
-       id="title1013">CATTATA-&gt;TATATTG</title>
-    <path
-       fill="none"
-       stroke="#000000"
-       d="m 270.86,-1565.81 c 2.93,17.12 6.79,44.18 6.79,67.81 0,0 0,0 0,176 0,29.22 -25.44,51.8 -48.64,66.32"
-       id="path1015" />
-    <polygon
-       fill="#000000"
-       stroke="#000000"
-       points="227.1,-1258.62 230.67,-1252.6 220.28,-1250.52 "
-       id="polygon1017" />
-    <text
-       text-anchor="middle"
-       x="281.14999"
-       y="-1406.3"
-       font-family="Times, serif"
-       font-size="14px"
-       id="text1019">4</text>
-  </g>
-  <g
      id="node10"
      class="node"
      transform="translate(518.57364,1877.043)">
@@ -615,30 +591,6 @@
        font-family="Times, serif"
        font-size="14px"
        id="text1069">ATATTGC</text>
-  </g>
-  <g
-     id="edge28"
-     class="edge"
-     transform="translate(518.57364,1877.043)">
-    <title
-       id="title1072">ATTATAT-&gt;ATATTGC</title>
-    <path
-       fill="none"
-       stroke="#000000"
-       d="m 89.34,-1481.89 c -22.98,14.46 -52.69,39.26 -52.69,70.89 0,0 0,0 0,176 0,28.24 23.73,50.69 45.66,65.42"
-       id="path1074" />
-    <polygon
-       fill="#000000"
-       stroke="#000000"
-       points="80.57,-1166.54 84.32,-1172.45 90.88,-1164.13 "
-       id="polygon1076" />
-    <text
-       text-anchor="middle"
-       x="40.150002"
-       y="-1319.3"
-       font-family="Times, serif"
-       font-size="14px"
-       id="text1078">4</text>
   </g>
   <g
      id="edge6"

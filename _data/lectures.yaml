@@ -99,10 +99,12 @@ lectures:
     details: Gene-finding, CpG islands and Chromatin states, Gibbs sampling, Expectation maximization
     instructor: Aakrosh Ratan
     links:
-      - url: null
+      - url: slides/hmm.html
         title: Lecture slides
       - url: resources/RABINER1989.pdf
         title: Rabiner 1989 tutorial on HMMs
+      - url: https://www.nature.com/articles/nbt1004-1315
+        title: What is a hidden Markov model?
   - lecture_number: 9
     date: 03/22/22
     topic: Linear models, Contingency tables, and Likelihood-based tests

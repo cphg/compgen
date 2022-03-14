@@ -1,0 +1,434 @@
+---
+layout: aakrosh_markdown
+title: "Hidden Markov Models (HMMs)"
+---
+
+## {{page.title}}
+
+---
+
+## Gene finding, CpG islands, $\ldots$
+
+---
+
+## Hidden Markov Models (HMMs)
+* Provide a foundation for probabilistic models of linear sequence ‘labeling’ problems
+* Can be designed just by drawing a graph diagram
+* The ‘Legos’ of computational sequence analysis
+* Developed in Electrical Engineering for applications to voice recognition
+
+---
+
+## Markov Models
+* Set of states: ${s_1, s_2, \ldots, s_n}$
+* Process moves from one state to another generating a sequence of states: $s_{i1}, s_{i2}, \ldots, s_{ik}, \ldots$
+* Markov chain property: $$P(s_{ik}|s_{i1},s_{i2},\ldots,s_{i(k-1)}) = P(s_{ik}|s_{i(k-1)})$$
+* The following need to be defined:
+  * transition probabilities $A=(a_{ij}), a_{ij} = P(s_i, s_j)$
+  * initial probabilities: $\pi=(\pi_i), \pi_i = P(s_i)$
+
+Note: Markov chain property: probability of each subsequent state depends only on what was the previous state
+
+---
+
+## Example 
+<div class="mermaid">
+%%{init: {'theme': 'dark' } }%%
+graph TD;
+  Fair== 0.7 ==>Fair;
+  Fair== 0.3 ==>Loaded;
+  Loaded== 0.6 ==>Loaded;
+  Loaded== 0.4 ==>Fair;
+</div> 
+
+$A = \begin{bmatrix}
+0.7 & 0.3\\\\\\
+0.4 & 0.6
+\end{bmatrix}$,
+$\pi = (0.4, 0.6)$
+
+Note: So let's consider I have two coins, one of them is fair and the other one is loaded. 
+
+---
+
+## Calculation of sequence probability
+
+By Markov chain property, probability of state sequence can be found by the formula
+
+$$\begin{eqnarray}
+P(s_{i1}, \ldots, s_{ik}) &=& P(s_{ik} | s_{i1}, \ldots, s_{i(k-1)}) P(s_{i1}, \ldots, s_{i(k-1)})\\\\\\
+&=& P(s_{ik} | s_{i(k-1)}) P(s_{i1}, s_{i2}, \ldots, s_{i(k-1)})\\\\\\
+&=& \ldots\\\\\\
+&=& P(s_{ik} | s_{i(k-1)}) \ldots P(s_{i2} | s_{i1}) P(s_{i1}) 
+\end{eqnarray}$$
+
+---
+
+## Calculation of sequence probability
+<div class="mermaid">
+%%{init: {'theme': 'dark' } }%%
+graph TD;
+  Fair== 0.7 ==>Fair;
+  Fair== 0.3 ==>Loaded;
+  Loaded== 0.6 ==>Loaded;
+  Loaded== 0.4 ==>Fair;
+</div> 
+
+$\pi = (0.4, 0.6)$
+
+Suppose we want to calculate $P(L,L,F,F)$
+
+$$\begin{eqnarray}
+P(L,L,F,F) &=& P(F|L,L,F) P(L,L,F) \\\\\\
+&=& P(F|F) P(F|L,L) P(L,L)\\\\\\
+&=& P(F|F) P(F|L) P(L|L) P(L)\\\\\\
+&=& 0.7 \times 0.4 \times 0.6 \times 0.6
+\end{eqnarray}$$
+
+---
+
+## Hidden Markov Models
+* Set of states: ${s_1, s_2, \ldots, s_n}$
+* Process moves from one state to another generating a sequence of states: $s_{i1}, s_{i2}, \ldots, s_{ik}, \ldots$
+* Markov chain property: $$P(s_{ik}|s_{i1},s_{i2},\ldots,s_{i(k-1)}) = P(s_{ik}|s_{i(k-1)})$$
+* States are not visible, but each state randomly generates one of $M$ observations (or visible states): ${v_1, v_2, \ldots, v_M}$ <!-- .element : class="fragment" data-fragment-index="1" -->
+
+---
+
+## Hidden Markov Models
+* The following need to be defined:
+  * transition probabilities $A=(a_{ij}), a_{ij} = P(s_i, s_j)$
+  * initial probabilities: $\pi=(\pi_i), \pi_i = P(s_i)$
+  * observation probabilities: $B=(b_i(v_m)), b_i(v_m) = P(v_m | s_i)$
+* Model $M = (A, B, \pi)$
+
+---
+
+## Example 
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== 0.7 ==>Fair;
+  Fair== 0.3 ==>Loaded;
+  Loaded== 0.6 ==>Loaded;
+  Loaded== 0.4 ==>Fair;
+  Fair-. 0.5 .-> H;
+  Fair-. 0.5 .-> T;
+  Loaded-. 0.3 .-> H;
+  Loaded-. 0.7 .-> T;
+</div> 
+
+$A = \begin{bmatrix}
+0.7 & 0.3\\\\\\
+0.4 & 0.6
+\end{bmatrix}$,
+$B = \begin{bmatrix}
+0.5 & 0.5\\\\\\
+0.3 & 0.7
+\end{bmatrix}$,
+$\pi = (0.4, 0.6)$
+
+---
+
+## Calculation of sequence probability
+Suppose we want to calculate $P( \\{ H,H \\} )$
+
+$$\begin{eqnarray}
+P( \\{ H,H \\} ) &=& P( \\{ H,H \\}, \\{ F,F \\}) + \\\\\\
+& & P( \\{ H,H \\}, \\{ F,L \\}) +\\\\\\
+& & P( \\{ H,H \\}, \\{ L,F \\}) +\\\\\\
+& & P( \\{ H,H \\}, \\{ L,L \\})
+\end{eqnarray}$$
+
+$$\begin{eqnarray}
+P( \\{ H,H \\}, \\{ F,F \\}) &=& P( \\{ H,H \\} | \\{ F,F \\}) P(\\{ F,F \\})\\\\\\
+&=& P(H|F) P(H|F) P(F|F) P(F)
+\end{eqnarray}$$
+
+Note: Consider all possible hidden state sequences
+
+---
+
+## Computational problems with HMMs
+* Decoding problem : Given the HMM $M=(A,B,\pi)$, and an observation sequence $O$, calculate the most likely sequence of states that produced $O$.
+* Evaluation problem : Given the HMM $M=(A,B,\pi)$, and an observation sequence $O, o_i \in {v_1,v_2,\ldots,v_M}$, calculate probability that $M$ generated $O$. <!-- .element : class="fragment" data-fragment-index="1" -->
+* Learning problem : Given observation sequence $O$, and general structure of HMM, determine HMM parameters that best fit the training data. <!-- .element : class="fragment" data-fragment-index="2" -->
+
+---
+
+## Decoding problem 
+Given the HMM $M=(A,B,\pi)$, and an observation sequence $O$, calculate the most likely sequence of states that produced $O$.
+
+$\eta_{t-1}(j)$ = probability that the HMM is in state $s_j$ after generating the sequence $o_1,o_2,\ldots,o_{t-1}$ <!-- .element : class="fragment" data-fragment-index="1" -->
+
+$\eta_t(i)$ = probability that the HMM is in state $s_i$ after generating the sequence $o_1,o_2,\ldots,o_t$ <!-- .element : class="fragment" data-fragment-index="1" -->
+
+Along the path, $\eta_t(i) = \eta_{t-1}(j) \times a_{ji}  \times b(o_t|s_i)$ <!-- .element : class="fragment" data-fragment-index="2" -->
+
+
+Note: A brute force approach will take exponential time. Let's think about time $t$, and the probability that the HMM is in state $s_i$ after generating the sequence $o_1,o_2,\ldots,o_t$. If we consider a path going through $s_j$ at time $t-1$, then eta_t(i) for that path which involved s_j and s_i can be connected as follows
+
+---
+
+## Decoding problem 
+Given the HMM $M=(A,B,\pi)$, and an observation sequence $O$, calculate the most likely sequence of states that produced $O$.
+
+$\eta_{t-1}(j)$ = probability that the HMM is in state $s_j$ after generating the sequence $o_1,o_2,\ldots,o_{t-1}$ 
+
+$\eta_t(i)$ = probability that the HMM is in state $s_i$ after generating the sequence $o_1,o_2,\ldots,o_t$ 
+
+$$P(S_t|o_{1:t}) = \eta_t(i) = \max_{j} \eta_{t-1}(j) \times a_{ji}  \times b(o_t|s_i)$$ 
+
+---
+
+## Decoding problem
+
+Calculate $P(S_{k}, o_{1:k})$.
+
+<font size="+2">
+$$\begin{eqnarray}
+P(S_{k}, o_{1:k}) & = & \sum_{S_{k-1}} P(S_{k}, S_{k-1}, o_{1:k})\\\\\\
+&=& \sum_{S_{k-1}} P(o_k|S_k,S_{k-1},o_{1:k-1}) P(S_k,S_{k-1},o_{1:k-1})\\\\\\
+&=& \sum_{S_{k-1}} P(o_k|S_k,S_{k-1},o_{1:k-1}) P(S_k | S_{k-1},o_{1:k-1}) P(S_{k-1},o_{1:k-1})
+\end{eqnarray}$$
+</font>
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== 0.7 ==>Fair;
+  Fair== 0.3 ==>Loaded;
+  Loaded== 0.6 ==>Loaded;
+  Loaded== 0.4 ==>Fair;
+  Fair-. 0.5 .-> H;
+  Fair-. 0.5 .-> T;
+  Loaded-. 0.3 .-> H;
+  Loaded-. 0.7 .-> T;
+</div> 
+
+Observations : HHTTTTTTTH
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== -0.36 ==>Fair;
+  Fair== -1.20 ==>Loaded;
+  Loaded== -0.51 ==>Loaded;
+  Loaded== -0.92 ==>Fair;
+  Fair-. -0.69 .-> H;
+  Fair-. -0.69 .-> T;
+  Loaded-. -1.20 .-> H;
+  Loaded-. -0.36 .-> T;
+</div> 
+
+Observations : HHTTTTTTTH
+
+![dp](images/hmm/dp1.svg) <!-- .element : class="fragment" data-fragment-index="1" -->
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== -0.36 ==>Fair;
+  Fair== -1.20 ==>Loaded;
+  Loaded== -0.51 ==>Loaded;
+  Loaded== -0.92 ==>Fair;
+  Fair-. -0.69 .-> H;
+  Fair-. -0.69 .-> T;
+  Loaded-. -1.20 .-> H;
+  Loaded-. -0.36 .-> T;
+</div> 
+
+![dp](images/hmm/dp2.svg) 
+
+Note: log(state prior * state emission) -0.69 - 0.69
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== -0.36 ==>Fair;
+  Fair== -1.20 ==>Loaded;
+  Loaded== -0.51 ==>Loaded;
+  Loaded== -0.92 ==>Fair;
+  Fair-. -0.69 .-> H;
+  Fair-. -0.69 .-> T;
+  Loaded-. -1.20 .-> H;
+  Loaded-. -0.36 .-> T;
+</div> 
+
+![dp](images/hmm/dp3.svg) 
+
+Note: log(state prior * state emission). -1.2 - 0.69
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== -0.36 ==>Fair;
+  Fair== -1.20 ==>Loaded;
+  Loaded== -0.51 ==>Loaded;
+  Loaded== -0.92 ==>Fair;
+  Fair-. -0.69 .-> H;
+  Fair-. -0.69 .-> T;
+  Loaded-. -1.20 .-> H;
+  Loaded-. -0.36 .-> T;
+</div> 
+
+![dp](images/hmm/dp4.svg) 
+
+Note: -1.39 - 0.36 - .69 = -2.44, -1.9 - 0.92 - 0.69 = -3.51 
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== -0.36 ==>Fair;
+  Fair== -1.20 ==>Loaded;
+  Loaded== -0.51 ==>Loaded;
+  Loaded== -0.92 ==>Fair;
+  Fair-. -0.69 .-> H;
+  Fair-. -0.69 .-> T;
+  Loaded-. -1.20 .-> H;
+  Loaded-. -0.36 .-> T;
+</div> 
+
+![dp](images/hmm/dp5.svg) 
+
+Note: -1.39 - 1.20 - 1.20 = -3.79, -1.9 - 0.51 - 1.20 = -3.60 
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== -0.36 ==>Fair;
+  Fair== -1.20 ==>Loaded;
+  Loaded== -0.51 ==>Loaded;
+  Loaded== -0.92 ==>Fair;
+  Fair-. -0.69 .-> H;
+  Fair-. -0.69 .-> T;
+  Loaded-. -1.20 .-> H;
+  Loaded-. -0.36 .-> T;
+</div> 
+
+![dp](images/hmm/dp6.svg) 
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== -0.36 ==>Fair;
+  Fair== -1.20 ==>Loaded;
+  Loaded== -0.51 ==>Loaded;
+  Loaded== -0.92 ==>Fair;
+  Fair-. -0.69 .-> H;
+  Fair-. -0.69 .-> T;
+  Loaded-. -1.20 .-> H;
+  Loaded-. -0.36 .-> T;
+</div> 
+
+![dp](images/hmm/dp7.svg) 
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== -0.36 ==>Fair;
+  Fair== -1.20 ==>Loaded;
+  Loaded== -0.51 ==>Loaded;
+  Loaded== -0.92 ==>Fair;
+  Fair-. -0.69 .-> H;
+  Fair-. -0.69 .-> T;
+  Loaded-. -1.20 .-> H;
+  Loaded-. -0.36 .-> T;
+</div> 
+
+![dp](images/hmm/dp8.svg) 
+
+---
+
+## Viterbi algorithm
+<div class="mermaid">
+%%{init: {'theme': 'dark', "flowchart": { "useMaxWidth": true} } }%%
+graph TD;
+  Fair== -0.36 ==>Fair;
+  Fair== -1.20 ==>Loaded;
+  Loaded== -0.51 ==>Loaded;
+  Loaded== -0.92 ==>Fair;
+  Fair-. -0.69 .-> H;
+  Fair-. -0.69 .-> T;
+  Loaded-. -1.20 .-> H;
+  Loaded-. -0.36 .-> T;
+</div> 
+
+![dp](images/hmm/dp9.svg) 
+
+---
+
+## Evaluation problem
+Given the HMM $M=(A,B,\pi)$, and an observation sequence $O$, calculate probability that $M$ generated $O$, $P(S_t|o_{1:T})$.
+
+$$\begin{eqnarray}
+P(S_t|o_{1:T}) & \propto & P(S_t, o_{1:T})\\\\\\
+&=& P(o_{t+1:T} | S_t, o_{1:t}) P(S_t, o_{1:t})\\\\\\
+&=& P(o_{t+1:T} | S_t) P(S_t, o_{1:t})
+\end{eqnarray}$$
+
+Note: Why do we want to do this? Maybe you want to sample from the posterior distribution. Maybe you want to identify change-points where P(Xt) is significantly different from P(Xt+1). o_{t+1:T} and o_{1:t} are independent given S_t. Remember P(A,B) = P(A|B) P(B)
+
+---
+
+## Forward algorithm 
+
+Same as the forward pass of the Viterbi algorithm
+
+---
+
+## test
+
+  \begin{align*}
+x &= \sqrt{4^2-1^2} \\
+  &= \sqrt{15}.
+  \end{align*}
+
+
+---
+
+## Backward algorthm
+
+Compute $P(o_{t+1:T} | S_t)$.
+
+$$\begin{align*}
+P(o_{t+1:T} | S_t) &= \sum_{S_{t+1}} P(o_{t+1:T}, S_{t+1} | S_t)\\\\\\
+&= \sum_{S_{t+1}} P(o_{t+2:T} | S_{t+1}, S_t, o_{t+1}) \\\\\\ &~~~~~~~~~~~P(o_{t+1}|S_{t+1},S_{t})\notag \\\\\\ &~~~~~~~~~~~P(S_{t+1}|S_t)\notag \\\\\\
+\end{align*}$$
+
+---
+
+## Learning problem
+
+---
+
+## Limitations
+
+---

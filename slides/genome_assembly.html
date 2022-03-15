@@ -110,9 +110,8 @@ Note: This is possible if the sequenced genome is circular (bacterial genomes, m
 ---
 
 ## An example digraph
-GCATTATATATTGCGCGTACGGCGCCGCTACA, read-length : 7, minimum overlap : 3
-
-![intro](images/genome_assembly/digraph1.svg) <!-- .element width="45%" height="45%" -->
+<small>GCATTATATATTGCGCGTACGGCGCCGCTACA, read-length : 7, minimum overlap : 3</small><br>
+![intro](images/genome_assembly/digraph1.svg) <!-- .element width="40%" height="40%" -->
 
 Note: In order to keep the presentation uncluttered, we are not showing the treatment of the reverse complements
 
@@ -133,30 +132,26 @@ Note: But the picture gets clearer after removing transitively-inferrible edges.
 ---
 
 ## Layout
-Remove transitively-inferrible edges, starting with edges that skip one node.
-
-![intro](images/genome_assembly/digraph1.svg) <!-- .element width="45%" height="45%" -->
-
----
-
-## Layout
-Removing edges that skip one node.
-
-![intro](images/genome_assembly/digraph2.svg) <!-- .element width="45%" height="45%" -->
+Remove transitively-inferrible edges<br>
+![intro](images/genome_assembly/digraph1.svg) <!-- .element width="40%" height="40%" -->
 
 ---
 
 ## Layout
-Removing edges that skip two nodes.
-
-![intro](images/genome_assembly/digraph3.svg) <!-- .element width="45%" height="45%" -->
+Removing edges that skip one node.<br>
+![intro](images/genome_assembly/digraph2.svg) <!-- .element width="40%" height="40%" -->
 
 ---
 
 ## Layout
-Removing edges that skip three nodes.
+Removing edges that skip two nodes.<br>
+![intro](images/genome_assembly/digraph3.svg) <!-- .element width="40%" height="40%" -->
 
-![intro](images/genome_assembly/digraph4.svg) <!-- .element width="45%" height="45%" -->
+---
+
+## Layout
+Removing edges that skip three nodes.<br>
+![intro](images/genome_assembly/digraph4.svg) <!-- .element width="40%" height="40%" -->
 
 ---
 
@@ -357,14 +352,13 @@ class DeBruijnGraph:
 
 ## Constructing De Bruijn graph
 <small>Sequence : GTGCGCTAATCGGAGACGAATTTAAGACAC</small><br>
-![DeBruijn](images/genome_assembly/example_debruijn.svg) <!-- .element width="40%" height="40%" -->
+![DeBruijn](images/genome_assembly/example_debruijn.svg) <!-- .element width="30%" height="30%" -->
 
 ---
 
 ## Constructing De Bruijn graph
-<small>Sequence : GTGCGC<span style="color:red">TAATCGGAGACGAATTTAAG</span>ACAC<span style="color:red">TAATCGGAGACGAATTTAAG</span></small> 
-
-![DeBruijn](images/genome_assembly/example_debruijn2.svg) <!-- .element width="40%" height="40%" -->
+<small>Sequence : GTGCGC<span style="color:red">TAATCGGAGACGAATTTAAG</span>ACAC<span style="color:red">TAATCGGAGACGAATTTAAG</span></small><br>
+![DeBruijn](images/genome_assembly/example_debruijn2.svg) <!-- .element width="37%" height="37%" -->
 
 Note: There are two things to appreciate here. Node for k-1-mer from left end is semi-balanced with one more outgoing edge than incoming. Node for k-1-mer at right end is semi-balanced with one more incoming than outgoing. The only exception here is that left- and right-most k-1-mers are equal. Other nodes are balanced since # times k-1-mer occurs as a left k-1-mer = # times it occurs as a right k-1-mer. So the graph produced is Eulerian. Addition of duplicates does not increase the number of nodes significantly. Edges increase, but we can replace edges with edge weights.
 
@@ -410,18 +404,18 @@ Note: |E| is the number of edges. Convert graph into one with Eulerian cycle (ad
 
 ## De Bruijn graph
 <small>Sequence : GTGCGCTAATCGGAGACGAATTTAAGACAC</small><br>
-![DeBruijn](images/genome_assembly/example_debruijn.svg) <!-- .element width="40%" height="40%" -->  
+![DeBruijn](images/genome_assembly/example_debruijn.svg) <!-- .element width="30%" height="30%" -->  
 
 ---
 
 ## De Bruijn graph
-<small>Sequence : GTGCGC<span style="color:red">TAATCGGAGACGAATTTAAG</span>ACAC<span style="color:red">TAATCGGAGACGAATTTAAG</span></small>
-![DeBruijn](images/genome_assembly/example_debruijn2.svg)  <!-- .element width="40%" height="40%" -->  
+<small>Sequence : GTGCGC<span style="color:red">TAATCGGAGACGAATTTAAG</span>ACAC<span style="color:red">TAATCGGAGACGAATTTAAG</span></small><br>
+![DeBruijn](images/genome_assembly/example_debruijn2.svg)  <!-- .element width="37%" height="37%" -->  
 
 ---
 
 ## De Bruijn graph
-![failure](images/genome_assembly/failure.png)
+![failure](images/genome_assembly/failure.png) <!-- .element width="30%" height="30%" -->
 
 Walk 1:
     ZA→AB→BE→EF→FA→AB→BC→CD→DA→AB→BY

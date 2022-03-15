@@ -73,6 +73,8 @@ Note: If we assume that sequencing of reads is random, then as more reads are se
 ## Overlap Layout Consensus
 ![intro](images/genome_assembly/olc.png) <!-- .element width="70%" height="70%" -->
 
+Notes: Examples of such assemblers include SGA, Fermi
+
 ---
 
 ## Overlap
@@ -94,7 +96,16 @@ Note: We can represent such an overlap with a directed graph, where directed edg
 ## Finding all overlaps
 ![intro](images/genome_assembly/find_overlaps.png) <!-- .element width="70%" height="70%" -->
 
-Note: Count k occurences of P in O(n) time and it does not need T.
+Note: Count k occurences of P in O(n) time and it does not need T. There are of course other ways to get layouts, for example as in YASRA.
+
+---
+
+## Overlap graph
+Overlap graph can contain cycles. A cycle is a path beginning and ending at the same vertex.
+
+![cycles](images/genome_assembly/cycles.png) 
+
+Note: This is possible if the sequenced genome is circular (bacterial genomes, mtDNA). And in the case of repeats.
 
 ---
 
@@ -159,6 +170,13 @@ Note: Can someone tell me what could be the cause of the branches?
 ## Repeats
 ![intro](images/genome_assembly/repeats.png) <!-- .element width="95%" height="95%" -->
 
+Note: This is also why longer reads are extremely helpful with genome assembly. For some of the assemblies we have recently done for humans, we can assemble close to complete chromosomes after we use some additional information from conformation capture experiments
+
+---
+
+## Comparison of some assemblies
+![snake](images/genome_assembly/snake.png)
+
 ---
 
 ## Layout
@@ -172,6 +190,11 @@ Note: Mismatch could be due to sequencing error or repeat. Since the path throug
 
 ## Overlap Layout Consensus
 ![intro](images/genome_assembly/olc3.png) <!-- .element width="90%" height="90%" -->
+
+---
+
+## Consensus
+![intro](images/genome_assembly/layout.png) <!-- .element width="95%" height="95%" -->
 
 ---
 
@@ -203,14 +226,22 @@ Note: If S contains n strings, then how many orderings (n!). The SCS problem is 
 ## Idea 2: Choose order prioritizing similarity
 ![idea2](images/genome_assembly/idea2_simplified.png)
 
-Note: We keep on doing this, and we will have AABBBA as the result.
+Note: We keep on doing this, and we will have AAABBBA or AAABBAB as the result.
 
 ---
 
-## SCS
+## Shortest common superstring
 ![greedy](images/genome_assembly/scs2.png)
 
 Note: The answer might be different if we try an equally reasonable order. For example, if we use ABB,BBA in the second step, then we get a superstring of length 9
+
+---
+
+## Shortest common superstring
+
+The greedy algorithm is a good approximation; i.e. the superstring yielded by the greedy algorithm won’t be more than ~2.5 times longer than true SCS (see Gusfield, Algorithms on Strings, Trees and Sequences: Computer Science and Computational Biology, 16.17.1)
+
+Note: Greedy algorithm is not guaranteed to choose overlaps yielding SCS
 
 ---
 
@@ -270,6 +301,10 @@ AA and BA are semi-balanced, AB and BB are balanced
     * Split *k* mer into left and right *k-1* mers
     * Add *k-1* mers as nodes to de Bruijn graph
     * Add edge from left *k-1* mer to right *k-1* mer
+
+$k$ is typically chosen to be odd, so a *k*mer is not it's own reverse complement. Example: TCGCGA
+
+Note: When the first half of the kmer is reverse complement of the second half, then we have a situation where the kmer is its own reverse complement.
 
 ---
 
@@ -369,7 +404,7 @@ For a Eulerian graph, Eulerian walk can be found in $O(|E|)$ time.
         return list(map(str, tour))
 ```
 
-Note: |E| is the number of edges. Convert graph into one with Eulerian cycle (add an edge to make all nodes balanced). We want to be able to traverse the whole graph. We then start from a node and then visit its neighbor and keep going down till we are done, then backtrack and visit the remaining neighbors. (depth first). 
+Note: |E| is the number of edges. Convert graph into one with Eulerian cycle (add an edge to make all nodes balanced). We want to be able to traverse the whole graph. We then start from a node and we are going to keep visiting unvisited edges till we get back to v.  It is not possible to get stuck at any vertex other than v, because indegree and outdegree of every vertex must be same, when the trail enters another vertex w there must be an unused edge leaving w. The tour formed in this way is a closed tour, but may not cover all the vertices and edges of the initial graph. As long as there exists a vertex u that belongs to the current tour, but that has adjacent edges not part of the tour, start another trail from u, following unused edges until returning to u, and join the tour formed in this way to the previous tour. 
 
 ---
 
@@ -402,6 +437,20 @@ Walk 2:
 * Difference in coverage can make graph non-Eulerian
 
 Note: Casting assembly as Eulerian walk is appealing, but not practical. Uneven coverage, sequencing errors, etc make graph non-Eulerian. Even if graph were Eulerian, repeats yield many possible walks
+
+---
+
+## Graph Topology based error-correction
+![velvet](images/genome_assembly/velvet-bubbles.png)
+
+---
+
+## *k*mer based error correction
+![kmers](images/genome_assembly/error_correction.png)
+
+<small>[PMC6311904](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6311904/)</small>
+
+Note: Frequency distribution of both error-free and error-containing k-mers for a NGS data set. The frequency distribution of erroneous k-mers is represented by the dash orange line, while the distribution of the correct ones is shown as the dash sky-blue line. The solid black line is the distribution of all the k-mers. The α-labeled area is the proportion of correct k-mers having frequency less than f0, while the β-labeled area is the proportion of erroneous k-mers having frequency greater than f0
 
 ---
 

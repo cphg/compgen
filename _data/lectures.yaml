@@ -107,11 +107,11 @@ lectures:
         title: What is a hidden Markov model?
   - lecture_number: 9
     date: 03/22/22
-    topic: Linear models, Contingency tables, and Likelihood-based tests
-    details: Genome Wide Association Studies, QTLs, xQTLs 
+    topic: Linear Regression, Chi-Squared Test of Independence 
+    details: Genome Wide Association Studies, eQTLs
     instructor: Stefan Bekiranov
     links:
-      - url: null
+      - url: slides/linear_models.html
         title: Lecture slides
   - lecture_number: 10
     section: "Unit 2: Epigenome"

@@ -120,13 +120,13 @@ lectures:
     details: PWMs, information entropy, motif finding algorithms
     instructor: Chongzhi Zang
     links:
-      - url: null
+      - url: slides/epigenomics1.pdf
         title: Lecture slides
       - url: https://www.nature.com/articles/nbt0406-423.pdf
         title: What are DNA sequence motifs?
       - url: resources/10.1.1.121.7056.pdf
         title: Bailey & Elkan MEME paper
-      - url: resources/motif_assignment/motif_assignment.pdf
+      - url: resources/motif_assignment/motif%20assignment.pdf
         title: Motif assignment
   - lecture_number: 11
     date: 03/29/22 

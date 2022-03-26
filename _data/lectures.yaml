@@ -136,10 +136,10 @@ lectures:
     links:
       - url: null
         title: Lecture slides
-      - url: null
-        title: ChIP-seq review
-      - url: null
-        title: MACS
+      - url: resources/Computational%20methodology%20for%20ChIP-seq%20analysis.pdf
+        title: ChIP-seq computational methodology review
+      - url: https://genomebiology.biomedcentral.com/track/pdf/10.1186/gb-2008-9-9-r137.pdf
+        title: MACS paper
   - lecture_number: 12
     date: 03/31/22
     topic: Epigenomic domains, Hierarchy and scales of genome structure
@@ -148,10 +148,10 @@ lectures:
     links:
       - url: null
         title: Lecture slides
-      - url: null
-        title: 
-      - url: null
-        title: 
+      - url: resources/btp340.pdf
+        title: SICER paper
+      - url: resources/TheHitchhikersGuideToHiCAnalysis.pdf
+        title: The Hitchhiker's Guide to Hi-C Analysis
   - lecture_number: 13
     date: 04/05/22
     topic: "Genomic intervals: formats, data structures and algorithms"

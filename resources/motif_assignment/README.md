@@ -31,10 +31,10 @@ max(S, 0)
 Run motif matching scan on the 11 provided sequences for the RBPJ motif. Generate plots for the RBPJ motif matching patterns for each sequence. Use different colors for the two curves for original sequence and its reverse complement sequence.
 
 The PWM can be found at:
-rbpj_pwm.txt
+[rbpj_pwm.txt](rbpj_pwm.txt)
 
 The sequences can be found at:
-notch1_binding_sequences.fa 
+[notch1_binding_sequences.fa](notch1_binding_sequences.fa)
 
 
 ## 3. Discuss any interesting observations you find from the results. (1 pt)

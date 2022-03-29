@@ -21,11 +21,126 @@ date: 2021-12-09
 ---
 <img src="images/genomic-intervals/intervals.svg">
 
+---
+## What can be represented as an interval?
+
+- ChIP-seq or ATAC-seq peaks
 
 ---
-## BED 
+## Peaks
 
-### (Browser Extensible Data)
+![](images/genomic-intervals/peaks.svg)
+
+Genomic intervals are often colloquially referred to as 'peaks'.
+
+---
+## What can be represented as an interval?
+
+- ChIP-seq or ATAC-seq peaks
+- Single-Nucleotide Polymorphisms (SNPs) 
+
+---
+## SNPs
+
+![](images/genomic-intervals/snps.svg)
+
+SNPs are interval of width 1
+
+---
+## What can be represented as an interval?
+
+- ChIP-seq or ATAC-seq peaks
+- Single-Nucleotide Polymorphisms (SNPs)
+- Genes and gene components (TSS, exons, introns, etc)
+
+---
+## Genes and gene components
+
+![](images/genomic-intervals/brca2-gene-model.png)
+
+---
+## What can be represented as an interval?
+
+- ChIP-seq or ATAC-seq peaks
+- Single-Nucleotide Polymorphisms (SNPs)
+- Genes and gene components (TSS, exons, introns, etc)
+- Non-coding DNA annotation (promoters, enhancers)
+
+---
+## Non-coding DNA annotation
+
+![](images/genomic-intervals/regulatory-build.png)
+
+---
+## What can be represented as an interval?
+
+- ChIP-seq or ATAC-seq peaks
+- Single-Nucleotide Polymorphisms (SNPs)
+- Genes and gene components (TSS, exons, introns, etc)
+- Non-coding DNA annotation (promoters, enhancers)
+- Any sequence or subsequence (*e.g.* a chromosome)
+- Chromosomes
+
+---
+![](images/genomic-intervals/chrom-sizes.png)
+
+---
+## Terminology
+
+- **coordinate system**: a set of sequence names and lengths
+
+
+---
+## What can be represented as an interval?
+
+- ChIP-seq or ATAC-seq peaks
+- Single-Nucleotide Polymorphisms (SNPs)
+- Genes and gene components (TSS, exons, introns, etc)
+- Non-coding DNA annotation (promoters, enhancers)
+- Any sequence or subsequence (*e.g.* a chromosome)
+- Chromosomes
+- Protein domains
+
+---
+## Protein domains
+
+![](images/genomic-intervals/ets-domains.jpeg)
+
+---
+## What can be represented as an interval?
+
+- ChIP-seq or ATAC-seq peaks
+- Single-Nucleotide Polymorphisms (SNPs)
+- Genes and gene components (TSS, exons, introns, etc)
+- Non-coding DNA annotation (promoters, enhancers)
+- Any sequence or subsequence (*e.g.* a chromosome)
+- Chromosomes
+- Protein domains
+- Anything else?
+
+---
+# Key point
+
+<span class="fragment">
+Because of the linear nature of DNA and RNA, many biological entities can be conceptualized as genomic intervals.
+</span>
+<span class="fragment">Genomic intervals are often a simplified abstraction of genomic sequence.</span>
+
+<span class="fragment">
+$ \implies $
+Interval operations are fundamental in genomics
+</span>
+---
+## File formats for genomic intervals
+- [BED](http://genome.ucsc.edu/FAQ/FAQformat.html#format1)
+- [narrowPeak](http://genome.ucsc.edu/FAQ/FAQformat.html#format12)
+- [broadPeak](http://genome.ucsc.edu/FAQ/FAQformat.html#format13)
+- Genome Feature Format ([GTF](http://uswest.ensembl.org/info/website/upload/gff.html), [GFF2](http://gmod.org/wiki/GFF2), [GFF3](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md))
+  - Used For storing transcripts, exons, *etc.*
+- Many custom variations!
+
+---
+### BED (Browser Extensible Data)
 
 - originally designed by UCSC for the genome browser
 - but, also often used for analysis
@@ -59,35 +174,71 @@ chr2   38252    29502
 - BED6 is `chrom`, `chromStart`, and `chromEnd`, `name`, `score`, `strand`
 
 ---
-## BED-like formats
-- narrowPeak
-- broadPeak
-- custom formats
-- BTFs?
-- BedGraph
+##  Related file formats
+- [Wiggle](http://genome.ucsc.edu/goldenPath/help/wiggle.html) - continuous-valued data with constant size
+	- Fixed-step - regular spacing between
+	- Variable-step - variable spacing between
+- BedGraph - continuous-valued data with variable size
 
 ---
-## Terminology
+## Wiggle (fixed step)
 
-- **coordinate system**: a set of sequence names and lengths
+Continuous-valued data with constant size and regular spacing
+
+Format:
+```
+fixedStep  chrom=chrN start=position  step=stepInterval [span=windowSize]
+dataValue1
+dataValue2
+...
+```
+
+Example
+```
+fixedStep chrom=chr3 start=400601 step=100
+11
+22
+33
+```
+
 ---
-## What can be represented as an interval?
+## Wiggle (variable step)
 
-- ChIP-seq or ATAC-seq peaks
+Continuous-valued data with constant size and variable spacing
+
+
+Format:
+```
+variableStep  chrom=chrN [span=windowSize]
+  chromStartA  dataValueA
+  chromStartB  dataValueB
+  ... etc ...  ... etc ...
+```
+
+Example:
+```
+variableStep chrom=chr2
+300701 12.5
+300702 12.5
+300703 12.5
+300704 12.5
+300705 12.5 
+```
 
 ---
-## Peaks
+## BedGraph
 
-![](images/genomic-intervals/peaks.svg)
+Continuous-valued data with variable size
 
----
-## What can be represented as an interval?
-
-- ChIP-seq or ATAC-seq peaks
-- SNPs (interval of width 1)
-- genes and components (exons, introns, etc)
-- other features (promoters, enhancers)
-- TADs?
+```
+track type=bedGraph
+chr19 49302000 49302300 -1.0
+chr19 49302300 49302600 -0.75
+chr19 49302600 49302900 -0.50
+chr19 49302900 49303200 -0.25
+chr19 49303200 49303500 0.0
+chr19 49303500 49303800 0.25
+```
 
 ---
 ## Terminology
@@ -96,3 +247,143 @@ chr2   38252    29502
 - **union**
 - **overlap**
 - **flat**: a region set that is non-overlapping
+
+---
+### Biological questions, interval computations
+
+- Is SNP $s$ located in a promoter element?
+- Is SNP $s$ located in a gene-dense region?
+- What is the nearest gene downstream of SNP $s$?
+- What is the average distance to genes for SNP set $S$?
+
+---
+### Biological questions, interval computations
+
+- Which TF binding sizes overlap region $r$?
+- Are binding sites of TF $y$ enriched in enhancers?
+- How many sites of TF $y$ are within 10 kb of gene $z$?
+- Has any previous experiment previously identified region $r$?
+- What gene has the greatest concentration of TF $y$ binding sites within 1kb?
+
+---
+### Biological questions, interval computations
+- What is the average signal across interval set $I$?
+- What is the *shape* of signal across interval set $I$?
+- What is the frequency of annotations for interval set $I$?
+- How many SNPs in patient $p$ overlap interval set $I$?
+
+---
+### Biological questions, interval computations
+- How many aligned reads mapped to gene $g$?
+- How many aligned reads overlap splicing site $s$?
+
+---
+## What constraints make two intervals comparable?
+
+- An interval comparison assumes a homology statement.
+
+
+---
+# Intersection
+
+Does $A$ intersect $B$?
+
+$  A \overset{?}\cap B$
+
+![](images/genomic-intervals/intervals-intersect.svg)
+
+$A_{start} = 5$ &nbsp; $A_{end} = 25$ &nbsp; $B_{start} = 23$ &nbsp; $B_{end} = 30$
+
+---
+![](images/genomic-intervals/intervals-intersect.svg)
+
+$A_{start} = 5$ &nbsp; $A_{end} = 25$ &nbsp; $B_{start} = 23$ &nbsp; $B_{end} = 30$
+
+$cond 1: A_{end} \overset{?}> B_{start}$
+
+<span class="fragment">
+$cond 2: A_{start} \overset{?}< B_{end}$
+</span>
+
+---
+Assume:
+1. Intervals are well-formed ($X_{start} < X_{end}$)
+2. Intervals are ordered by start ($A_{start} < B_{start}$)
+
+$A_{start} < B_{start}  $ (order)  
+$B_{start} < B_{end}  $  (well-formed)  
+$\implies A_{start} < B_{end}$ (trans. property)
+
+Then:
+
+if $ A_{end} > B_{start}$
+
+$ \implies A \cap B$
+
+
+---
+## Union
+
+1. Do they intersect? Take min/max
+
+---
+###
+
+If we make some assumpions, like pre-computing order, we can do things more efficiently.
+
+---
+### Interval set overlap counting
+
+Given:
+
+A database intervals: $i_1,i_2,...\in\textbf{I}$,   
+A query interval: $q$,  
+
+Count the number of intervals in $\textbf{I}$ overlapping $q$.
+
+<pre><code data-line-numbers="1-9">def count_overlaps(query, intervals_set):
+	n_overlaps = 0
+	for i in interval_set:
+		if overlap(query, i):
+			n_overlaps = n_overlaps +1
+	return n_overlaps
+
+def overlap(query, i):
+	return query.start < i.end && query.end > i.start
+</code></pre>
+
+Application: What is the RNA-seq expression level of gene $g$?
+
+---
+
+<pre><code data-line-numbers="3">def count_overlaps(query, intervals_set):
+	n_overlaps = 0
+	for i in interval_set:
+		if overlap(query, i):
+			n_overlaps = n_overlaps +1
+	return n_overlaps
+
+def overlap(query, i):
+	return query.start < i.end && query.end > i.start
+</code></pre>
+
+
+$O(N)$  
+$N$ = Number of intervals in database
+
+Can we do better?
+
+---
+Organize database as two lists:
+
+![](images/genomic-intervals/subject-query-annotated.svg)
+
+<div class="fragment">
+
+1. Binary search $q_{end}$ vs $\textbf{I}_{start}$  
+2. Step backward until no more overlaps  
+
+![](images/genomic-intervals/binary-search.svg)
+</div>
+
+---

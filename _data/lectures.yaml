@@ -136,7 +136,7 @@ lectures:
     details: ChIP-seq, read mapping, epigenomic profile construction, narrow peak calling 
     instructor: Chongzhi Zang
     links:
-      - url: null
+      - url: slides/epigenomics2.pdf
         title: Lecture slides
       - url: resources/Computational%20methodology%20for%20ChIP-seq%20analysis.pdf
         title: ChIP-seq computational methodology review

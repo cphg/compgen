@@ -371,10 +371,63 @@ def overlap(query, i):
 $O(N)$  
 $N$ = Number of intervals in database
 
+We may have billions of intervals. 
+
 Can we do better?
 
 ---
-Organize database as two lists:
+## Binary search
+
+```Python
+def binary_search(array, query, low, high):
+	pivot = int((low + high)/2)
+	if (low >= high):
+		return False
+	if (array[pivot] = query):
+		return pivot
+	if (array[pivot] > query):
+		return binary_search(array, query, low, pivot-1)
+	else:
+		return binary_search(array, query, pivot+1, high)
+```
+> Binary search is one of the most powerful ideas in algorithm design... After only one comparison you can discard one half of all the names in the book. Twenty comparisons suffice to find any name in the million-name Manhattan phone book. -*Steven Skiena, The Algorithm Design Manual*
+---
+## Binary search
+
+- Sequential search: $O(N)$; Binary search: $O(logN)$
+- Requires sorted input (sequential search does not)
+
+Say I have a series of regions in a BED file. Can I do a binary search on the file?
+
+<div class="fragment">
+Binary search also requires random access.
+
+> Random access means the ability to access any element directly. This is contrast to *sequential access*, where I can only access elements in sequence.
+</div>
+
+---
+### Binary search trees
+
+<div class="mermaid">
+graph TB;
+    A((8))-->B((3))
+    A-->C((10))
+    B-->D((2))
+    B-->E((6))
+    C-->F((9))
+    C-->G((12))
+    E-->H((5))
+    E-->I((7))
+</div>
+
+
+- Random access and array *insertion* are enemies.
+- Insertion in a sorted array is $O(N)$.
+- Binary search **trees** have $O(logN)$ search *and*  insertion.
+- They do not require random access for binary search.
+
+---
+An $O(logN)$ option. Organize database as two lists:
 
 ![](images/genomic-intervals/subject-query-annotated.svg)
 
@@ -386,4 +439,71 @@ Organize database as two lists:
 ![](images/genomic-intervals/binary-search.svg)
 </div>
 
+
+
 ---
+
+Hidden assumption: No containment
+
+![](images/genomic-intervals/subject-query-containment.svg)
+
+![](images/genomic-intervals/binary-search-fail.svg)
+
+<div class="fragment">
+How can we handle containment?
+</div>
+
+---
+## Advanced data structures
+
+- B trees
+- R trees
+- B+ trees
+- Interval trees
+- Nested containment lists
+
+---
+### B trees
+
+- [B Tree at Wikipedia](https://en.wikipedia.org/wiki/B-tree)
+- Generalization of a binary search tree:
+	- Nodes have $m$ children
+	- Node values are *boundaries* for subtrees
+	- Boundaries provide overlap constraints
+
+![](images/genomic-intervals/B-tree.svg)
+
+---
+### R trees
+- Generalization of a B-tree beyond integer keys (used by BEDtools)
+- A flavor of [k-d trees](https://en.wikipedia.org/wiki/K-d_tree)
+- Annotates tree nodes with a *minimum bounding rectangle* of elements. A query that does not intersect the bounding rectangle will not intersect any child element.
+- Introduced by [Guttman 1984](https://doi.org/10.1145/971697.602266)
+
+---
+
+<img src="images/genomic-intervals/R-tree.png" height=650>
+
+---
+### Nested containment list
+
+- Used by GenomicRanges
+![](images/genomic-intervals/nclist.png)
+
+---
+### B+ trees
+
+- A B tree in which nodes hold keys pointing to a linked list of values.
+- Used by GIGGLE
+- See [B+ Tree at Wikipedia](https://en.wikipedia.org/wiki/B%2B_tree)
+
+![](images/genomic-intervals/Bplustree.png)
+
+---
+# Conclusion
+
+- Genomic intervals are an extremely useful abstraction.
+- Genomic interval data is growing astronomically
+- Diverse biological questions can be asked using intervals
+- Data structures and algorithms enables large-scale analysis
+- New methods for genomic intervals are exciting

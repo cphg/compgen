@@ -8,13 +8,23 @@ date: 2021-12-09
 ### {{ page.title }}
 
 ---
+### Chromatin accessibility
 
+
+
+---
+### DNase hypersensitivity
+
+
+---
 ### ATAC-seq experiment
 
 <img src="images/buenrostro2013_fig1.jpg" height="600">
 
 ---
+### Transposase biology
 
+---
 ### ChIP-seq vs ATAC-seq
 
 <div class="row">
@@ -44,6 +54,32 @@ flowchart LR
 </div>
 
 ---
+### Biological questions for chromatin analysis
+
+- How does the chromatin state change as a cell differentiates?
+- What genome regions are used specifically by cell type $x$?
+
+<div class="fragment">
+How can we compare samples?
+</div>
+
+
+---
+## Normalization
+
+>  Transforming data so as to make them more comparable
+
+1. Normalizing to an independent reference.
+2. Normalizing two or more datasets to each other.
+
+---
+## Normalization approaches
+
+- Mapping/projection
+- Trimming, Clip functions
+- Scaling (log, z-score, quantile, minmax)
+- Filtering
+---
 
 ### How can you compare two samples?
 
@@ -53,14 +89,13 @@ Potential issues:
 3. Sequences are relative to the available pool
 4. CNVs, repeats, NuMts, and other artifacts
 
-
 ---
 
 ### Problem 1
 
 Peak locations differ across samples
 
-Solution: Consensus peaks
+Possible solution: Consensus peaks
 
 ---
 
@@ -78,7 +113,6 @@ But this leads to problems with lots of samples, or when samples vary significan
 
 
 ---
-
 
 ### Consensus peaks 2: Union-tile
 
@@ -117,4 +151,18 @@ capAndScale = function(x):
 	return x/cap
 
 ---
+# Quantile normalization
+
+- Goal: to make values comparable to one another
+- Assumes that the distributions between the samples should be the same.
+It forces the distributions to look identical 
+
+
+---
+## Q-Q plots
+
+- Base case: used to visualize the normality of a dataset
+- It compares the observed values against the theoretical distribution.
+- Can also be used to compare two datasets to each other.
+
 

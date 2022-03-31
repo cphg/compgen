@@ -148,7 +148,7 @@ lectures:
     details: Histone modifications, broad peak calling, chromatin domains, 3D genome basics
     instructor: Chongzhi Zang
     links:
-      - url: null
+      - url: slides/epigenomics3.pdf
         title: Lecture slides
       - url: resources/btp340.pdf
         title: SICER paper

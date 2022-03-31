@@ -7,22 +7,28 @@ date: 2021-12-09
 
 ### {{ page.title }}
 
----
-### Chromatin accessibility
-
-
 
 ---
 ### DNase hypersensitivity
 
+<img src="images/data-diagnostics/dnase.svg" height="600">
 
 ---
 ### ATAC-seq experiment
 
-<img src="images/buenrostro2013_fig1.jpg" height="600">
+<img src="images/data-diagnostics/buenrostro2013_fig1.jpg" height="600">
 
 ---
-### Transposase biology
+### Tn5 Transposase
+
+<img src="images/data-diagnostics/reznikoff2008_fig4.jpg"  height="600">
+
+---
+<img src="images/data-diagnostics/reznikoff2008_fig2.jpg">
+
+---
+<img src="images/data-diagnostics/tn5_shift.svg" style="background-color:white;">
+
 
 ---
 ### ChIP-seq vs ATAC-seq
@@ -54,6 +60,31 @@ flowchart LR
 </div>
 
 ---
+### QC metrics for ATAC-seq
+
+- TSS enrichment score
+- Fragment distribution
+
+
+
+---
+### TSS enrichment score
+
+1. Collect a reference set of TSSs
+2. Aggregate reads 2000 bp around TSSs
+3. Tile into 100 bp windows.
+
+$ S_{TSS} = \frac{ TSS }{ background } $
+
+<img src="images/data-diagnostics/tss.png" height="350">
+
+---
+### Fragment distribution
+
+<img src="images/data-diagnostics/fragdist.png" height="450">
+
+
+---
 ### Biological questions for chromatin analysis
 
 - How does the chromatin state change as a cell differentiates?
@@ -65,19 +96,20 @@ How can we compare samples?
 
 
 ---
-## Normalization
+## Harmonization
 
 >  Transforming data so as to make them more comparable
 
 1. Normalizing to an independent reference.
 2. Normalizing two or more datasets to each other.
 
+The approach depends on the data.
 ---
-## Normalization approaches
+## Harmonization approaches
 
 - Mapping/projection
+- Scaling (z-score, minmax, quantile)
 - Trimming, Clip functions
-- Scaling (log, z-score, quantile, minmax)
 - Filtering
 ---
 
@@ -107,7 +139,7 @@ Simply merge all the peaks into one.
 
 ---
 
-But this leads to problems with lots of samples, or when samples vary significantly.
+But combining many samples has low resolution
 
 <img src="images/data-diagnostics/union-problem.svg" height="400" style="background:white">
 
@@ -116,31 +148,226 @@ But this leads to problems with lots of samples, or when samples vary significan
 
 ### Consensus peaks 2: Union-tile
 
-You could do the union approach, and then do a sliding window
+<img src="images/data-diagnostics/union-tile.svg" height="400" style="background:white">
+
+---
+### Consensus peaks 2: Union-tile
+- Increases resolution
+- Increases compute time
+- Tile boundaries are artificial and may split meaningful units
 
 ---
 
 ### Consensus peaks 3: Algorithm
 
-<img src="images/data-diagnostics/Granja_Corces_ArchR_Sup9b.svg" height="400" style="background:white">
+<img src="images/data-diagnostics/Granja_Corces_ArchR_Sup9b.svg" height="600" style="background:white">
 
+---
+You have consensus peaks.
+
+```
+chr1   15223    15320
+chr2   38252    29502
+chr3    3680     4680
+```
+
+Now what?
+
+<div class="fragment">
+
+Build a matrix:
+
+```
+chr    start      end     s1  s2  s3  s4  s5 ...
+chr1   15223    15320     x1  x2  x3  x4  x5 ...
+chr2   38252    29502     y1  y2  y3  y4  y5 ...
+chr3    3680     4680     z1  z2  z3  z4  z5 ...
+```
+</div>
+
+---
+### Peak accessibility matrix
+
+- Peaks are genomic intervals
+- Data is: signal track (`.wig`) or aligned reads (`.bam`)
+- Extract score for regions ([bigWigAverageOverBed](https://www.encodeproject.org/software/bigwigaverageoverbed/))
+
+Examples of matrix values:
+- Number of reads aligned
+- Maximum height of signal curve
+- Area under the curve (sum of signal curve)
+
+
+---
+
+### Thought experiment
+
+Say you have 1 core dataset and you want to compare all others in terms of that.
+
+How would you create a peak accessibility matrix?
 ---
 
 ### Problem 2: Sequencing depth 
 <img src="images/data-diagnostics/alignment-depth.svg" height="400" style="background:white">
 
 ---
+### RNA-seq RPKM
 
-- RPKM: Reads per Kilobase per Million reads
+Reads per Kilobase per Million (RPKM) normalizes to depth and gene length.
+
+1. $ s = \sum{ R } / 1000000 $ 
+2. For each gene, $ e^{scaled}_g = e^{raw}_g / s $.
+3. For each gene, $ e_g = e^{raw}_g / l_g $,
+	where $ l $ is length of the gene (in kb)
+
+
 - FPKM: Fragments per Kilobase per Million reads
 
----
+See [Wagner et al. 2012](https://doi.org/10.1007/s12064-012-0162-3) for TPM vs RPKM
 
 ---
+### ATAC-seq considerations
 
-### Problem 3: Sequencing depth 
+- Region width (fixed vs variable)
+- Raw read counts vs. model signal track
 
-Clip functions
+---
+![](images/data-diagnostics/atac-distribution.svg)
+
+---
+### Standard normalization (standardization)
+
+$ x' = \frac{x - \mu}{\sigma} $
+
+- Centers: puts data around the mean
+- Scales: puts data on the same range
+- Result is standard deviations away from the mean
+- Doesn't change the shape of a distribution
+
+---
+### Min-max normalization
+
+- Sets all data on a scale from 0-1
+
+$ x' = \frac{x-x_{min}}{x_{max}-x_{min}} $
+
+- Makes data interpretable:	1= highly open; 0= closed
+- Choose your axis:
+
+```
+chr    start      end     s1  s2  s3  s4  s5 ...
+chr1   15223    15320     x1  x2  x3  x4  x5 ...
+chr2   38252    29502     y1  y2  y3  y4  y5 ...
+chr3    3680     4680     z1  z2  z3  z4  z5 ...
+```
+
+---
+### Quantile normalization
+
+- Goal: to make values comparable to one another
+- Assumes sample distributions should be the same. Forces them to look identical 
+
+<div class="fragment">
+
+### Key assumption
+
+Most elements should look similar<br>
+when comparing two samples. 
+</div>
+
+---
+### Quantile normalization method
+
+Given reference distribution $R$,  
+
+1. Rank sample data points $ a_i \in A $,
+2. Set the value of $A_r$ to $R_r$, for each rank $r$.
+
+So, the highest $a$ assumes the highest value in $R$, the 2nd highest $a$ assumes the 2nd highest in $R$, *etc.*
+
+$A_1 \rightarrow R_1$  
+$A_2 \rightarrow R_2$  
+
+---
+### Quantile normalization in R
+
+```R
+> A = c(2, 35, 5, 7, 12, 19, 3)
+> B = c(3, 6, 7, 9, 12, 13, 14)
+> 
+> R = apply(cbind(sort(A),sort(B)), 1, mean)
+> R # Reference distribution
+[1]  2.5  4.5  6.0  8.0 12.0 16.0 24.5
+> R[rank(A)] # A normalized
+[1]  2.5 24.5  6.0  8.0 12.0 16.0  4.5
+> R[rank(B)] # B normalized
+[1]  2.5  4.5  6.0  8.0 12.0 16.0 24.5
+```
+
+
+---
+## Quantile-Quantile plots
+
+- Base case: visualize normality of a dataset
+- Compares observed against theoretical distribution.
+- Can also compare two datasets to each other.
+
+
+---
+
+```R
+d1 = rexp(5000, 2)
+d2 = rexp(5000, 4)
+df = data.frame(val=c(d1, d2),
+  samp=factor(rep(c(1,2), each=5000)))
+ggplot(df, aes(x=val group=samp, color=samp)) + 
+  geom_density() + thm
+```
+<img src="images/data-diagnostics/exp-dists.png" height=400>
+
+---
+
+```R
+res = seq(0,1,by=.001)
+ggplot() + 
+  geom_point(aes(x = quantile(d1, res), y = quantile(d2, res))) + 
+  geom_abline(slope=1,intercept = 0)
+```
+<img src="images/data-diagnostics/exp-dists-qq.png" height=400>
+
+---
+
+```R
+R = apply(cbind(sort(d1),sort(d2)), 1, mean)
+d1n = R[rank(d1)] # d1 normalized
+d2n = R[rank(d2)] # d2 normalized
+
+ggplot() + geom_point(aes(x = quantile(d1n, res), y = quantile(d2n, res))) + theme_minimal() + theme(text = element_text(size = 16)) + geom_abline(slope=1,intercept = 0)
+```
+
+<img src="images/data-diagnostics/exp-dists-qq-qnorm.png" height=400>
+
+---
+
+```R
+d1 = rnorm(5000, 3, 1)
+d2 = rnorm(5000, 3, 2)
+```
+<div class="row">
+
+<div class="col">
+Raw:<br>
+<img src="images/data-diagnostics/norm-dists.png" height=220><img src="images/data-diagnostics/norm-qq.png" height=220>
+</div>
+<div class="col">
+	Q-norm:<br>
+<img src="images/data-diagnostics/norm-dists-qnorm.png" height=220><img src="images/data-diagnostics/norm-qq-qnorm.png" height=220>
+</div>
+</div>
+---
+### Clip functions
+
+- Handle outliers
 
 $ x = min(x, quantile(x, 0.99)) $
 
@@ -149,20 +376,37 @@ capAndScale = function(x):
 	cap = quantile(x, 0.99)
 	x[x>cap] = cap
 	return x/cap
+```
 
 ---
-# Quantile normalization
+## Sequencing real estate
 
-- Goal: to make values comparable to one another
-- Assumes that the distributions between the samples should be the same.
-It forces the distributions to look identical 
-
+<img src="images/data-diagnostics/relative-depth.svg" height=600>
 
 ---
-## Q-Q plots
+## Filters
 
-- Base case: used to visualize the normality of a dataset
-- It compares the observed values against the theoretical distribution.
-- Can also be used to compare two datasets to each other.
+---
 
+<img src="images/data-diagnostics/numts.svg" width="800">
+<img src="images/data-diagnostics/numts_simultaneous_alignment.svg" width="800" class="fragment">
+<img src="images/data-diagnostics/numts_alignment.svg" width="800" class="fragment">
 
+---
+
+<img src="images/data-diagnostics/numts.svg" width="800">
+<img src="images/data-diagnostics/numts_alignment_problems.svg" width="800">
+<img src="images/data-diagnostics/numts_alignment.svg" width="800">
+---
+
+<img src="images/data-diagnostics/numts.svg" width="800">
+<img src="images/data-diagnostics/numts_alignment_problems.svg" width="800">
+<img src="images/data-diagnostics/numts_alignment_blacklist.svg" width="800">
+
+---
+Problems with region masking
+<img src="images/data-diagnostics/numts_alignment_blacklist.svg" width="800">
+<div>
+<li>Inaccurate alignment statistics</li>
+<li>Requires pre-defined NuMt locations</li>
+<li>Wastes compute power</li>

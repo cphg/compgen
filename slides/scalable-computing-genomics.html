@@ -1,0 +1,186 @@
+---
+layout: reveal_markdown
+title: "Scalable computing in genomics"
+tags: slides 
+date: 2021-12-09
+---
+
+<style>
+	.reveal {font-size: 2.2em;}
+</style>
+
+# {{ page.title }}
+---
+Remember this?
+<iframe src="https://databio.org/seqcosts/cost.html" width="1200" height="550"></iframe>
+<a style="font-size:0.6em" href="https://databio.org/seqcosts">databio.org/seqcosts</a>
+
+---
+Lower costs &rarr; More data
+
+<iframe src="https://databio.org/seqcosts/sra.html" width="950" height="550"></iframe>
+<a style="font-size:0.6em" href="https://databio.org/seqcosts">databio.org/seqcosts</a>
+
+---
+### Scalable computing in genomics
+
+Genomics can be 'big data'.<br>
+Here are some techniques we use to cope
+
+#### Approaches
+
+1. Parallelization
+2. Optimization
+3. Databases
+4. Compression
+
+---
+## Parallelization
+
+> Splitting a compute task, and then completing each split simultaneously. 
+
+---
+### split-apply-combine
+
+MapReduce
+
+---
+### Scopes of parallelism
+
+1. Parallel by sample
+2. Tool-level parallel 
+3. Dependency-level parallelization
+
+---
+### Parallel by sample/job
+
+- no shared memory; requires independence of jobs
+- HPC clusters are intended for this type of parallelization
+- Restricted by size of HPC cluster
+- AWS Batch?
+
+---
+### Workflows
+
+> A workflow or pipeline is a repeatable sequence of tasks that process a piece of data. 
+
+
+<div class="mermaid">
+flowchart LR
+  Data --> Task1 --> Task2 --> Task3 --> Output
+</div>
+
+---
+### Parallel jobs in R
+
+- BatchJobs
+- snow
+
+---
+### Parallel by process
+
+- node-threaded parallelism
+- restricted to the cores on a single node
+- typically built-in to a tool, so limited by tool capacity
+
+---
+### Parallel processing in R
+
+- [parallel]() package (part of Core R)
+
+```R
+mclapply(data, function, mc.cores=detectCores())
+```
+
+---
+### Parallel processing in Python
+
+- subprocess module
+- multiprocessing module
+- threading module
+
+---
+### Parallel by dependency
+
+- not necessarily node-threaded, but likely has shared file-system requirements
+- requires a dependency graph of workflow steps
+- requires a layer of task management above typical HPC usage
+- limited to independent workflow elements
+
+---
+### Scopes of parallelism: tradeoffs
+
+
+---
+### Workflow spectrum
+
+![](images/scalable-computing-genomics/pipeline_spectrum.svg)
+
+---
+#### Workflow/pipeline engine/framework
+
+> A development toolkit that makes it easier to build workflows.
+
+- Snakemake
+- Nextflow
+- Common Workflow Language
+
+---
+### Snakemake
+
+---
+### Nextflow
+
+---
+### Common workflow language
+
+---
+### Stop writing shell scripts!
+
+- Shell scripting language is difficult to write
+- As a corollary, shell scripts are also generally difficult to read
+- Shell scripting lacks the features in a full-service language
+
+---
+### Stop writing shell scripts!
+
+> The shell makes common and simple actions really simple, at the expense of making more complex things much more complex.
+
+---
+> Typically, a small shell script will be shorter and simpler than the corresponding python program, but the python program will tend to gracefully accept modifications, whereas the shell script will tend to get less and less maintainable as code is added.
+
+---
+> This has the consequence that for optimal day-to-day productivity you need shell-scripting, but you should use it mostly for throwaway scripts, and use python everywhere else. -Anonymous
+
+---
+## 2. Optimization
+
+---
+![](images/scalable-computing-genomics/bigocheatsheet.png)
+
+Source: https://www.bigocheatsheet.com/
+
+
+
+---
+Tabix indexing
+
+Input:
+```
+chr1    10468   annotation1
+chr1    10469   annotation2
+chr1    10470   annotation3
+```
+
+Compress: `bgzip file.tsv`  
+Index: `tabix -s 1 -b 2 -e 2 file.tsv.gz`  
+Retrieve: `tabix file.tsv.gz.tbi chr5:50000-100000` 
+
+See [Tabix Bioinformatics paper](https://doi.org/10.1093/bioinformatics/btq671)
+
+---
+BigBed and BigWig
+
+- Compressed and Indexed versions of BED and WIG files.
+- Compresed: makes the files much smaller.
+- Indexed: Allows random access, so you can read specific chunks

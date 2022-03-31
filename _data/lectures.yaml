@@ -162,6 +162,10 @@ lectures:
     links:
       - title: Lecture slides
         url: slides/interval-data-structures
+      - title: Orchestrating high-throughput genomic analysis with Bioconductor 
+        url: https://doi.org/10.1038/nmeth.3252
+      - title: "BigWig and BigBed: enabling browsing of large distributed datasets"
+        url: https://doi.org/10.1093/bioinformatics/btq351
   - lecture_number: 14
     date: 04/07/22
     topic: ATAC-seq diagnostics and harmonization
@@ -170,14 +174,18 @@ lectures:
     links:
       - url: slides/data-diagnostics
         title: Lecture slides
+      - url: resources/Smith2020.pdf
+        title: Review of ATAC-seq data analysis
   - lecture_number: 15
     date: 04/12/22
-    topic: Scalable computational algorithms
-    details: DNA methylation calling, epialleles, Big-Oh complexity, Efficiently processing large sequencing data
+    topic: Scalable computating in genomics
+    details: Parallelization, workflow management, optimization, Big-Oh complexity, Efficiently processing large sequencing data
     instructor: Nathan Sheffield
     links:
-      - url: slides/scalable-computational-algorithms
+      - url: slides/scalable-computing-genomics
         title: Lecture slides
+      - url: https://doi.org/10.1038/s41592-021-01254-9
+        title: Reproducible, scalable, and shareable analysis pipelines with bioinformatics workflow managers
   - lecture_number: 16
     date: 04/14/22
     section: "Unit 3: Transcriptome"

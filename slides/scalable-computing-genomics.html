@@ -25,9 +25,12 @@ Lower costs &rarr; More data
 ### Scalable computing in genomics
 
 Genomics can be 'big data'.<br>
-Here are some techniques we use to cope
 
-#### Approaches
+<img src="images/scalable-computing-genomics/performance-importance-heatmap.svg" height="400" style="background:white">
+
+---
+
+### Approaches for scalability
 
 1. Parallelization
 2. Optimization
@@ -42,46 +45,110 @@ Here are some techniques we use to cope
 ---
 ### split-apply-combine
 
-MapReduce
+<img src="images/scalable-computing-genomics/split-apply-combine.svg" height="400" style="background:white">
+
+- Many problems call for a similar computing architecture
+- *e.g.* MapReduce/Hadoop
 
 ---
-### Scopes of parallelism
 
-1. Parallel by sample
-2. Tool-level parallel 
-3. Dependency-level parallelization
-
----
-### Parallel by sample/job
-
-- no shared memory; requires independence of jobs
-- HPC clusters are intended for this type of parallelization
-- Restricted by size of HPC cluster
-- AWS Batch?
-
----
-### Workflows
-
-> A workflow or pipeline is a repeatable sequence of tasks that process a piece of data. 
-
-
-<div class="mermaid">
-flowchart LR
-  Data --> Task1 --> Task2 --> Task3 --> Output
+<h3>Scopes of parallelism</h3>
+<img src="images/scalable-computing-genomics/parallel_sequential.svg" width="100%">
+<div class="row" style="margin:0; padding:0">
+<div class="col fragment" style="background-color:#211">by process
+<img src="images/scalable-computing-genomics/parallel_process.svg" width="300">
+</div>
+<div class="col fragment" style="background-color:#112">by sample
+<img src="images/scalable-computing-genomics/parallel_sample.svg" width="300">
+</div>
+<div class="col fragment" style="background-color:#121">by dependence
+<img src="images/scalable-computing-genomics/parallel_dependency.svg" width="300">
+</div>
 </div>
 
 ---
-### Parallel jobs in R
+<img src="images/scalable-computing-genomics/parallel_process.svg" height="100" style="float:right">
 
-- BatchJobs
-- snow
-
----
 ### Parallel by process
 
-- node-threaded parallelism
-- restricted to the cores on a single node
+
+PROs:
+- easy to use if the tool can do it (*e.g.* `-c 16`)
+- relatively easy in R or Python
+
+CON:
+- node-threaded parallelism (restricted to a single node)
 - typically built-in to a tool, so limited by tool capacity
+
+---
+### Aside: Cluster hardware
+
+<img src="images/scalable-computing-genomics/cluster-hardware.svg" height="400">
+
+
+---
+<img src="images/scalable-computing-genomics/parallel_sample.svg" height="100" style="float:right">
+
+### Parallel by sample/job
+
+PRO:
+- no shared memory; limited only by cluster size
+- HPC clusters are intended for this type of parallelization
+- Restricted by size of HPC, rather than node (burst to cloud)
+- Doesn't depend on the tool
+
+CON:
+- requires independence of jobs
+
+---
+<img src="images/scalable-computing-genomics/parallel_dependency.svg" height="100" style="float:right">
+
+
+### Parallel by dependency
+
+PRO:
+- not necessarily node-threaded
+
+CON:
+- may have shared file-system requirements
+- requires a dependency graph of workflow steps
+- requires a layer of task management above typical HPC usage
+- limited to independent workflow elements
+- requires independence of jobs
+
+---
+
+<h3>Scopes of parallelism: tradeoffs</h3>
+<img src="images/scalable-computing-genomics/parallel_sequential.svg" width="100%">
+<div class="row" style="margin:0; padding:0">
+<div class="col" style="background-color:#211">by process
+<img src="images/scalable-computing-genomics/parallel_process.svg" width="300">
+</div>
+<div class="col" style="background-color:#112">by sample
+<img src="images/scalable-computing-genomics/parallel_sample.svg" width="300">
+</div>
+<div class="col" style="background-color:#121">by dependence
+<img src="images/scalable-computing-genomics/parallel_dependency.svg" width="300">
+</div>
+</div>
+
+<div class="row frament">
+<div class="col" style="background-color:#211">Very easy</div>
+<div class="col" style="background-color:#112">Easy</div>
+<div class="col" style="background-color:#121">Hard</div>
+</div>
+
+<div class="row fragment">
+<div class="col" style="background-color:#211">
+<img src="images/scalable-computing-genomics/parallel_process_benefit.svg" width="250">
+</div>
+<div class="col" style="background-color:#112">
+<img src="images/scalable-computing-genomics/parallel_sample_benefit.svg" width="250">
+</div>
+<div class="col" style="background-color:#121">
+<img src="images/scalable-computing-genomics/parallel_dependency_benefit.svg" width="250">
+</div>
+</div>
 
 ---
 ### Parallel processing in R
@@ -93,6 +160,12 @@ mclapply(data, function, mc.cores=detectCores())
 ```
 
 ---
+### Parallel jobs in R
+
+- BatchJobs
+- snow
+
+---
 ### Parallel processing in Python
 
 - subprocess module
@@ -100,17 +173,14 @@ mclapply(data, function, mc.cores=detectCores())
 - threading module
 
 ---
-### Parallel by dependency
+### Workflows
 
-- not necessarily node-threaded, but likely has shared file-system requirements
-- requires a dependency graph of workflow steps
-- requires a layer of task management above typical HPC usage
-- limited to independent workflow elements
+> A workflow or pipeline is a repeatable sequence of tasks that process a piece of data. 
 
----
-### Scopes of parallelism: tradeoffs
-
-
+<div class="mermaid">
+flowchart LR
+  Data --> Task1 --> Task2 --> Task3 --> Output
+</div>
 ---
 ### Workflow spectrum
 
@@ -142,8 +212,6 @@ mclapply(data, function, mc.cores=detectCores())
 - Shell scripting lacks the features in a full-service language
 
 ---
-### Stop writing shell scripts!
-
 > The shell makes common and simple actions really simple, at the expense of making more complex things much more complex.
 
 ---
@@ -161,6 +229,36 @@ mclapply(data, function, mc.cores=detectCores())
 Source: https://www.bigocheatsheet.com/
 
 
+
+1. algorithm complexity
+2. language choice and quirks
+3. 
+
+
+---
+### Use vectorized loops in R
+
+```R
+library("microbenchmark")
+d = matrix(rnorm(10000000), 10, 1000000)
+myMeans = function(d) {
+	means = c()
+	for (i in 1:1000000) {		means[i] = mean(d[,i])	}
+	means
+}
+
+microbenchmark(	
+	myMeans(d),
+	apply(d, 2, mean),
+	colMeans(d),
+	times=3)
+
+Unit: milliseconds
+              expr  min   lq mean median   uq   max neval
+        myMeans(d) 4693 4880 4997   5067 5149  5230     3
+ apply(d, 2, mean) 4856 5047 5152   5237 5300  5363     3
+       colMeans(d)    7    7    7      7    7     8     3
+```
 
 ---
 Tabix indexing
@@ -183,4 +281,4 @@ BigBed and BigWig
 
 - Compressed and Indexed versions of BED and WIG files.
 - Compresed: makes the files much smaller.
-- Indexed: Allows random access, so you can read specific chunks
+- Indexed: Random access allows reading specific chunks

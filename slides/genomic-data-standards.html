@@ -5,6 +5,8 @@ tags: slides
 date: 2021-12-09
 ---
 
+
+
 # {{ page.title }}
 ---
 
@@ -18,12 +20,31 @@ date: 2021-12-09
 What happens when there is no standard  
 (or, when there are too many standards)
 
-<img src="images/geektech-charging-leads.png" width="600" alt="Geektech charging leads">
+<img src="images/genomic-data-standards/geektech-charging-leads.png" width="600" alt="Geektech charging leads">
 
 ---
-<img src="images/eu-common-charger.png" width="600" alt="Geektech charging leads">
+<img src="images/genomic-data-standards/eu-common-charger.png" width="600" alt="Geektech charging leads">
 ---
-<img src="https://imgs.xkcd.com/comics/standards.png" width="600">
+
+<a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png">
+
+---
+### Who is the target audience?
+
+- humans?
+- computers?
+
+It's easy to build a human-friendly interface to data organized for computers. The opposite is not true.
+
+---
+### Aside: My Advice
+
+1. Make and share your data in *computable* form
+2. Make *everything* computable
+	- literature text processing. we have to get text out of a PDF.
+
+Computability is a prerequisite for interoperability
+
 ---
 ### Existing standards in genomics
 
@@ -33,28 +54,60 @@ What happens when there is no standard
   - SAM/BAM: Aligned DNA sequences
   - VCF: genomic variation
   - BED: genomic intervals
+
+---
+### File formats are not enough
+
+Say I have two BED files. Are they comparable?
+
+File 1: 
+```
+chr1  15300  17300
+chr1  24900  25600
+chr1  72420  74440
+```
+
+File 2:
+```
+1  18110  19300
+1  64000  65600
+1  72400  74700
+```
+
+<div class="fragment">sequence names must match</div>
+<div class="fragment">reference sequence must be compatible</div>
+
+---
+### Existing standards in genomics
+
 - Reference genomes
-  - GRCh38/hg38 human reference genome
+  - human reference: hg18, hg19, hg38/GRCh38
+  - human T2T reference
+  - mouse reference: mm8, mm9, mm10
   - Other reference genomes
 ---
+### Liftover
 
+<img src="images/genomic-data-standards/liftover.jpeg" height="500">
+
+See [Luu et al. 2020](https://doi.org/10.1093/nargab/lqaa054)
+
+---
 ### Existing standards in genomics
 - Gene names
   - HUGO Gene Nomenclature Committee (https://www.genenames.org/)
 - Gene and transcript annotation
   - GENCODE (https://www.gencodegenes.org/)
----
-### Standards in genomics are important
-- Genomes will always be a community resource
-- It's a huge, worldwide, rapidly growing endeavor
----
-### You should
-- Be familiar with existing standards
-- Be aware of current work on new standards
 
-- Don't reinvent the wheel
-- Contribute to the community
-- Interoperability means greater impact
+---
+### RNA-seq
+
+<a href="https://en.wikipedia.org/wiki/RNA-Seq"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Summary_of_RNA-Seq.svg" height="600"></a>
+
+---
+### Transcript models
+
+![](images/genomic-intervals/brca2-gene-model.png)
 
 ---
 ### GA4GH
@@ -65,14 +118,12 @@ What happens when there is no standard
 - formed in 2013
 
 ---
-### Web
+### The increasing importance of web standards
 
 As data and analysis become larger and more distributed, more recent standards increase involvement of web concepts
 
-
 ---
 ### RESTful API
-
 
 ---
 ### Refget
@@ -89,3 +140,19 @@ As data and analysis become larger and more distributed, more recent standards i
 --- 
 ### WES
 
+---
+
+<img src="https://imgs.xkcd.com/comics/standards.png" width="600">
+
+---
+### Standards in genomics are important
+- Genomes will always be a community resource
+- It's a huge, worldwide, rapidly growing endeavor
+---
+### You should
+- Be familiar with existing standards
+- Be aware of current work on new standards
+
+- Don't reinvent the wheel
+- Contribute to the community
+- Interoperability means greater impact

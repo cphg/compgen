@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1600"
+   height="1200"
+   viewBox="0 0 1600 1200"
+   id="svg4161"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="10-results.svg">
+  <defs
+     id="defs4163" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#000000"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.69957755"
+     inkscape:cx="1073.0981"
+     inkscape:cy="30.451102"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px" />
+  <metadata
+     id="metadata4166">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,147.63784)">
+    <rect
+       style="color:#ffffff;display:inline;overflow:visible;visibility:visible;opacity:0.15;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate"
+       id="rect3574"
+       width="661.31812"
+       height="191.08182"
+       x="762.63281"
+       y="252.28625" />
+    <text
+       xml:space="preserve"
+       style="color:#ffffff;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.5112648px;line-height:125%;font-family:'Courier New';-inkscape-font-specification:'Courier New';text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate"
+       x="194.55499"
+       y="289.25125"
+       id="text6401-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.99996271,1.0000373)"><tspan
+         sodipodi:role="line"
+         x="194.55499"
+         y="289.25125"
+         style="font-weight:bold;font-size:34.5112648px;-inkscape-font-specification:'Courier New Bold'"
+         id="tspan4319">query dbSet      collection pValueLog      oddsRat support</tspan><tspan
+         sodipodi:role="line"
+         x="194.55499"
+         y="332.39032"
+         style="font-weight:normal;font-size:34.5112648px;-inkscape-font-specification:'Courier New'"
+         id="tspan4321">1       669     encode_tfbs 234.69021    159.06016      68</tspan><tspan
+         sodipodi:role="line"
+         x="194.55499"
+         y="375.52942"
+         style="font-weight:normal;font-size:34.5112648px;-inkscape-font-specification:'Courier New'"
+         id="tspan4324">1      2326 sheffield_dnase  71.34937     81.27610      21</tspan><tspan
+         sodipodi:role="line"
+         x="194.55499"
+         y="418.66849"
+         style="font-weight:normal;font-size:34.5112648px;-inkscape-font-specification:'Courier New'"
+         id="tspan4326">1       668     encode_tfbs 100.50736     64.15682      33</tspan><tspan
+         sodipodi:role="line"
+         x="194.55499"
+         y="461.80759"
+         style="font-weight:normal;font-size:34.5112648px;-inkscape-font-specification:'Courier New'"
+         id="tspan4329" /><tspan
+         sodipodi:role="line"
+         x="194.55499"
+         y="504.94666"
+         id="tspan6413-9" /><tspan
+         sodipodi:role="line"
+         x="194.55499"
+         y="548.08575"
+         id="tspan6415-3" /></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text4337"
+       y="224.16159"
+       x="834.81049"
+       style="color:#ffffff;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.5112648px;line-height:125%;font-family:Arial;-inkscape-font-specification:Arial;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#e56956;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate;"
+       xml:space="preserve"><tspan
+         y="224.16159"
+         x="834.81049"
+         id="tspan4339"
+         sodipodi:role="line">Overlap Enrichment Significance</tspan></text>
+    <text
+       xml:space="preserve"
+       style="color:#ffffff;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.5112648px;line-height:125%;font-family:Arial;-inkscape-font-specification:Arial;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#ffaa53;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate;"
+       x="297.96857"
+       y="224.16159"
+       id="text4404"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4406"
+         x="297.96857"
+         y="224.16159">Region Set Identification</tspan></text>
+    <rect
+       y="252.28625"
+       x="179.77589"
+       height="191.08182"
+       width="578.48907"
+       id="rect4408"
+       style="color:#ffffff;display:inline;overflow:visible;visibility:visible;opacity:0.15;fill:#d45500;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate" />
+    <rect
+       y="566.39667"
+       x="29.620218"
+       height="191.08182"
+       width="731.20392"
+       id="rect4501"
+       style="color:#ffffff;display:inline;overflow:visible;visibility:visible;opacity:0.15;fill:#000080;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate" />
+    <rect
+       y="566.39612"
+       x="1138.2545"
+       height="191.08215"
+       width="444.55942"
+       id="rect4503"
+       style="color:#ffffff;display:inline;overflow:visible;visibility:visible;opacity:0.2;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4505"
+       y="538.27203"
+       x="313.66171"
+       style="color:#ffffff;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.5112648px;line-height:125%;font-family:Arial;-inkscape-font-specification:Arial;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#24c1d7;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate;"
+       xml:space="preserve"><tspan
+         y="538.27203"
+         x="313.66171"
+         id="tspan4507"
+         sodipodi:role="line">Ranking</tspan></text>
+    <text
+       xml:space="preserve"
+       style="color:#ffffff;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.5112648px;line-height:125%;font-family:Arial;-inkscape-font-specification:Arial;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#ded724;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate;"
+       x="796.8999"
+       y="538.27203"
+       id="text4509"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4511"
+         x="796.8999"
+         y="538.27203">Contingency Table</tspan></text>
+    <rect
+       style="color:#ffffff;display:inline;overflow:visible;visibility:visible;opacity:0.15;fill:#aa8800;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate"
+       id="rect4513"
+       width="380.12372"
+       height="191.08182"
+       x="757.67041"
+       y="566.39667" />
+    <text
+       transform="scale(0.99996271,1.0000373)"
+       sodipodi:linespacing="125%"
+       id="text4517"
+       y="603.3501"
+       x="37.494011"
+       style="color:#ffffff;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.5112648px;line-height:125%;font-family:'Courier New';-inkscape-font-specification:'Courier New';text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate"
+       xml:space="preserve"><tspan
+         id="tspan4519"
+         style="font-weight:bold;font-size:34.5112648px;-inkscape-font-specification:'Courier New Bold'"
+         y="603.3501"
+         x="37.494011"
+         sodipodi:role="line">rnkPV rnkOR rnkSup maxRnk meanRnk     b   c       d           description</tspan><tspan
+         id="tspan4521"
+         style="font-weight:normal;font-size:34.5112648px;-inkscape-font-specification:'Courier New'"
+         y="646.4892"
+         x="37.494011"
+         sodipodi:role="line">    1    35      2     35     12.7 37981  32 2851474    SK-N-MC Pol2 ChIP</tspan><tspan
+         id="tspan4523"
+         style="font-weight:normal;font-size:34.5112648px;-inkscape-font-specification:'Courier New'"
+         y="689.62823"
+         x="37.494011"
+         sodipodi:role="line">    5    70     28     70     34.3  9443  79 2880012  Ewing sarcoma DNase</tspan><tspan
+         id="tspan4525"
+         style="font-weight:normal;font-size:34.5112648px;-inkscape-font-specification:'Courier New'"
+         y="732.76733"
+         x="37.494011"
+         sodipodi:role="line">    2    75      9     75     28.7 21989  67 2867466   SK-N-MC FOXP2 ChIP</tspan><tspan
+         id="tspan4527"
+         style="font-weight:normal;font-size:34.5112648px;-inkscape-font-specification:'Courier New'"
+         y="775.90643"
+         x="37.494011"
+         sodipodi:role="line" /><tspan
+         id="tspan4529"
+         y="819.04553"
+         x="37.494011"
+         sodipodi:role="line" /><tspan
+         id="tspan4531"
+         y="862.18457"
+         x="37.494011"
+         sodipodi:role="line" /></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text4533"
+       y="538.27203"
+       x="1256.6085"
+       style="color:#ffffff;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.5112648px;line-height:125%;font-family:Arial;-inkscape-font-specification:Arial;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#5bb128;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate;"
+       xml:space="preserve"><tspan
+         y="538.27203"
+         x="1256.6085"
+         id="tspan4535"
+         sodipodi:role="line">Description</tspan></text>
+  </g>
+</svg>

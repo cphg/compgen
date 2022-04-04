@@ -1,6 +1,6 @@
 ---
 layout: reveal_markdown
-title: "Interval Data Structures"
+title: "Genomic Intervals"
 tags: slides 
 date: 2021-12-09
 ---
@@ -136,7 +136,7 @@ Interval operations are fundamental in genomics
 - [narrowPeak](http://genome.ucsc.edu/FAQ/FAQformat.html#format12)
 - [broadPeak](http://genome.ucsc.edu/FAQ/FAQformat.html#format13)
 - Genome Feature Format ([GTF](http://uswest.ensembl.org/info/website/upload/gff.html), [GFF2](http://gmod.org/wiki/GFF2), [GFF3](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md))
-  - Used For storing transcripts, exons, *etc.*
+  - Used for storing transcripts, exons, *etc.*
 - Many custom variations!
 
 ---
@@ -292,7 +292,6 @@ $  A \overset{?}\cap B$
 
 ![](images/genomic-intervals/intervals-intersect.svg)
 
-$A_{start} = 5$ &nbsp; $A_{end} = 25$ &nbsp; $B_{start} = 23$ &nbsp; $B_{end} = 30$
 
 ---
 ![](images/genomic-intervals/intervals-intersect.svg)
@@ -498,6 +497,28 @@ How can we handle containment?
 - See [B+ Tree at Wikipedia](https://en.wikipedia.org/wiki/B%2B_tree)
 
 ![](images/genomic-intervals/Bplustree.png)
+
+---
+### Region set enrichment analysis
+
+Given a query region set (say, from a ChIP-seq experiment), what other, previously published region sets are most similar?
+
+
+---
+### Interval similarity metrics
+- Overlap count
+- Jaccard index $\frac{A \cap B}{A \cup B}$
+
+---
+<img src="images/genomic-intervals/07-lola1.svg" />
+---
+<img src="images/genomic-intervals/08-lola2.svg" />
+---
+<img src="images/genomic-intervals/09-test.svg" />
+---
+<img src="images/genomic-intervals/10-results.svg" />
+
+
 
 ---
 # Conclusion

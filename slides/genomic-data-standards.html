@@ -110,6 +110,10 @@ See [Luu et al. 2020](https://doi.org/10.1093/nargab/lqaa054)
 ![](images/genomic-intervals/brca2-gene-model.png)
 
 ---
+
+tximeta
+
+---
 ### GA4GH
 
 > The Global Alliance for Genomics and Health (GA4GH) is a policy-framing and technical standards-setting organization, seeking to enable responsible genomic data sharing within a human rights framework.
@@ -123,22 +127,101 @@ See [Luu et al. 2020](https://doi.org/10.1093/nargab/lqaa054)
 As data and analysis become larger and more distributed, more recent standards increase involvement of web concepts
 
 ---
-### RESTful API
+### Application programming interface (API)
+
+- An API defines protocols and formats for input and output of a computing system
+- It provides an abstraction layer to a user
+
+---
+### REST
+
+- "Representational state transfer"
+- REST is a software architectural style.
+- It specifies constraints for an API. Most important:
+
+1. Loose coupling between client and server
+2. Abstraction of server resources
+3. Persistent Uniform Resource Identifiers (URIs)
+4. Stateless -- client manages state
+5. Representations of resource as universal as possible
+
+---
+### JSON
+
+- JavaScript Object Notation is language-agnostic
+- The standard interchange format for the web
+
+An object is an unordered set of name/value pairs. An object begins with `{` and ends with `}`. Each name is followed by `:` and the name/value pairs are separated by `,`
+
+```json
+{
+	"name":"John",
+	"age":30,
+	"car":null
+}
+
+```
 
 ---
 ### Refget
 
---- 
+---
 ### Sequence Collections
 
 ---
-### DRS
+### GA4GH:DRS
 
---- 
-### TES
+[Data Repository Service (DRS)](https://ga4gh.github.io/data-repository-service-schemas/preview/release/drs-1.0.0/docs/)
 
---- 
+Objects in the repository have unique identifiers  
+
+```
+/objects/{object_id}
+# returns a JSON response including access methods 
+```
+
+```
+/objects/{object_id}/access/{access_id}
+# returns a URL where you can get the object  
+``` 
+
+---
+### GA4GH:DRS
+
+#### Current approach 
+
+You share your data with a link on your website
+
+<div class="fragment">
+
+#### Future approach
+
+You implement DRS. Then, a standard DRS client could get data, making your data more accessible.
+
+</div>
+
+---
 ### WES
+
+[Workflow Execution Service](https://ga4gh.github.io/workflow-execution-service-schemas/docs/)
+
+Provides a standard way for users to submit workflow requests to workflow execution systems, and to monitor their execution
+
+- GET `/runs` - to list current runs
+- POST `/runs` - to start a new run
+- GET `/runs/{run_id}` - information about a run
+- GET `/runs/{run_id}/status` - status of a run
+- POST `/runs/{run_id}/cancel` - cancels a run
+
+---
+### GA4GH:TES
+
+[Task Execution Service](https://ga4gh.github.io/task-execution-schemas/docs/)
+
+- GET `/tasks` - list tasks tracked by the TES server
+- POST `/tasks` - create new task
+- GET `/tasks/{id}` - get a single task
+- POST `/tasks/{id}:cancel` - cancel a task
 
 ---
 
@@ -151,8 +234,9 @@ As data and analysis become larger and more distributed, more recent standards i
 ---
 ### You should
 - Be familiar with existing standards
-- Be aware of current work on new standards
+- Use them whenever possible
+- Be aware of work on new standards
 
-- Don't reinvent the wheel
-- Contribute to the community
-- Interoperability means greater impact
+<div class="fragment">
+Remember, interoperability means impact
+</div>

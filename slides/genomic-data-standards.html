@@ -5,6 +5,17 @@ tags: slides
 date: 2021-12-09
 ---
 
+<style>
+
+
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:18px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+
+</style>
+
 
 
 # {{ page.title }}
@@ -18,7 +29,7 @@ date: 2021-12-09
 ---
 
 What happens when there is no standard  
-(or, when there are too many standards)
+(or, equivalently, too many standards)
 
 <img src="images/genomic-data-standards/geektech-charging-leads.png" width="600" alt="Geektech charging leads">
 
@@ -29,12 +40,21 @@ What happens when there is no standard
 <a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png">
 
 ---
-### Who is the target audience?
+### Aside: My Advice
+
+Who is the target audience?
 
 - humans?
 - computers?
 
-It's easy to build a human-friendly interface to data organized for computers. The opposite is not true.
+<div class="fragment">It's easy to build a human-friendly interface to data organized for computers. The opposite is not true.</div>
+
+<div class="fragment">
+So, always build in this direction: 
+
+computers &rightarrow; humans
+
+</div>
 
 ---
 ### Aside: My Advice
@@ -45,15 +65,32 @@ It's easy to build a human-friendly interface to data organized for computers. T
 
 Computability is a prerequisite for interoperability
 
+
+
+
 ---
 ### Existing standards in genomics
 
 - File formats
+- Reference genomes
+- Web standards and APIs
+- Ontologies
+
+---
+### GA4GH
+
+> The Global Alliance for Genomics and Health (GA4GH) is a policy-framing and technical standards-setting organization, seeking to enable responsible genomic data sharing within a human rights framework.
+
+- [ga4gh.org](https://www.ga4gh.org/)
+- formed in 2013
+
+---
+### Standards: File formats
+  - BED: genomic intervals
   - FASTA: DNA sequences
   - FASTQ: Short DNA sequencer reads
   - SAM/BAM: Aligned DNA sequences
   - VCF: genomic variation
-  - BED: genomic intervals
 
 ---
 ### File formats are not enough
@@ -78,19 +115,128 @@ File 2:
 <div class="fragment">reference sequence must be compatible</div>
 
 ---
-### Existing standards in genomics
+### Standards: Reference genomes
 
-- Reference genomes
-  - human reference: hg18, hg19, hg38/GRCh38
-  - human T2T reference
-  - mouse reference: mm8, mm9, mm10
-  - Other reference genomes
+Reference genomes are versioned.
+
+human reference: hg18, hg19, hg38/GRCh38, T2T
+
+mouse reference: mm8, mm9, mm10
+
+They are not compatible!
+
 ---
-### Liftover
+### Converting among genome builds
+
+Liftover ([Luu et al. 2020](https://doi.org/10.1093/nargab/lqaa054))
 
 <img src="images/genomic-data-standards/liftover.jpeg" height="500">
 
-See [Luu et al. 2020](https://doi.org/10.1093/nargab/lqaa054)
+---
+### Standards: Reference genomes
+
+There are also many variations of the *same* version.
+
+- 3 GRCh38 providers: NCBI, Ensembl, UCSC
+- hard- soft-, or no repeat masks?
+- what are the chromosomes named (1 vs chr1 vs chr1, NC_000001.11)
+- what secondary scaffolds are included?
+- how is the assembly named (hg38, GRCh38, or GCF_000001405.39)
+- are any decoy sequences included (like EBV)?
+
+<div class="fragment">
+Downstream results are not compatible if based on a different reference!
+</div>
+
+---
+Andy Yates' "Genome provider analysis"
+<table class="tg" style="margin-bottom:60px">
+<thead>
+  <tr>
+    <th class="tg">Provider</th>
+    <th class="tg">Chr1 name</th>
+    <th class="tg">Chr1 length</th>
+    <th class="tg">Chr1 md5</th>
+    <th class="tg">Num chroms</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg">Ensembl primary</td>
+    <td class="tg">1</td>
+    <td class="tg">248956422</td>
+    <td class="tg">2648ae1bacce4ec4b6cf337dcae37816</td>
+    <td class="tg">195</td>
+  </tr>
+  <tr>
+    <td class="tg">Ensembl toplevel</td>
+    <td class="tg">1</td>
+    <td class="tg">248956422</td>
+    <td class="tg">2648ae1bacce4ec4b6cf337dcae37816</td>
+    <td class="tg">649</td>
+  </tr>
+  <tr>
+    <td class="tg">NCBI</td>
+    <td class="tg">NC_000001.11</td>
+    <td class="tg">248956422</td>
+    <td class="tg">6aef897c3d6ff0c78aff06ac189178dd</td>
+    <td class="tg">640</td>
+  </tr>
+  <tr>
+    <td class="tg">UCSC</td>
+    <td class="tg">chr1</td>
+    <td class="tg">248956422</td>
+    <td class="tg">2648ae1bacce4ec4b6cf337dcae37816</td>
+    <td class="tg">456</td>
+  </tr>
+</tbody>
+</table>
+
+<div class="small">https://gist.github.com/andrewyatz/692f81baab1bebaf09c481937f2ad6c6</div>
+
+
+---
+
+<h2>How refget works</h2>
+
+<div class="col2">
+<img src="images/genomic-data-standards/refget_concept.svg" style="background:white" width="400">
+</div>
+
+---
+### Hashing
+
+> A hash function maps an object to a finite space
+
+- must be deterministic
+- should be very fast to compute
+- should reduce collisions
+
+<div class="fragment">Used for hash tables, but also...</div>
+
+---
+### Hashing
+
+The output, called a *hash* or *digest*, can be seen as a fingerprint or barcode. It is a unique identifier of an input item.
+
+<div class="fragment">As long as there are no collisions...</div>
+
+
+---
+
+<h2>Sequence collections</h2>
+
+Digest algorithm
+
+<img src="images/genomic-data-standards/digest_algorithm.svg" style="background:white" width="900">
+
+---
+
+<h2>Sequence collections</h2>
+
+Digest lookup
+
+<img src="images/genomic-data-standards/digest_lookup.svg" style="background:white" width="900">
 
 ---
 ### Existing standards in genomics
@@ -112,14 +258,6 @@ See [Luu et al. 2020](https://doi.org/10.1093/nargab/lqaa054)
 ---
 
 tximeta
-
----
-### GA4GH
-
-> The Global Alliance for Genomics and Health (GA4GH) is a policy-framing and technical standards-setting organization, seeking to enable responsible genomic data sharing within a human rights framework.
-
-- [ga4gh.org](https://www.ga4gh.org/)
-- formed in 2013
 
 ---
 ### The increasing importance of web standards

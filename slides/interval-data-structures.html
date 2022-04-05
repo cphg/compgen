@@ -284,7 +284,6 @@ Processing level. Raw signal vs. summary signal vs. regions
 - **intersection**
 - **union**
 - **overlap**
-- **flat**: a region set that is non-overlapping
 
 ---
 ### Biological questions, interval computations
@@ -516,9 +515,8 @@ How can we handle containment?
 
 - B trees
 - R trees
-- B+ trees
-- Interval trees
 - Nested containment lists
+- Augmented interval lists
 
 ---
 ### B trees
@@ -532,11 +530,11 @@ How can we handle containment?
 ![](images/genomic-intervals/B-tree.svg)
 
 ---
-### R trees
-- Generalization of a B-tree beyond integer keys (used by BEDtools)
+### R trees - [Guttman 1984](https://doi.org/10.1145/971697.602266)
+- Generalization of a B-tree beyond integer keys 
+- Used by [BEDtools](https://bedtools.readthedocs.io/en/latest/)
 - A flavor of [k-d trees](https://en.wikipedia.org/wiki/K-d_tree)
 - Annotates tree nodes with a *minimum bounding rectangle* of elements. A query that does not intersect the bounding rectangle will not intersect any child element.
-- Introduced by [Guttman 1984](https://doi.org/10.1145/971697.602266)
 
 ---
 
@@ -544,18 +542,20 @@ How can we handle containment?
 
 ---
 ### Nested containment list
+<a href="https://doi.org/10.1093/bioinformatics/btl647">Alekseyenko & Lee 2017</a>
 
-- Used by GenomicRanges
+- Used by Bioconductor GenomicRanges class
 ![](images/genomic-intervals/nclist.png)
 
 ---
-### B+ trees
 
-- A B tree but nodes hold keys pointing to a linked list of values.
-- Used by GIGGLE
-- See [B+ Tree at Wikipedia](https://en.wikipedia.org/wiki/B%2B_tree)
+Augmented Interval List - <a href="https://doi.org/10.1093/bioinformatics/btz407">Feng et al 2019</a>
 
-![](images/genomic-intervals/Bplustree.png)
+![](images/genomic-intervals/subject-query-containment.svg)
+
+![](images/genomic-intervals/binary-search-maxE.svg)
+
+
 
 ---
 ### Intro to [Bioconductor Genomic Ranges](https://bioconductor.org/packages/devel/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesIntroduction.html)
@@ -723,15 +723,13 @@ gr[2:3]  # subset
 ---
 ### Region set enrichment analysis
 
-- Has any previous experiment previously identified region $r$?
-
 Given a query region set (say, from a ChIP-seq experiment), what other, previously published region sets are most similar?
-
 
 ---
 ### Interval similarity metrics
 - Overlap count
-- Jaccard index $\frac{A \cap B}{A \cup B}$
+<li class="fragment">Jaccard index $\frac{A \cap B}{A \cup B}$</li>
+<li class="fragment">Fisher's Exact Test (LOLA, <a href="https://doi.org/10.1093/bioinformatics/btv612">Sheffield and Bock 2016</a>)</li>
 
 ---
 <img src="images/genomic-intervals/07-lola1.svg" />
@@ -742,7 +740,32 @@ Given a query region set (say, from a ChIP-seq experiment), what other, previous
 ---
 <img src="images/genomic-intervals/10-results.svg" />
 
+---
 
+<img src="images/genomic-intervals/subject-query-one-vs-one.svg">
+<img src="images/genomic-intervals/subject-query-one-vs-many.svg">
+
+---
+<img src="images/genomic-intervals/subject-query-one-vs-many-loop.svg">
+<div class="fragment">
+<img src="images/genomic-intervals/subject-query-one-vs-many-integrate.svg">
+</div>
+
+---
+### B+ trees
+
+- A B tree but nodes hold keys pointing to a linked list of values.
+- Used by [GIGGLE](https://www.nature.com/articles/nmeth.4556)
+- See [B+ Tree at Wikipedia](https://en.wikipedia.org/wiki/B%2B_tree)
+
+![](images/genomic-intervals/Bplustree.png)
+---
+### Integrated Genome Database
+
+- Introduced by [Feng and Sheffield 2021](https://doi.org/10.1093/bioinformatics/btaa1062)
+- Uses a linear binning of an array
+
+![](images/genomic-intervals/igd.jpg)
 
 ---
 # Conclusion

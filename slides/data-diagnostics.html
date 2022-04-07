@@ -23,12 +23,6 @@ date: 2021-12-09
 
 <img src="images/data-diagnostics/reznikoff2008_fig4.jpg"  height="600">
 
----
-<img src="images/data-diagnostics/reznikoff2008_fig2.jpg">
-
----
-<img src="images/data-diagnostics/tn5_shift.svg" style="background-color:white;">
-
 
 ---
 ### ChIP-seq vs ATAC-seq
@@ -39,6 +33,7 @@ date: 2021-12-09
 #### ChIP-seq
 - uses an antibody
 - selects a specific factor
+- identifies fragments
 </div>
 
 <div class="col">
@@ -46,6 +41,7 @@ date: 2021-12-09
 #### ATAC-seq
 - no antibody
 - all factors
+- identifies nucleotides
 </div>
 
 </div>
@@ -58,6 +54,24 @@ date: 2021-12-09
 flowchart LR
   Sequences --> Alignment --> Counting --> x[Peak calling] --> Summary
 </div>
+
+---
+<img src="images/data-diagnostics/pepatac_workflow_white.svg" height="670">
+
+---
+<img src="images/data-diagnostics/reznikoff2008_fig2.jpg">
+
+---
+<img src="images/data-diagnostics/tn5_shift.svg" style="background-color:white;">
+
+---
+### ATAC-seq peak calling
+
+F-seq uses kernel density estimation: [Boyle et al. 2007](https://doi.org/10.1093/bioinformatics/btn480)
+
+<img src="images/data-diagnostics/fseq-kernel-figure.png" style="background-color:white;" width="600">
+
+
 
 ---
 ### QC metrics for ATAC-seq
@@ -87,8 +101,9 @@ $ S_{TSS} = \frac{ TSS }{ background } $
 ---
 ### Biological questions for chromatin analysis
 
-- How does the chromatin state change as a cell differentiates?
-- What genome regions are used specifically by cell type $x$?
+- What regions are specific to cell-type $x$?
+- How do they change during differentiation?
+- What genetic variation affects accessibility?
 
 <div class="fragment">
 How can we compare samples?
@@ -157,10 +172,15 @@ But combining many samples has low resolution
 - Tile boundaries are artificial and may split meaningful units
 
 ---
+### Consensus peaks 3: Union-tile
 
-### Consensus peaks 3: Algorithm
+<img src="images/data-diagnostics/union-tile-overlap.svg" height="400" style="background:white">
 
-<img src="images/data-diagnostics/Granja_Corces_ArchR_Sup9b.svg" height="600" style="background:white">
+---
+
+### Consensus peaks 4: Algorithm
+
+<a href="https://doi.org/10.1126/science.aav1898"><img src="images/data-diagnostics/Granja_Corces_ArchR_Sup9b.svg" height="600" style="background:white"></a>
 
 ---
 You have consensus peaks.
@@ -350,20 +370,50 @@ ggplot() + geom_point(aes(x = quantile(d1n, res), y = quantile(d2n, res))) + the
 ---
 
 ```R
+d1 = rexp(5000, 2)
+d2 = rexp(5000, 4)
+```
+<img src="images/data-diagnostics/norm-exp-exp.png" height=450>
+
+---
+
+```R
 d1 = rnorm(5000, 3, 1)
 d2 = rnorm(5000, 3, 2)
 ```
-<div class="row">
+<img src="images/data-diagnostics/norm-norm-norm.png" height=450>
 
-<div class="col">
-Raw:<br>
-<img src="images/data-diagnostics/norm-dists.png" height=220><img src="images/data-diagnostics/norm-qq.png" height=220>
-</div>
-<div class="col">
-	Q-norm:<br>
-<img src="images/data-diagnostics/norm-dists-qnorm.png" height=220><img src="images/data-diagnostics/norm-qq-qnorm.png" height=220>
-</div>
-</div>
+---
+```R
+d1 = c(rnorm(2000, 2, 1), rnorm(3000, 6, 2))
+d2 = rnorm(5000, 3, 2)
+```
+<img src="images/data-diagnostics/norm-binorm-norm.png" height=450>
+
+---
+```R
+d1 = c(rnorm(4995, 3, 2), rnorm(5, 35, 1))
+d2 = rnorm(5000, 3, 2)
+```
+<img src="images/data-diagnostics/norm-norm-outlier.png" height=450>
+
+
+---
+
+```R
+d1 = rnorm(5000, 3, 4)
+d2 = rexp(5000, 3, 2)
+```
+<img src="images/data-diagnostics/norm-norm-exp.png" height=450>
+
+---
+
+```R
+d1 = rbinom(5000, 30, .5)
+d2 = rpois(5000, 15)
+```
+<img src="images/data-diagnostics/norm-binom-pois.png" height=450>
+
 ---
 ### Clip functions
 
@@ -410,3 +460,94 @@ Problems with region masking
 <li>Inaccurate alignment statistics</li>
 <li>Requires pre-defined NuMt locations</li>
 <li>Wastes compute power</li>
+
+
+---
+### Batch effects
+
+
+Normalization $ \ne $ Batch correction
+
+---
+
+[Leek et al. 2010](https://doi.org/10.1038/nrg2825) says:
+
+> Normalization adjusts global properties of measurements for individual samples so that they can be more appropriately compared.
+
+> Normalization does not remove batch effects, which affect specific subsets of genes and may affect different genes in different ways.
+
+---
+
+![](images/data-diagnostics/batch-effects.jpg)
+
+---
+
+> We found batch effects for all of these data sets, and substantial percentages (32.1–99.5%) of measured features showed statistically significant associations with processing date, irrespective of biological phenotype (Table 1). This suggests that batch effects influence a large percentage of the measurements from genomic technologies. 
+
+---
+
+### Sources of batch effects
+
+- experimental conditions
+- different protocols
+- different labs
+- different technicians
+- sequencing equipment
+- lane in a sequencer
+- day of the week
+- reagent lots
+
+---
+
+<img src="images/data-diagnostics/batch-correction-example.png" height="670">
+
+---
+### Batch correction approaches
+
+#### Known batches
+
+Known batches &rightarrow; remove effects
+
+#### Unknown batches
+
+Keep biological signal &rightarrow; remove everything else
+
+---
+
+### Known batches
+
+1. Exploratory Data Analysis
+	- PCA
+	- Clustering
+	- Individual feature plots
+2. Statistical correction
+	- [ComBat](https://doi.org/10.1093/nargab/lqaa078)
+
+---
+
+![](images/data-diagnostics/pca-batch-demo.png)
+
+---
+### Surrogate Variable Analysis
+
+[Leek and Storey 2007](https://doi.org/10.1371/journal.pgen.0030161)
+
+1. Remove signal of variable of interest from data.
+2. Decompose the residual matrix to identify vectors with more variation than expected by chance (permutation test).
+
+---
+### Surrogate Variable Analysis
+
+3. Identify the subset of genes driving each vector. 
+4. For each subset of genes, build a surrogate variable based on the original expression data.
+5. Include surrogate variables as covariates in subsequent analyses.
+
+---
+### Confounding
+
+Technical batches coincide with biological interest.
+
+*e.g.* controls processed one day, cases another.
+
+
+---

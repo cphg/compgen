@@ -1,6 +1,6 @@
 ---
 layout: reveal_markdown
-title: "Data diagnostics and harmonization"
+title: "ATAC-seq data diagnostics and harmonization"
 tags: slides 
 date: 2021-12-09
 ---
@@ -52,7 +52,11 @@ date: 2021-12-09
 
 <div class="mermaid">
 flowchart LR
-  Sequences --> Alignment --> Counting --> x[Peak calling] --> Summary
+  Sequences  --> Alignment --> Counting --> x[Peak calling]
+</div>
+<div class="mermaid">
+flowchart LR
+  FASTQ --> BAM --> WIG --> BED
 </div>
 
 ---
@@ -76,6 +80,10 @@ F-seq uses kernel density estimation: [Boyle et al. 2007](https://doi.org/10.109
 ---
 ### QC metrics for ATAC-seq
 
+Pre-alignment:
+- Fastqc
+
+Post-alignment:
 - TSS enrichment score
 - Fragment distribution
 
@@ -235,9 +243,9 @@ How would you create a peak accessibility matrix?
 
 Reads per Kilobase per Million (RPKM) normalizes to depth and gene length.
 
-1. $ s = \sum{ R } / 1000000 $ 
-2. For each gene, $ e^{scaled}_g = e^{raw}_g / s $.
-3. For each gene, $ e_g = e^{raw}_g / l_g $,
+1. $ R^{mil} = \sum{ R } / 1000000 $ 
+2. For each gene, $ e^{scaled}_g = \frac{e^{raw}_g}{R^{mil}} $.
+3. For each gene, $ e_g = \frac{e^{scaled}_g}{l_g} $,
 	where $ l $ is length of the gene (in kb)
 
 
@@ -460,6 +468,9 @@ Problems with region masking
 <li>Inaccurate alignment statistics</li>
 <li>Requires pre-defined NuMt locations</li>
 <li>Wastes compute power</li>
+
+---
+<img src="images/data-diagnostics/prealignments2.svg" width="800">
 
 
 ---

@@ -28,6 +28,9 @@ Genomics can be 'big data'.<br>
 
 <img src="images/scalable-computing-genomics/performance-importance-heatmap.svg" height="400" style="background:white">
 
+<div class="fragment">
+Scalability considers time and space
+</div>
 ---
 
 ### Approaches for scalability
@@ -407,7 +410,7 @@ Unit: milliseconds
 - Memory lookups are quick
 
 ---
-### Count ATAC-seq signal intensity in consensus peaks
+### Extract ATAC in consensus peaks
 
 Method 1 pseudocode:
 ```python
@@ -424,4 +427,22 @@ def quantify_accessibility(peaks_bed, reads_bam):
 		count_reads(r, readsbam)
 ```
 
+Which is faster? Which uses more memory?
+
+
 <div class="fragment">Could we switch the peaks and reads?</div>
+
+---
+# Compression
+
+Does smaller = faster ?
+
+- Zipping files leads to faster transfer
+- But zipping files must be unzipped to be read
+- Disk space vs compute time is also a tradeoff
+
+
+---
+### CRAM
+
+"Reference-based" compression ([Fritz 2011](https://dx.doi.org/10.1101%2Fgr.114819.110))

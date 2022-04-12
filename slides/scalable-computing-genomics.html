@@ -162,26 +162,49 @@ CON:
 </div>
 
 ---
-### Parallel processing in R
-
-- [parallel]() package (part of Core R)
-
-```R
-mclapply(data, function, mc.cores=detectCores())
-```
-
----
 ### Parallel jobs in R
 
 - BatchJobs
 - snow
 
+### Parallel processing in R
+
+- [parallel]() package (part of Core R)
+
+```R
+lapply(data, func)  # serial
+mclapply(data, func, mc.cores=detectCores())  # parallel
+```
+
 ---
 ### Parallel processing in Python
 
 - subprocess module
+
+```Python
+import subprocess
+
+>>> subprocess.run(["ls", "-l"])  # doesn't capture output
+CompletedProcess(args=['ls', '-l'], returncode=0)
+
+>>> subprocess.run(["ls", "-l", "/dev/null"], capture_output=True)
+CompletedProcess(args=['ls', '-l', '/dev/null'], returncode=0,
+stdout=b'crw-rw-rw- 1 root root 1, 3 Jan 23 16:23 /dev/null\n', stderr=b'')
+```
+
+
 - multiprocessing module
-- threading module
+
+```Python
+from multiprocessing import Pool
+
+def f(x):
+    return x*x
+
+if __name__ == '__main__':
+    with Pool(5) as p:
+        print(p.map(f, [1, 2, 3]))
+```
 
 ---
 ### Workflows
@@ -441,9 +464,28 @@ Brute force: enumerate all orders
 
 Exponential time arises in problems with nested subproblems
 
+Longest common subsequence (LCS): find the longest subsequence common to all sequences in two sequences.
+
+```
+def longest_cmn_subseq(s1, s2, ind1, ind2):
+	if (ind1 == -1 or ind2 == -1):  # base case
+		return 0
+	if (s1[ind1] == s2[ind2]):  # match
+		return 1 + longest_cmn_subseq(s1, s2, ind1-1, ind2-1)
+	return max(longest_cmn_subseq(s1, s2, ind1-1, ind2), longest_cmn_subseq(s1, s2, ind1, ind2-1))
+
+longest_cmn_subseq("TCGA", "TGCTA", 3, 4)
+3
+```
+
+Exponential time comes from the double recursive call
+
+
 
 ---
 ## Polynomial time $ O(n^2) $
+
+Nested loops
 
 ```python
 # Naively align reads to a reference genome
@@ -500,14 +542,6 @@ Retrieve: `tabix file.tsv.gz.tbi chr5:50000-100000`
 See [Tabix Bioinformatics paper](https://doi.org/10.1093/bioinformatics/btq671)
 
 ---
-BigBed and BigWig
-
-- Compressed and Indexed versions of BED and WIG files.
-- Compressed: makes the files much smaller.
-- Indexed: Random access allows reading specific chunks
-
-
----
 ### Optimization: Language choice
 
 1. Existing implementations are often faster than yours
@@ -522,7 +556,7 @@ library("microbenchmark")
 d = matrix(rnorm(10000000), 10, 1000000)
 myMeans = function(d) {
 	means = c()
-	for (i in 1:1000000) {		means[i] = mean(d[,i])	}
+	for (i in 1:ncol(d)) {		means[i] = mean(d[,i])	}
 	means
 }
 
@@ -543,8 +577,8 @@ Unit: milliseconds
 ### Link C code into R or Python
 
 - [Rcpp](http://adv-r.had.co.nz/Rcpp.html) makes it easy to link C++ into R.
-- [Cython](https://cython.org/) compiles Python code into C extensions
 - [Extending Python](https://docs.python.org/3/extending/extending.html) shows how to call C extensions from Python
+- [Cython](https://cython.org/) compiles Python code into C extensions
 
 ---
 ### Optimization: Speed/memory tradeoff
@@ -577,12 +611,20 @@ Which is faster? Which uses more memory?
 <div class="fragment">Could we switch the peaks and reads?</div>
 
 ---
+### Aside: Cluster hardware
+
+<img src="images/scalable-computing-genomics/cluster-hardware-disk.svg" height="400">
+
+
+
+---
 # Compression
 
 Does smaller = faster ?
 
 - Zipping files leads to faster transfer
 - But zipping files must be unzipped to be read
+- But loading less data off disk is faster
 - Disk space vs compute time is also a tradeoff
 
 ---
@@ -674,15 +716,17 @@ r004 0 ref 16 30 6M14N5M * 0 0 ATAGCTTCAGC *
 r003 2064 ref 29 17 6H5M * 0 0 TAGGC * SA:Z:ref,9,+,5S6M,30,1;
 r001 147 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
 ```
-
+```
+99 = 01100011
+```
 ```
 >>> 99 & 0x1
 1
 >>> 99 & 0x2
 2
->>> 99 & 0x3
-3
 >>> 99 & 0x4
+0
+>>> 99 & 0x8
 0
 >>> 99 & 0x10
 0
@@ -694,11 +738,45 @@ r001 147 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
 0
 ```
 
+
+
 ---
 <a href="https://broadinstitute.github.io/picard/explain-flags.html">Explain SAM flags</a>
 
 ---
+```
+@HD VN:1.6 SO:coordinate
+@SQ SN:ref LN:45
+r001 99 ref 7 30 8M2I4M1D3M = 37 39 TTAGATAAAGGATACTG *
+r002 0 ref 9 30 3S6M1P1I4M * 0 0 AAAAGATAAGGATA *
+r003 0 ref 9 30 5S6M * 0 0 GCCTAAGCTAA * SA:Z:ref,29,-,6H5M,17,0;
+r004 0 ref 16 30 6M14N5M * 0 0 ATAGCTTCAGC *
+r003 2064 ref 29 17 6H5M * 0 0 TAGGC * SA:Z:ref,9,+,5S6M,30,1;
+r001 147 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
+```
+
 <img src="images/scalable-computing-genomics/sam-cigar.png">
+
+---
+### BAM 
+
+> BGZF is block compression implemented on top of the standard gzip file format. The goal of BGZF is to
+provide good compression while allowing efficient random access to the BAM file for indexed queries. The
+BGZF format is ‘gunzip compatible’, in the sense that a compliant gunzip utility can decompress a BGZF
+compressed file.
+
+---
+### BAM
+
+- `.bam` file contains the aligned read data
+- `.bai` file contains the index (offsets to locations of bins)
+
+---
+### Aside: BigBed and BigWig
+
+- Compressed and Indexed versions of BED and WIG files.
+- Compressed: makes the files much smaller.
+- Indexed: Random access allows reading specific chunks
 
 ---
 ### CRAM

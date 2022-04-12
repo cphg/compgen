@@ -785,8 +785,13 @@ compressed file.
 
 
 ---
-
 <img src="images/scalable-computing-genomics/cram.jpg" height="650" style="background:white">
+
+---
+
+CRAM 3.1: [Bonfield 2022](10.1093/bioinformatics/btac010)
+
+> Although reference compression is where the original work focussed, it is wrong to assume that this is the primary reason for CRAM’s reduced file size. BAM serializes all data together (first name, chromosome, position, sequence, quality and auxiliary fields, then second name, chromosome and so on). This leads to poor compression ratios as names, sequences and quality values all have very different characteristics. CRAM has a column-oriented approach, where a block of names are compressed together or a block of qualities together. 
 
 ---
 

@@ -112,8 +112,30 @@ File 2:
 ```
 
 <div class="fragment">sequence names must match</div>
-<div class="fragment">reference sequence must be compatible</div>
 
+<div style="color:black">.</div>
+---
+### File formats are not enough
+
+Say I have two BED files. Are they comparable?
+
+File 1: 
+```
+chr1  15300  17300
+chr1  24900  25600
+chr1  72420  74440
+```
+
+File 2:
+```
+chr1  18110  19300
+chr1  64000  65600
+chr1  72400  74700
+```
+
+sequence names must match. How about now?
+
+<div class="fragment">reference sequence must be compatible</div>
 ---
 <div class="row" style="border: 1px solid white">
 	<div class="col" style="border: 1px solid white"></div>
@@ -212,14 +234,6 @@ Andy Yates' "Genome provider analysis"
 
 
 ---
-
-<h2>How refget works</h2>
-
-<div class="col2">
-<img src="images/genomic-data-standards/refget_concept.svg" style="background:white" width="400">
-</div>
-
----
 ### Hashing
 
 > A hash function maps an object to a finite space
@@ -242,7 +256,6 @@ The output, called a *hash* or *digest*, can be seen as a fingerprint or barcode
 
 "Message Digest"
 
-
 ---
 ### 
 
@@ -251,7 +264,22 @@ In 2011, the Internet Engineering Task Force (IETF) [advised in this document](h
 > The published attacks against MD5 show that it is not prudent to use MD5 when collision resistance is required.
 
 ---
+
+<h2>How refget works</h2>
+
+<div class="col2">
+<img src="images/genomic-data-standards/refget_concept.svg" style="background:white" width="400">
+</div>
+
+---
+### Sanitize sequence before digesting
+
+1. Remove whitespace
+2. Make upper-case
+
+---
 ### CRAM format
+
 
 ---
 Refget is great, but:

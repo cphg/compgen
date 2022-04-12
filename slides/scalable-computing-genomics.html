@@ -29,16 +29,24 @@ Genomics can be 'big data'.<br>
 <img src="images/scalable-computing-genomics/performance-importance-heatmap.svg" height="400" style="background:white">
 
 <div class="fragment">
-Scalability considers time and space
+Component of scalability: 1) time and 2) space
 </div>
+---
+### Typical epigenome project
+
+- Many independent samples (patients, cell lines, conditions)
+- 2 Analysis stages:
+	1. "Pipeline": Processing raw data
+	2. "Analysis": Analyzing processed data
+
 ---
 
 ### Approaches for scalability
 
 1. Parallelization
 2. Optimization
-3. Databases
-4. Compression
+3. Compression
+4. Databases
 
 ---
 ## 1. Parallelization
@@ -201,11 +209,136 @@ flowchart LR
 ---
 ### Snakemake
 
+```console
+SAMPLES = ["A", "B"]
+
+
+rule all:
+    input:
+        "plots/quals.svg"
+
+
+rule bwa_map:
+    input:
+        "data/genome.fa",
+        "data/samples/{sample}.fastq"
+    output:
+        "mapped_reads/{sample}.bam"
+    shell:
+        "bwa mem {input} | samtools view -Sb - > {output}"
+
+
+rule samtools_sort:
+    input:
+        "mapped_reads/{sample}.bam"
+    output:
+        "sorted_reads/{sample}.bam"
+    shell:
+        "samtools sort -T sorted_reads/{wildcards.sample} "
+        "-O bam {input} > {output}"
+
+
+rule samtools_index:
+    input:
+        "sorted_reads/{sample}.bam"
+    output:
+        "sorted_reads/{sample}.bam.bai"
+    shell:
+        "samtools index {input}"
+
+
+rule bcftools_call:
+    input:
+        fa="data/genome.fa",
+        bam=expand("sorted_reads/{sample}.bam", sample=SAMPLES),
+        bai=expand("sorted_reads/{sample}.bam.bai", sample=SAMPLES)
+    output:
+        "calls/all.vcf"
+    shell:
+        "samtools mpileup -g -f {input.fa} {input.bam} | "
+        "bcftools call -mv - > {output}"
+
+
+rule plot_quals:
+    input:
+        "calls/all.vcf"
+    output:
+        "plots/quals.svg"
+    script:
+        "scripts/plot-quals.py"
+
+```
+
 ---
 ### Nextflow
 
+```console
+// Script parameters
+params.query = "/some/data/sample.fa"
+params.db = "/some/path/pdb"
+
+db = file(params.db)
+query_ch = Channel.fromPath(params.query)
+
+process blastSearch {
+    input:
+    file query from query_ch
+
+    output:
+    file "top_hits.txt" into top_hits_ch
+
+    """
+    blastp -db $db -query $query -outfmt 6 > blast_result
+    cat blast_result | head -n 10 | cut -f 2 > top_hits.txt
+    """
+}
+
+process extractTopHits {
+    input:
+    file top_hits from top_hits_ch
+
+    output:
+    file "sequences.txt" into sequences_ch
+
+    """
+    blastdbcmd -db $db -entry_batch $top_hits > sequences.txt
+    """
+}
+```
+
+
 ---
 ### Common workflow language
+
+```console
+#!/usr/bin/env cwl-runner
+
+cwlVersion: v1.0
+class: Workflow
+inputs:
+  tarball: File
+  name_of_file_to_extract: string
+
+outputs:
+  compiled_class:
+    type: File
+    outputSource: compile/classfile
+
+steps:
+  untar:
+    run: tar-param.cwl
+    in:
+      tarfile: tarball
+      extractfile: name_of_file_to_extract
+    out: [extracted_file]
+
+  compile:
+    run: arguments.cwl
+    in:
+      src: untar/extracted_file
+    out: [classfile]
+
+```
 
 ---
 ### Stop writing shell scripts!
@@ -222,6 +355,17 @@ flowchart LR
 
 ---
 > This has the consequence that for optimal day-to-day productivity you need shell-scripting, but you should use it mostly for throwaway scripts, and use python everywhere else. -Anonymous
+
+---
+### Advantages of workflow frameworks
+
+- Reproducibility
+- Restartability
+- Reusability
+- Logging
+- Provenance
+- Scaling up compute resources
+- Dependency management
 
 ---
 ## 2. Optimization
@@ -441,8 +585,160 @@ Does smaller = faster ?
 - But zipping files must be unzipped to be read
 - Disk space vs compute time is also a tradeoff
 
+---
+### GZIP
+- Based on LZ77 and Huffman Coding
+
+---
+### Run-length Encoding
+
+```R
+> c(rep(1,20), rep(0,15))
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+> rle(c(rep(1,20), rep(0,15)))
+Run Length Encoding
+  lengths: int [1:2] 20 15
+  values : num [1:2] 1 0
+```
+
+---
+### LZ77
+
+Duplicate string elimination
+
+1. Find the longest repeated sequences in string
+2. Replace repeats with relative references to earlier
+
+Input: "The compression and the decompression leave an impression. Hahahahaha!"
+
+Output: "The compression and t [20 | 3] de [22 | 12] leave [28 | 3] i [42 | 7] . Hah [2 | 7] !"
+
+<span style="font-size: 0.6em">Example credit: https://sudonull.com</span>
+
+---
+
+
+### [Huffman Coding](https://en.wikipedia.org/wiki/Huffman_coding)
+
+Minimum redundancy codes
+
+Assign the fewest bits to the most common characters.
+
+DNA Input: ACTGAACGATCAGTACAGAAG
+
+```
+Base   Freq  HuffCode       ASCII
+   A      9         0    01000001
+   G      5        10    01000111
+   C      4       110    01000011
+   T      3       111    01010100
+```
+
+<span style="font-size: 0.6em">See [Okaily et al](https://dx.doi.org/10.1089%2Fcmb.2016.0151)</span>
+
+---
+### BAM file format
+
+- FASTQ -> SAM
+- SAM [specification](https://samtools.github.io/hts-specs/). Columns
+
+<img src="images/scalable-computing-genomics/sam-format.png">
+
+---
+### Example SAM file
+
+```
+@HD VN:1.6 SO:coordinate
+@SQ SN:ref LN:45
+r001 99 ref 7 30 8M2I4M1D3M = 37 39 TTAGATAAAGGATACTG *
+r002 0 ref 9 30 3S6M1P1I4M * 0 0 AAAAGATAAGGATA *
+r003 0 ref 9 30 5S6M * 0 0 GCCTAAGCTAA * SA:Z:ref,29,-,6H5M,17,0;
+r004 0 ref 16 30 6M14N5M * 0 0 ATAGCTTCAGC *
+r003 2064 ref 29 17 6H5M * 0 0 TAGGC * SA:Z:ref,9,+,5S6M,30,1;
+r001 147 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
+```
+
+---
+<img src="images/scalable-computing-genomics/sam-flags.png">
+
+
+---
+
+```
+@HD VN:1.6 SO:coordinate
+@SQ SN:ref LN:45
+r001 99 ref 7 30 8M2I4M1D3M = 37 39 TTAGATAAAGGATACTG *
+r002 0 ref 9 30 3S6M1P1I4M * 0 0 AAAAGATAAGGATA *
+r003 0 ref 9 30 5S6M * 0 0 GCCTAAGCTAA * SA:Z:ref,29,-,6H5M,17,0;
+r004 0 ref 16 30 6M14N5M * 0 0 ATAGCTTCAGC *
+r003 2064 ref 29 17 6H5M * 0 0 TAGGC * SA:Z:ref,9,+,5S6M,30,1;
+r001 147 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
+```
+
+```
+>>> 99 & 0x1
+1
+>>> 99 & 0x2
+2
+>>> 99 & 0x3
+3
+>>> 99 & 0x4
+0
+>>> 99 & 0x10
+0
+>>> 99 & 0x20
+32
+>>> 99 & 0x40
+64
+>>> 99 & 0x80
+0
+```
+
+---
+<a href="https://broadinstitute.github.io/picard/explain-flags.html">Explain SAM flags</a>
+
+---
+<img src="images/scalable-computing-genomics/sam-cigar.png">
 
 ---
 ### CRAM
 
 "Reference-based" compression ([Fritz 2011](https://dx.doi.org/10.1101%2Fgr.114819.110))
+
+
+---
+
+<img src="images/scalable-computing-genomics/cram.jpg" height="650" style="background:white">
+
+---
+
+### Databases
+
+- Database:Space as Parallelization:Compute
+- They offload *storage* requirements
+- They are critical for simultaneous multi-user
+- Reduce storage requirements by centralizing
+- Data has gravity, it brings compute to it
+
+---
+### Explosion of biomedical cloud platforms
+
+- AnVIL [Schatz 2021]
+- Gabriella Miller Kids First Data Resource Center [Heath 2019]
+- Cavatica [Volchenboum 2017]
+- Gen3 Workspaces [Hughes 2019]
+- Biomedical Research Hub [Barnes 2021]
+- AHA Precision Medicine Platform [KassHout 2018]
+- CanDIG [Dursi 2021]
+- NHLBI BioData Catalyst
+- Alex's Lemonade Stand Refine.bio
+- Pediatric Cancer Data Commons [Plana 2021]
+- SAGE Bionetworks’ Synapse [Grayson 2019]
+- NCI Genomic Data Commons [Heath 2021]
+
+---
+### Problems with cloud platforms
+
+- Platform lock-in
+- Difficulty integrating across platforms
+- Duplicated effort for both users and developers

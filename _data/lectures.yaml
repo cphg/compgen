@@ -211,7 +211,6 @@ lectures:
         title: K-mer assignment
       - title: Efficient counting of k-mers in DNA sequences using a bloom filter
         url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-333
-
   - lecture_number: 18
     date: 04/21/22
     topic: Dimensionality reduction

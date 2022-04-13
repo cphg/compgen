@@ -219,7 +219,6 @@ lectures:
     links:
       - url: slides/dim_red
         title: Lecture slides
-    links:
       - url: https://dx.doi.org/10.1038/44565
         title: Learning the parts of objects by non-negative matrix factorization 
   - lecture_number: 19

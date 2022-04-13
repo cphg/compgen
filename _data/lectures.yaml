@@ -215,10 +215,10 @@ lectures:
   - lecture_number: 18
     date: 04/21/22
     topic: Dimensionality reduction
-    details: Limitations of single-cell RNA-seq data; Curse of dimensionality, PCA, NMF, tSNE, uMAP.
+    details: Curse of Dimensionality, PCA, NMF, tSNE, uMAP
     instructor: Stefan Bekiranov
     links:
-      - url: null
+      - url: slides/dim_red
         title: Lecture slides
     links:
       - url: https://dx.doi.org/10.1038/44565

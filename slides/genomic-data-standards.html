@@ -16,9 +16,10 @@ date: 2021-12-09
 
 </style>
 
+### {{ page.title }}
 
+<a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png">
 
-# {{ page.title }}
 ---
 
 ## What is a standard?
@@ -34,47 +35,24 @@ What happens when there is no standard
 <img src="images/genomic-data-standards/geektech-charging-leads.png" width="600" alt="Geektech charging leads">
 
 ---
-<img src="images/genomic-data-standards/eu-common-charger.png" width="600" alt="Geektech charging leads">
----
 
-<a href="https://xkcd.com/2116/"><img src="https://imgs.xkcd.com/comics/norm_normal_file_format.png">
+<img src="https://imgs.xkcd.com/comics/standards.png" width="600">
 
----
-### Aside: My Advice
-
-Who is the target audience?
-
-- humans?
-- computers?
-
-<div class="fragment">It's easy to build a human-friendly interface to data organized for computers. The opposite is not true.</div>
-
-<div class="fragment">
-So, always build in this direction: 
-
-computers &rightarrow; humans
-
-</div>
+<img src="images/genomic-data-standards/eu-common-charger.png" width="600" alt="Geektech charging leads" class="fragment">
 
 ---
-### Aside: My Advice
-
-1. Make and share your data in *computable* form
-2. Make *everything* computable
-	- literature text processing. we have to get text out of a PDF.
-
-Computability is a prerequisite for interoperability
 
 
 
-
----
 ### Existing standards in genomics
 
+- Project metadata
+- Ontologies
 - File formats
 - Reference genomes
 - Web standards and APIs
-- Ontologies
+
+<p>Standards &rarr; Interoperability</p>
 
 ---
 ### GA4GH
@@ -85,6 +63,449 @@ Computability is a prerequisite for interoperability
 - formed in 2013
 
 ---
+
+<h3>Research is organized in <i>projects</i></h3>
+<div class="row">
+<div class="col">
+<img src="images/genomic-data-standards/tubes.svg" width="450">
+</div>
+<div class="col fragment">
+<img src="images/genomic-data-standards/tubes_color.svg" width="450">
+</div>
+</div>
+<div class="fragment">
+  How do we conceptualize a research project?
+</div>
+
+---
+
+
+<h2>Each project has 3 components</h2>
+<img src="images/genomic-data-standards/data-code-compute.svg" width="500" style="align:center"><br/>
+
+---
+
+<h2>Organizing multiple projects is a challenge</h2>
+<img src="images/genomic-data-standards/linking-projects.svg" width="600" style="align:center"><br/>
+
+---
+
+<h2>How do I re-use a component?</h2>
+<img src="images/genomic-data-standards/linking-projects-reuse.svg" width="600" style="align:center"><br/>
+
+---
+
+<h2>A project is a set of edges in a tripartite graph</h2>
+<img src="images/genomic-data-standards/linking-projects-modular.svg" width="600" style="align:center"><br/><br/>
+
+---
+
+<h2>Enable linking with interfaces</h2>
+<img src="images/genomic-data-standards/linking-interfaces.svg" width="600" style="align:center"><br/>
+
+---
+
+### Existing standards in genomics
+
+- Project metadata (Data &rarr; Code)
+- Ontologies (Data &rarr; Code)
+- File formats (Data &rarr; Data)
+- Reference genomes (Data &rarr; Data)
+- Web standards and APIs (Data &rarr; Compute)
+
+<p>Standards &rarr; Interoperability</p>
+
+
+---
+
+<h2>PEP: Portable Encapsulated Projects</h2>
+<img src="images/genomic-data-standards/pep_center_white.svg" width="700">
+---
+<img src="images/genomic-data-standards/pep_contents_white.svg" width="750">
+---
+<div class="bullet">
+  <h2><img src="images/genomic-data-standards/pep_logo.svg" width="70">PEP format</h2>
+</div>
+<div class="bullet">
+<img src="images/genomic-data-standards/file.svg" width="30">project_config.yaml
+</div>
+<pre><code>metadata:
+  sample_annotation: /path/to/samples.csv
+  output_dir: /path/to/output/folder
+</code></pre>
+<hr>
+<div class="bullet">
+<img src="images/genomic-data-standards/file.svg" width="30">samples.csv
+</div>
+<pre><code>sample_name, protocol, organism, data_source
+frog_0h, RNA-seq, frog, /path/to/frog0.gz
+frog_1h, RNA-seq, frog, /path/to/frog1.gz
+frog_2h, RNA-seq, frog, /path/to/frog2.gz
+frog_3h, RNA-seq, frog, /path/to/frog3.gz
+</code></pre>
+
+---
+
+  <h3>PEP portability features</h3>
+  <div style="text-align: left">
+<!--    <span class="bullet"><img src="images/genomic-data-standards/ftnetwork-connected.svg" width="50" class="bullet">Project API</span><br> -->
+    <span class="bullet"><img src="images/genomic-data-standards/replace_white.svg" width="50" class="bullet">Derived attributes</span><br>
+    <span class="bullet"><img src="images/genomic-data-standards/implies_white.svg" width="50" class="bullet">Implied attributes</span><br>
+    <span class="bullet"><img src="images/genomic-data-standards/subproject_white.svg" width="50" class="bullet">Subprojects</span><br>
+  </div>
+
+---
+
+<span class="bullet"><img src="images/genomic-data-standards/replace_white.svg" width="50" class="bullet">Derived attributes</span><br>
+<div class="well">Build new sample attributes from existing ones</div>
+
+<!-- These code data-markdown sections seem to kill data-backgrounds  -->
+Without derived attribute:
+<code>
+<div data-markdown style="font-size:0.4em">
+
+| sample_name   | t    | protocol        | organism | data_source            |
+| ------------- | ---- | :-------------: | -------- | ---------------------- |
+| frog_0h       | 0    | RNA-seq         | frog     | /path/to/frog0.gz      |
+| frog_1h       | 1    | RNA-seq         | frog     | /path/to/frog1.gz      |
+| frog_2h       | 2    | RNA-seq         | frog     | /path/to/frog2.gz      |
+| frog_3h       | 3    | RNA-seq         | frog     | /path/to/frog3.gz      |
+
+</div>
+</code>
+
+Using derived attribute:
+<code>
+<div data-markdown style="font-size:0.4em">
+
+| sample_name   | t    | protocol        | organism | data_source            |
+| ------------- | ---- | :-------------: | -------- | ---------------------- |
+| frog_0h       | 0    | RNA-seq         | frog     | my_samples             |
+| frog_1h       | 1    | RNA-seq         | frog     | my_samples             |
+| frog_2h       | 2    | RNA-seq         | frog     | my_samples             |
+| frog_3h       | 3    | RNA-seq         | frog     | my_samples             |
+| crab_0h       | 0    | RNA-seq         | crab     | your_samples           |
+| crab_3h       | 3    | RNA-seq         | crab     | your_samples           |
+
+</div>
+</code>
+---
+<code>
+<div data-markdown style="font-size:0.5em">
+
+| sample_name   | t    | protocol        | organism | data_source            |
+| ------------- | ---- | :-------------: | -------- | ---------------------- |
+| frog_0h       | 0    | RNA-seq         | frog     | my_samples             |
+| frog_1h       | 1    | RNA-seq         | frog     | my_samples             |
+| frog_2h       | 2    | RNA-seq         | frog     | my_samples             |
+| frog_3h       | 3    | RNA-seq         | frog     | my_samples             |
+| crab_0h       | 0    | RNA-seq         | crab     | your_samples           |
+| crab_3h       | 3    | RNA-seq         | crab     | your_samples           |
+
+</div>
+</code>
+Project config file:
+
+```yaml
+derived_columns: [data_source]
+data_sources:
+  my_samples: "/path/to/my/samples/{organism}_{t}h.gz"
+  your_samples: "/path/to/your/samples/{organism}_{t}h.gz"
+```
+
+{variable} identifies sample annotation columns
+
+<div class="well">Benefit: Enables distributed files, portability</div>
+
+---
+
+Implied attributes
+
+<div class="well">Add new sample attributes conditioned on values of existing attributes</div>
+<div class="col2">
+Before:<br>
+<code>
+<div data-markdown style="font-size:0.5em">
+
+| sample_name   | protocol        | organism | 
+| ------------- | :-------------: | -------- | 
+| human_1       | RNA-seq         | human    | 
+| human_2       | RNA-seq         | human    | 
+| human_3       | RNA-seq         | human    | 
+| mouse_1       | RNA-seq         | mouse    |
+
+</div>
+</code>
+</div>
+
+<div class="col2">
+After:<br>
+<code>
+<div data-markdown style="font-size:0.5em">
+
+| sample_name   | protocol        | organism | genome | 
+| ------------- | :-------------: | -------- | ------ |
+| human_1       | RNA-seq         | human    | hg38   |
+| human_2       | RNA-seq         | human    | hg38   |
+| human_3       | RNA-seq         | human    | hg38   |
+| mouse_1       | RNA-seq         | mouse    | mm10   |
+
+</div>
+</code>
+</div>
+---
+<code>
+<div data-markdown style="font-size:0.5em">
+
+| sample_name   | protocol        | organism | 
+| ------------- | :-------------: | -------- | 
+| human_1       | RNA-seq         | human    | 
+| human_2       | RNA-seq         | human    | 
+| human_3       | RNA-seq         | human    | 
+| mouse_1       | RNA-seq         | mouse    |
+
+</div>
+</code>
+Project config file:
+
+```yaml
+implied_columns:
+  organism:
+    human:
+      genome: hg38
+    mouse:
+      genome: mm10
+```
+
+<div class="well">Benefit: Divides project from sample metadata</div>
+
+---
+Subprojects
+
+<div class="well">Define activatable project attributes.</div>
+
+```yaml
+subprojects:
+  diverse:
+    metadata:
+      sample_annotation: psa_rrbs_diverse.csv
+  cancer:
+    metadata:
+      sample_annotation: psa_rrbs_intracancer.csv
+```
+
+<div class="well">Benefit: Defines multiple similar projects in a single file</div>
+
+---
+
+Study 1:
+<code>
+<div data-markdown style="font-size:0.4em">
+
+| sample_name   | t    | protocol        | organism | data_source            |
+| ------------- | ---- | :-------------: | -------- | ---------------------- |
+| frog_2h       | 2    | RNA-seq         | frog     | my_samples             |
+| frog_3h       | 3    | RNA-seq         | frog     | my_samples  
+</div>
+</code>
+
+
+Study 2:
+<code>
+<div data-markdown style="font-size:0.4em">
+
+| sample_name   | t    | protocol        | organism | data_source            |
+| ------------- | ---- | :-------------: | -------- | ---------------------- |
+| frog_0m       | 0    | RNAseq         | frog     | my_samples             |
+| frog_60m       | 60  | RNAseq         | frog     | my_samples             |
+</div>
+</code>
+
+---
+
+
+### Ontologies
+
+> A formal vocabulary and definition of concepts, entities, and their relationships.
+
+1. Terms
+2. Relations
+
+---
+
+## Gene Ontology
+
+- 3 Ontologies:
+  - Molecular Function
+  - Cellular Component
+  - Biological Process
+
+1. Terms: [Hexose Biosynthetic Process](http://amigo.geneontology.org/amigo/term/GO:0019319)
+
+2. Relations: is-a,  is-part-of, regulates ([Relation Ontology](https://doi.org/10.1186/gb-2005-6-5-r46))
+
+---
+
+![](images/genomic-data-standards/hexose-biosynthetic-process.png)
+
+---
+### EDAM Ontology
+
+![](images/genomic-data-standards/edam-ontology.png)
+
+---
+### Sequence Ontology
+
+Term: `open_chromatin_region`  
+SO Accession: `SO:0001747`  
+
+<div class="row">
+<div class="col">
+
+![](images/genomic-data-standards/SO0001747_sm.png)
+
+</div>
+<div class="col">
+
+Definition:  
+A DNA sequence that in the normal state of the chromosome corresponds to an unfolded, un-complexed stretch of double-stranded DNA.
+
+</div>
+</div>
+
+
+
+---
+<img src="images/genomic-data-standards/SO0000162_lg.png" height="670">
+
+---
+How can we enforce or validate terms?
+
+---
+### JSON Schema
+
+```
+{
+  "productId": 1,
+  "productName": "A green door",
+  "price": 12.50,
+  "tags": [ "home", "green" ]
+}
+```
+
+
+- What is productId?
+- Is productName required?
+- Can the price be zero (0)?
+- Are all of the tags string values?
+
+
+---
+### JSON Schema
+
+```
+{
+  "title": "Product",
+  "description": "A product from Acme's catalog",
+  "type": "object",
+  "properties": {
+    "productId": {
+      "description": "The unique identifier for a product",
+      "type": "integer"
+    },
+    "productName": {
+      "description": "Name of the product",
+      "type": "string"
+    }
+  },
+  "required": [ "productId", "productName" ]
+}
+```
+---
+### Validating objects with schemas
+
+```shell
+jsonschema --instance sample.json sample.schema
+```
+
+```python
+validate([2, 3, 4], {"maxItems": 2})
+Traceback (most recent call last):
+    ...
+ValidationError: [2, 3, 4] is too long
+```
+---
+### What is a schema?
+
+A formal definition of the properties and allowable values for data
+
+<span class="fragment">
+JSON-Schema provides a standard format for how to describe generic data objects, and tools to validate them.
+</span>
+
+---
+### A schema for ATAC-seq pipeline
+
+```
+description: A PEP for ATAC-seq samples for the PEPATAC pipeline.
+imports:
+  - http://schema.databio.org/pep/2.0.0.yaml
+properties:
+  samples:
+    type: array
+    items:
+      type: object
+      properties:
+        sample_name: 
+          type: string
+          description: "Name of the sample"
+        organism: 
+          type: string
+          description: "Organism"
+        protocol: 
+          type: string
+          description: "Must be an ATAC-seq or DNAse-seq sample"
+        genome:
+          type: string
+          description: "Refgenie genome registry identifier"
+        read_type:
+          type: string
+          description: "Is this single or paired-end data?"
+          enum: ["SINGLE", "PAIRED"]
+        read1:
+          anyOf:
+            - type: string
+              description: "Fastq file for read 1"
+            - type: array
+              items:
+                type: string
+        read2:
+          anyOf:
+            - type: string
+              description: "Fastq file for read 2 (for paired-end experiments)"
+            - type: array
+              items:
+                type: string
+      required_files:
+        - read1
+      files:
+        - read1
+        - read2
+      required:
+        - sample_name
+        - protocol
+        - read1
+        - genome
+required:
+  - samples
+```
+
+---
+
+<img src="images/genomic-data-standards/linking-interfaces.svg" width="600" style="align:center"><br/>
+
+---
+
 ### Standards: File formats
   - BED: genomic intervals
   - FASTA: DNA sequences
@@ -252,18 +673,6 @@ The output, called a *hash* or *digest*, can be seen as a fingerprint or barcode
 <div class="fragment">As long as there are no collisions...</div>
 
 ---
-### md5 algorithm
-
-"Message Digest"
-
----
-### 
-
-In 2011, the Internet Engineering Task Force (IETF) [advised in this document](https://tools.ietf.org/search/rfc6151) that
-
-> The published attacks against MD5 show that it is not prudent to use MD5 when collision resistance is required.
-
----
 
 <h2>How refget works</h2>
 
@@ -280,6 +689,7 @@ In 2011, the Internet Engineering Task Force (IETF) [advised in this document](h
 ---
 ### CRAM format
 
+Can use refget server for references
 
 ---
 Refget is great, but:
@@ -304,6 +714,31 @@ Digest lookup
 <img src="images/genomic-data-standards/digest_lookup.svg" style="background:white" width="900">
 
 ---
+
+&#10003; File formats  
+&#10003; Reference genome
+
+Are these RNA-seq experiments comparable?
+
+File 1: 
+```
+         sample1   sample2   sample3
+MIR1302        7        2        153
+FAM138A       64       22         55  
+LINC01409     14       22         17  
+PRDM16-DT      2        0          0  
+```
+
+File 2:
+```
+                  sample1   sample2   sample3
+ENSG00000243485        64        22        55  
+ENSG00000237613.2      55        53        52  
+ENSG00000238009.6      12        93       455  
+ENST00000477740.5       2        35         7  
+```
+
+---
 ### Existing standards in genomics
 - Gene names
   - HUGO Gene Nomenclature Committee (https://www.genenames.org/)
@@ -322,7 +757,13 @@ Digest lookup
 
 ---
 
-tximeta
+![](images/genomic-data-standards/tximeta.png)
+
+---
+
+<img src="images/genomic-data-standards/linking-interfaces.svg" width="600" style="align:center"><br/>
+
+- Web standards and APIs (Data &rarr; Compute)
 
 ---
 ### The increasing importance of web standards
@@ -334,42 +775,6 @@ As data and analysis become larger and more distributed, more recent standards i
 
 - An API defines protocols and formats for input and output of a computing system
 - It provides an abstraction layer to a user
-
----
-### REST
-
-- "Representational state transfer"
-- REST is a software architectural style.
-- It specifies constraints for an API. Most important:
-
-1. Loose coupling between client and server
-2. Abstraction of server resources
-3. Persistent Uniform Resource Identifiers (URIs)
-4. Stateless -- client manages state
-5. Representations of resource as universal as possible
-
----
-### JSON
-
-- JavaScript Object Notation is language-agnostic
-- The standard interchange format for the web
-
-An object is an unordered set of name/value pairs. An object begins with `{` and ends with `}`. Each name is followed by `:` and the name/value pairs are separated by `,`
-
-```json
-{
-	"name":"John",
-	"age":30,
-	"car":null
-}
-
-```
-
----
-### Refget
-
----
-### Sequence Collections
 
 ---
 ### GA4GH:DRS
@@ -404,7 +809,7 @@ You implement DRS. Then, a standard DRS client could get data, making your data 
 </div>
 
 ---
-### WES
+### GA4GH:WES
 
 [Workflow Execution Service](https://ga4gh.github.io/workflow-execution-service-schemas/docs/)
 
@@ -428,18 +833,38 @@ Provides a standard way for users to submit workflow requests to workflow execut
 
 ---
 
-<img src="https://imgs.xkcd.com/comics/standards.png" width="600">
+### Conclusion
+
+Who is the target audience?
+
+- humans?
+- computers?
+
+<div class="fragment">It's easy to build a human-friendly interface to data organized for computers. The opposite is not true.</div>
+
+<div class="fragment">
+So, always build in this direction: 
+
+computers &rightarrow; humans
+
+</div>
 
 ---
-### Standards in genomics are important
-- Genomes will always be a community resource
-- It's a huge, worldwide, rapidly growing endeavor
----
-### You should
-- Be familiar with existing standards
-- Use them whenever possible
-- Be aware of work on new standards
+
+1. Make and share *everything* in *computable* form
+  - your raw and processed data
+  - your results
+  - your writing (markdown)
+  - computability precedes interoperability
+2. Follow genomics standards
+  - Genomes will always be a community resource
+  - It's a huge, worldwide, rapidly growing endeavor
+  - Be familiar with existing standards
+  - Use them whenever possible
+  - Be aware of work on new standards
 
 <div class="fragment">
 Remember, interoperability means impact
 </div>
+
+

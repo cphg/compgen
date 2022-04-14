@@ -662,19 +662,21 @@ Output: "The compression and t [20 | 3] de [22 | 12] leave [28 | 3] i [42 | 7] .
 
 ### [Huffman Coding](https://en.wikipedia.org/wiki/Huffman_coding)
 
-Minimum redundancy codes
-
-Assign the fewest bits to the most common characters.
+Minimum redundancy codes: assign the fewest bits to the most common characters.
 
 DNA Input: ACTGAACGATCAGTACAGAAG
 
 ```
-Base   Freq  HuffCode       ASCII
-   A      9         0    01000001
-   G      5        10    01000111
-   C      4       110    01000011
-   T      3       111    01010100
+Base   Freq     ASCII   2bit  HuffCode    
+   A      9  01000001     00         0    
+   G      5  01000111     01        10    
+   C      4  01000011     10       110    
+   T      3  01010100     11       111    
 ```
+
+<span class="fragment">Requires prefix property for variable-width codes</span>  
+<span class="fragment">Requires sequential reading (no random access)</span>
+
 
 <span style="font-size: 0.6em">See [Okaily et al](https://dx.doi.org/10.1089%2Fcmb.2016.0151)</span>
 
@@ -716,10 +718,15 @@ r004 0 ref 16 30 6M14N5M * 0 0 ATAGCTTCAGC *
 r003 2064 ref 29 17 6H5M * 0 0 TAGGC * SA:Z:ref,9,+,5S6M,30,1;
 r001 147 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
 ```
-```
+```python
 99 = 01100011
+ 1 = 00000001
+ 2 = 00000010
+32 = 00100000
+64 = 01000000
 ```
-```
+
+```python
 >>> 99 & 0x1
 1
 >>> 99 & 0x2
@@ -728,13 +735,13 @@ r001 147 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
 0
 >>> 99 & 0x8
 0
->>> 99 & 0x10
+>>> 99 & 0x10  # hexadecimal 16
 0
->>> 99 & 0x20
+>>> 99 & 0x20  # hexadecimal 32
 32
->>> 99 & 0x40
+>>> 99 & 0x40  # hexadecimal 64
 64
->>> 99 & 0x80
+>>> 99 & 0x80  # hexadecimal 128
 0
 ```
 
@@ -781,8 +788,8 @@ compressed file.
 ---
 ### CRAM
 
-"Reference-based" compression ([Fritz 2011](https://dx.doi.org/10.1101%2Fgr.114819.110))
-
+"Reference-based" compression ([Fritz 2011](https://dx.doi.org/10.1101%2Fgr.114819.110))  
+CRAM 3.1 introduced by [Bonfield 2022](10.1093/bioinformatics/btac010)
 
 ---
 <img src="images/scalable-computing-genomics/cram.jpg" height="650" style="background:white">

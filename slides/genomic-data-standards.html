@@ -129,9 +129,8 @@ What happens when there is no standard
 <div class="bullet">
 <img src="images/genomic-data-standards/file.svg" width="30">project_config.yaml
 </div>
-<pre><code>metadata:
-  sample_annotation: /path/to/samples.csv
-  output_dir: /path/to/output/folder
+<pre><code>sample_table: /path/to/samples.tsv
+output_dir: /path/to/output/folder
 </code></pre>
 <hr>
 <div class="bullet">
@@ -207,10 +206,12 @@ Using derived attribute:
 Project config file:
 
 ```yaml
-derived_columns: [data_source]
-data_sources:
-  my_samples: "/path/to/my/samples/{organism}_{t}h.gz"
-  your_samples: "/path/to/your/samples/{organism}_{t}h.gz"
+sample_modifiers:
+  derive:
+    attributes: [data_source]
+    sources:
+      my_samples: "/path/to/my/samples/{organism}_{t}h.gz"
+      your_samples: "/your/samples/{organism}_{t}h.gz"
 ```
 
 {variable} identifies sample annotation columns
@@ -269,34 +270,38 @@ After:<br>
 Project config file:
 
 ```yaml
-implied_columns:
-  organism:
-    human:
-      genome: hg38
-    mouse:
-      genome: mm10
+sample_modifiers:
+  imply:
+    - if: 
+        organism: human
+      then:
+        genome: hg38
+    - if: 
+        organism: mouse
+      then:
+        genome: mm10
 ```
 
 <div class="well">Benefit: Divides project from sample metadata</div>
 
 ---
-Subprojects
+Project amendments
 
 <div class="well">Define activatable project attributes.</div>
 
 ```yaml
-subprojects:
-  diverse:
-    metadata:
-      sample_annotation: psa_rrbs_diverse.csv
-  cancer:
-    metadata:
-      sample_annotation: psa_rrbs_intracancer.csv
+project_modifiers:
+  amend:
+    diverse:
+      sample_table: psa_rrbs_diverse.csv
+    cancer:
+      sample_table: psa_rrbs_intracancer.csv
 ```
 
 <div class="well">Benefit: Defines multiple similar projects in a single file</div>
 
 ---
+### Is it enough?
 
 Study 1:
 <code>
@@ -381,6 +386,30 @@ A DNA sequence that in the normal state of the chromosome corresponds to an unfo
 ---
 How can we enforce or validate terms?
 
+Study 1:
+<code>
+<div data-markdown style="font-size:0.4em">
+
+| sample_name   | t    | protocol        | organism | data_source            |
+| ------------- | ---- | :-------------: | -------- | ---------------------- |
+| frog_2h       | 2    | RNA-seq         | frog     | my_samples             |
+| frog_3h       | 3    | RNA-seq         | frog     | my_samples  
+</div>
+</code>
+
+
+Study 2:
+<code>
+<div data-markdown style="font-size:0.4em">
+
+| sample_name   | t    | protocol        | organism | data_source            |
+| ------------- | ---- | :-------------: | -------- | ---------------------- |
+| frog_0m       | 0    | RNAseq         | frog     | my_samples             |
+| frog_60m       | 60  | RNAseq         | frog     | my_samples             |
+</div>
+</code>
+
+
 ---
 ### JSON Schema
 
@@ -399,9 +428,28 @@ How can we enforce or validate terms?
 - Can the price be zero (0)?
 - Are all of the tags string values?
 
+---
+### RNA-seq analysis
+
+```
+{
+  "sample_name": frog_2h,
+  "t": "2",
+  "protocol": "RNA-seq",
+  "organism": "frog",
+  "data_source": "my_samples"
+}
+```
+
+
+- Is sample_name required?
+- What is t?
+- What are the allowable protocols?
+- What are the allowable organisms?
+- What is the input file type expected for data source?
 
 ---
-### JSON Schema
+### Schema
 
 ```
 {
@@ -507,10 +555,10 @@ required:
 ---
 
 ### Standards: File formats
-  - BED: genomic intervals
   - FASTA: DNA sequences
   - FASTQ: Short DNA sequencer reads
   - SAM/BAM: Aligned DNA sequences
+  - BED: genomic intervals
   - VCF: genomic variation
 
 ---
@@ -600,7 +648,7 @@ There are also many variations of the *same* version.
 - hard- soft-, or no repeat masks?
 - what are the chromosomes named (1 vs chr1 vs chr1, NC_000001.11)
 - what secondary scaffolds are included?
-- how is the assembly named (hg38, GRCh38, or GCF_000001405.39)
+- how is the assembly named (hg38, GRCh38, or GCF_000001405.39)?
 - are any decoy sequences included (like EBV)?
 
 <div class="fragment">
@@ -674,7 +722,7 @@ The output, called a *hash* or *digest*, can be seen as a fingerprint or barcode
 
 ---
 
-<h2>How refget works</h2>
+### How [GA4GH:refget](https://doi.org/10.1093/bioinformatics/btab524) works
 
 <div class="col2">
 <img src="images/genomic-data-standards/refget_concept.svg" style="background:white" width="400">
@@ -715,6 +763,10 @@ Digest lookup
 
 ---
 
+hg38 &rarr; a6748aa0f
+
+---
+
 &#10003; File formats  
 &#10003; Reference genome
 
@@ -724,7 +776,7 @@ File 1:
 ```
          sample1   sample2   sample3
 MIR1302        7        2        153
-FAM138A       64       22         55  
+FAM138A       64       30         55  
 LINC01409     14       22         17  
 PRDM16-DT      2        0          0  
 ```
@@ -733,7 +785,7 @@ File 2:
 ```
                   sample1   sample2   sample3
 ENSG00000243485        64        22        55  
-ENSG00000237613.2      55        53        52  
+ENSG00000237613.2      17        53        52  
 ENSG00000238009.6      12        93       455  
 ENST00000477740.5       2        35         7  
 ```
@@ -778,14 +830,27 @@ As data and analysis become larger and more distributed, more recent standards i
 - It provides an abstraction layer to a user
 
 ---
+### GA4GH:REFGET
+
+[Refget API Specification](http://samtools.github.io/hts-specs/refget.html)
+
+
+```python
+GET /sequence/{id}
+# get sequence by ID. The primary method for accessing specified sequence data. 
+```
+
+
+
+---
 ### GA4GH:DRS
 
 [Data Repository Service (DRS)](https://ga4gh.github.io/data-repository-service-schemas/preview/release/drs-1.0.0/docs/)
 
-Objects in the repository have unique identifiers  
+> Provides a generic interface to data repositories so data consumers, including workflow systems, can access data in a single, standard way regardless of where it’s stored and how it’s managed
 
 ```
-/objects/{object_id}
+GET /objects/{object_id}
 # returns a JSON response including access methods 
 ```
 
@@ -857,7 +922,12 @@ computers &rightarrow; humans
   - your results
   - your writing (markdown)
   - computability precedes interoperability
-2. Follow genomics standards
+2. Follow standard file formats
+3. Use controlled terms (e.g. ontologies)
+4. Identify elements with unique identifiers
+
+---
+
   - Genomes will always be a community resource
   - It's a huge, worldwide, rapidly growing endeavor
   - Be familiar with existing standards

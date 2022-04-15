@@ -7,7 +7,7 @@ date: 2022-01-22
 
 ### Curse of Dimensionality
 
-<img src="images/dim_red/sphere_in_cube.png" width="500">
+<img src="images/dim_red/sphere_in_cube.png" width="700">
 
 What is the volume of the hypersphere divided by the hypercube as $d \rightarrow \infty$?
 
@@ -31,4 +31,117 @@ as $d \rightarrow \infty$.  And the distance between the center and corners of t
    2. in a unit 3-d cube is roughly 0.66.
    3. in a unit 1,000,000-d hypercube is $\sim$408.25.
 3. Distances from a random point to its nearest and farthest neighbor are similar.
-4. Distance-based classification generalizes poorly unless # samples grows exponentially with $d$.  
+4. Distance-based classification generalizes poorly unless # samples grows exponentially with $d$.
+
+---
+
+### Biological Networks
+
+<img src="images/dim_red/emt-gc_ppi.jpg" width="700"> 
+
+---
+
+### Biological Networks
+
+1. Highly interconnected with modular structure.
+2. Weakly to strongly scale-free (fraction of nodes with degree $k$ follows a power law $k^{-\alpha}$).
+3. Subsets of genes, proteins or regulatory elements tend to form highly correlated modules.
+4. Functional genomics datasets tend to (not always!) occupy a low dimensional subpace of the feature space (e.g., genes, proteins, regulatory elements).
+5. Ideal for dimenstional reduction approaches to both visualize and analyze functional genomics data.
+
+---
+
+### Principal Components Analysis (PCA)
+
+<img src="images/dim_red/pca.png" width="700">
+
+---
+
+### PCA
+
+Assume we have $n$ samples and $p$ features which are in the form of a $n \times p$ centered matrix $\mathbf{X}$ where we subtracted the mean across samples of each feature.
+
+The unbiased sample covariance matrix is then
+
+$$\Sigma_{XX} = \frac{1}{n-1} \mathbf{X}^{T} \mathbf{X}$$
+
+PCA finds a linear transformation $\mathbf{Z} = \mathbf{X} \mathbf{V}$ that diagonalizes $\Sigma_{XX}$.
+
+---
+
+### Singular Value Decomposition
+
+$\mathbf{X}$ can be decomposed as follows:
+
+$$\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^{T}$$
+
+where $\mathbf{U}$ and $\mathbf{V}$ are $n \times n$ and $p \times p$ orthogonal matricies, respectively, and $\mathbf{D}$ is a $n \times p$ diagonal matrix. The diagonal elements of $\mathbf{D}$ are the **singular values** of $\mathbf{X}$. The columns of $\mathbf{U}$ and $\mathbf{V}$ are the **left-singular vectors** and **right-singular vectors**.
+
+---
+
+### Singular Value Decomposition
+
+The left singular vectors and right singular vectors of $\mathbf{X}$ are the eigenvectors of $\mathbf{X} \mathbf{X}^{T}$ and $\mathbf{X}^{T} \mathbf{X}$.
+
+The nonzero singular values of $\mathbf{X}$ are the square roots of the eigenvalues of $\mathbf{X} \mathbf{X}^{T}$ and $\mathbf{X}^{T} \mathbf{X}$.
+
+---
+
+### PCA
+
+The covariance matrix of $\mathbf{Z} = \mathbf{X} \mathbf{V}$ where the columns of $\mathbf{V}$ are the right-singular vectors of $\mathbf{X}$ is
+
+$$\Sigma_{ZZ} = \frac{1}{n-1} \mathbf{Z}^{T} \mathbf{Z} = \frac{1}{n-1} \mathbf{D}^{T} \mathbf{D} = \frac{1}{n-1} \mathbf{\hat{D}}^{2}$$
+
+where $\mathbf{\hat{D}}^{2}$ is a square diagonal matrix (0s truncated), and we have used the SVD of $\mathbf{X}$, $(\mathbf{UDV}^{T})^{T} = \mathbf{V} \mathbf{D}^{T} \mathbf{U}^{T}$, $\mathbf{V}^{T} \mathbf{V} = \mathbf{I}\_{p}$, $\mathbf{U}^{T} \mathbf{U} = \mathbf{I}\_{n}$.
+
+---
+
+### Non-Negative Matrix Factorization
+
+Facotrize a matrix $\mathbf{V}$ with all positive elements into a product of two matricies $\mathbf{W}$ (features matrix) and $\mathbf{H}$ (coefficients matrix) subject to the constraint that $\mathbf{W}$ and $\mathbf{H}$ have no negative elements. Formally,
+
+$\mathbf{V} \approx \mathbf{W} \mathbf{H}$ such that $\mathbf{W} \geq 0$ and $\mathbf{H} \geq 0$
+
+where $\mathbf{V}$, $\mathbf{W}$ and $\mathbf{H}$ are $m \times n$, $m \times p$, and $p \times n$ matricies, $m$ is the number of samples, $n$ is the number of features, $p \ll n$, and possibly $p \ll m$.
+
+---
+
+### Non-Negative Matrix Factorization
+
+To approximate $\mathbf{V} \approx \mathbf{W} \mathbf{H}$, we need a cost function.  We'll focus on a Euclidean distance based cost function between $\mathbf{V}$ and $\mathbf{W} \mathbf{H}$ 
+
+$\Vert \mathbf{V} - \mathbf{WH} \Vert^{2} = \sum_{ij} (V_{ij} - (\mathbf{WH})_{ij})^2$
+
+---
+
+### Non-Negative Matrix Factorization
+
+Minimize cost function using Lee and Seung's multiplicative update rule:
+
+1. Initialize $\mathbf{H}$ and $\mathbf{W}$ with non negative values
+2. Update $H_{ij}$ and $W_{ij}$
+   1. $H_{ij} \leftarrow H_{ij} \frac{(\mathbf{W}^{T} \mathbf{V})_{ij}}{(\mathbf{W}^{T} \mathbf{WH})\_{ij}}$
+   2. $W_{ij} \leftarrow W_{ij} \frac{(\mathbf{V} \mathbf{H}^{T})_{ij}}{(\mathbf{W} \mathbf{HH}^{T})\_{ij}}$
+3. Stop when $H_{ij}$ and $W_{ij}$ don't change within a specified tolerance
+
+---
+
+### Non-Negative Matrix Factorization
+
+<img src="images/dim_red/Ceislik_Fig1.jpg.webp" width="800">
+
+---
+
+### Non-Negative Matrix Factorization
+
+<img src="images/dim_red/Ceislik_Fig2.jpg.webp" width="600">
+
+---
+
+### Non-Negative Matrix Factorization
+
+<img src="images/dim_red/Ceislik_Fig3.jpg.webp" width="900">
+
+
+

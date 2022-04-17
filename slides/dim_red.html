@@ -99,7 +99,7 @@ where $\mathbf{\hat{D}}^{2}$ is a square diagonal matrix (0s truncated), and we 
 
 ### Non-Negative Matrix Factorization
 
-Facotrize a matrix $\mathbf{V}$ with all positive elements into a product of two matricies $\mathbf{W}$ (features matrix) and $\mathbf{H}$ (coefficients matrix) subject to the constraint that $\mathbf{W}$ and $\mathbf{H}$ have no negative elements. Formally,
+Factorize a matrix $\mathbf{V}$ with all positive elements into a product of two matricies $\mathbf{W}$ (features matrix) and $\mathbf{H}$ (coefficients matrix) subject to the constraint that $\mathbf{W}$ and $\mathbf{H}$ have no negative elements. Formally,
 
 $\mathbf{V} \approx \mathbf{W} \mathbf{H}$ such that $\mathbf{W} \geq 0$ and $\mathbf{H} \geq 0$
 
@@ -173,7 +173,7 @@ which ensures that $p_{ij} = p_{ji}$ and $\sum_{i,j} p_{ij} = 1$
 
 ### T-SNE
 
-The goal of t-SNE is to learn a map $\mathbf{X} \mapsto \mathbf{Y}$ such that the $\mathbf{y}\_{1},\ldots,\mathbf{y}_{n}$ are mapped to a lower dimensional space $d = 2$ or $3$.  In the lower dimensional space, the probability of $\mathbf{y}\_{i}$ and $\mathbf{y}\_{j}$ being associated/near each other is assumed to follow a t-distribution with one degree of freedom where for $i \ne j$  
+The goal of t-SNE is to learn a map $\mathbf{X} \mapsto \mathbf{Y}$ such that the $\mathbf{y}\_{1},\ldots,\mathbf{y}_{n}$ are mapped to a lower dimensional space ($d = 2$ or $3$).  In the lower dimensional space, the probability of $\mathbf{y}\_{i}$ and $\mathbf{y}\_{j}$ being associated/near each other is assumed to follow a t-distribution with one degree of freedom where for $i \ne j$  
 
 $q_{ij} = \frac{(1 + \Vert \mathbf{y}\_{j} - \mathbf{y}\_{j} \Vert^2)^{-1}}{\sum\_{k,l;k \ne l} (1 + \Vert \mathbf{y}\_{k} - \mathbf{y}\_{l} \Vert^2)^{-1}}$ and 0 otherwise.
 
@@ -185,7 +185,116 @@ The locations of the $\mathbf{y}\_{i}$ in the lower dimensional space are found 
 
 $KL(p \Vert q) = \sum_{i,j;i \ne j} p_{ij} \log \frac{p\_{ij}}{q\_{ij}}$
 
-which is a measure of the difference between distributions $p_{ij}$ and $q_{ij}$.  The minimization of the Kullback-Leibler divergence with respect to $\mathbf{y}_{i}$ is performed using gradient descent.     
+which is a measure of the difference between distributions $p$ and $q$.  The minimization of the Kullback-Leibler divergence with respect to $\mathbf{y}_{i}$ is performed using gradient descent.
+
+---
+
+### Uniform Manifold Approximation & Projection (UMAP)     
+
+<img src="images/dim_red/umap.png" width="700">
+
+---
+
+### UMAP
+
+
+<img src="images/dim_red/simplices.png" width="500">
+
+<img src="images/dim_red/umap_basic_graph.png" width="500">
+
+---
+
+### UMAP: Graph Construction
+
+Let $\mathbf{x}\_{i},\ldots,\mathbf{x}\_{n}$ be the input data.  For each $\mathbf{x}\_{i}$ compute the $k$ nearest neighbors $\mathbf{x}\_{i1},\ldots,\mathbf{x}\_{ik}$ and
+
+$\rho\_{i} = \min \\{ d(\mathbf{x}\_{i},\mathbf{x}\_{ij}) | 1 \le j \le k, d > 0 \\}$
+
+and set $\sigma\_{i}$ using
+
+$\sum_{j=1}^{k} e^{(-\max(0,d(\mathbf{x}\_{i},\mathbf{x}\_{ij}) - \rho\_{i})/\sigma\_{i})} = \log\_{2}(k)$
+
+---
+
+### UMAP: Graph Construction
+
+<img src="images/dim_red/umap_open_cover.png" width="900">
+
+---
+
+### UMAP: Graph Construction
+
+Define a weighted directed graph $\bar{G} = (V,E,w)$ where the verticies $V$ of $\bar{G}$ are the set $X$.  Then form the set of directed edges with weights $w\_{h}$ 
+
+$E = \\{ (\mathbf{x}\_{i},\mathbf{x}\_{ij}) | 1 \le j \le k, 1 \le i \le n \\}$
+
+$w\_{h}(\mathbf{x}\_{i},\mathbf{x}\_{ij}) = e^{(-\max(0,d(\mathbf{x}\_{i},\mathbf{x}\_{ij}) - \rho\_{i})/\sigma\_{i})}$
+
+---
+
+### UMAP: Graph Construction
+
+<img src="images/dim_red/umap_raw_graph.png" width="900">
+
+---
+
+### UMAP: Graph Construction
+
+Combine edges of $\bar{G}$ with adjacency matrix $\mathbf{A}$ into a unified undirected graph $G$ with adjacency matrix $\mathbf{B}$
+
+$\mathbf{B} = \mathbf{A} + \mathbf{A}^{T} - \mathbf{A} \circ \mathbf{A}^{T}$
+
+where $\circ$ is the Haddamard (or pointwise) product.
+
+If $A\_{ij}$ is the probability that the directed edge from $\mathbf{x}\_{i}$ to $\mathbf{x}\_{j}$ exists, then $B\_{ij}$ is the probability that at least one of the two directed edges (from $\mathbf{x}\_{i}$ to $\mathbf{x}\_{j}$ and from $\mathbf{x}\_{j}$ to $\mathbf{x}\_{i}$) exists.
+
+---
+
+### UMAP: Graph Construction
+
+<img src="images/dim_red/umap_graph.png" width="900"> 
+
+---
+
+### UMAP: Graph Layout
+
+Learn a mapping $\mathbf{X} \mapsto \mathbf{Y}$ by first initializing the low dimentional representation using spectral embedding.
+
+Spectral embedding is a dimensional reduction approach that maps a connected graph $G$ to a low dimension vector space in such a way that two points that are "close" in the graph are "close" in the low dimensional vector space.  
+
+---
+
+### UMAP: Graph Layout
+
+Formally, this is done by calculating the eigenvectors of the Laplacian $\mathbf{L} = \mathbf{D} - \mathbf{B}$ of the adjacency matrix $B$ where $\mathbf{D}$ is a diagonal matrix with $D\_{ii} = \sum\_{j} B_{ij}$.  Sort the eigenvalues $\lambda_{0},\lambda_{1},\lambda_{2},\ldots$, and the eigenvectors corresponding to $\lambda_{1}$ and $\lambda_{2}$ represent the embedding in a 2-d vector space.
+
+---
+
+### UMAP: Graph Layout
+
+Fit $w\_{l}$, a differentiable form of the 2-d weights to exp.  Estimate $a$ and $b$ by performing non-linear regression
+
+of $w\_{l}(\mathbf{x},\mathbf{y}) = (1 + a (\Vert \mathbf{x} - \mathbf{y} \Vert\_{2}^{2})^{b})^{-1}$ to
+
+$\Psi(\mathbf{x},\mathbf{y}) = e^{-( \Vert \mathbf{x} - \mathbf{y} \Vert\_{2} - d_{min} )}$
+
+if $\Vert \mathbf{x} - \mathbf{y} \Vert\_{2}$ is greater than $d_{min}$ and 1 otherwise.   
+
+---
+
+### UMAP: Graph Layout    
+
+The locations of the $\mathbf{y}\_{i}$ in the lower dimensional space are found by minimizing the binary cross entropy loss $\mathcal{L}$ using stochastic gradient descent where the loss is 
+
+$$\begin{aligned}
+\mathcal{L} = & -\sum_{b \in B} w\_{h}(b) \log w\_{l}(b) \\\\\\ 
+& + (1 - w\_{h}(b)) \log (1 - w\_{l}(b)) \\\\\\
+\end{aligned}$$
+
+
+
+
+
 
 
 

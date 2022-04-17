@@ -212,7 +212,7 @@ $\rho\_{i} = \min \\{ d(\mathbf{x}\_{i},\mathbf{x}\_{ij}) | 1 \le j \le k, d > 0
 
 and set $\sigma\_{i}$ using
 
-$\sum_{j=1}^{k} e^{(-\max(0,d(\mathbf{x}\_{i},\mathbf{x}\_{ij}) - \rho\_{i})/\sigma\_{i})} = \log\_{2}(k)$
+$\sum_{j=1}^{k} e^{-\max(0,d(\mathbf{x}\_{i},\mathbf{x}\_{ij}) - \rho\_{i})/\sigma\_{i}} = \log\_{2}(k)$
 
 ---
 
@@ -228,7 +228,7 @@ Define a weighted directed graph $\bar{G} = (V,E,w)$ where the verticies $V$ of 
 
 $E = \\{ (\mathbf{x}\_{i},\mathbf{x}\_{ij}) | 1 \le j \le k, 1 \le i \le n \\}$
 
-$w\_{h}(\mathbf{x}\_{i},\mathbf{x}\_{ij}) = e^{(-\max(0,d(\mathbf{x}\_{i},\mathbf{x}\_{ij}) - \rho\_{i})/\sigma\_{i})}$
+$w\_{h}(\mathbf{x}\_{i},\mathbf{x}\_{ij}) = e^{-\max(0,d(\mathbf{x}\_{i},\mathbf{x}\_{ij}) - \rho\_{i})/\sigma\_{i}}$
 
 ---
 

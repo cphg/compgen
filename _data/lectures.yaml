@@ -216,7 +216,7 @@ lectures:
   - lecture_number: 18
     date: 04/21/22
     topic: Dimensionality reduction
-    details: Curse of Dimensionality, PCA, NMF, tSNE, uMAP
+    details: Curse of Dimensionality, PCA, NMF, t-SNE, UMAP
     instructor: Stefan Bekiranov
     links:
       - url: slides/dim_red

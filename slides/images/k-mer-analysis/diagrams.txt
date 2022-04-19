@@ -1,0 +1,14 @@
+<div class="mermaid">
+graph TD;
+  TCGA-->TCG;
+  TCGA-->CGA;
+</div>
+</div>
+<div class="col">
+<h2>2-mers</h2>
+<div class="mermaid">
+graph TD;
+  TCGA-->TC;
+  TCGA-->CG;
+  TCGA-->GA;
+</div>

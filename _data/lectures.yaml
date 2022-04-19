@@ -182,7 +182,7 @@ lectures:
         title: Review of ATAC-seq data analysis
   - lecture_number: 15
     date: 04/12/22
-    topic: Scalable computating in genomics
+    topic: Scalable computing in genomics
     details: Parallelization, workflow management, optimization, Big-Oh complexity, Efficiently processing large sequencing data
     instructor: Nathan Sheffield
     links:

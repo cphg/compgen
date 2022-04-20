@@ -229,7 +229,7 @@ lectures:
     details: Normalization, modeling count data
     instructor: Stefan Bekiranov
     links:
-      - url: null
+      - url: slides/diff_exp
         title: Lecture slides
   - lecture_number: 20
     date: 04/28/22

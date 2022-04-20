@@ -35,6 +35,8 @@ date: 2022-01-22
 4. Perform Differential Expression Anlaysis: limma
 5. Perform Enirched Pathway and Transcription Factor Analysis
 
+---
+
 ### Mircoarray Analysis
 
 <img src="images/diff_exp/crop_circles.png" width="800">
@@ -71,7 +73,7 @@ RMA
 
 RMA
 
-<img src="images/diff_exp/rma_background_model.png" width="900">
+<img src="images/diff_exp/rma_background_model.png" width="1000">
 
 ---
 
@@ -99,7 +101,111 @@ limma
 
 ---
 
-### RNA-Seq
+### RNA-SEQ Analysis
+
+1. Quality Control: FASTQC
+2. Splice-Aware Alignment: HISAT, STAR
+3. Estimate Expression Level: featureCounts in Rsubread, StringTie, Salmon, Sailfish, kallisto, RSEM  
+4. Normalize Across Samples: DESeq2 Normalization, Quantile Normalization, Scaling
+5. Perform Differential Expression Anlaysis: DESeq2, edgeR
+6. Perform Enirched Pathway and Transcription Factor Analysis: MSigDB, GSEA, String
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/rna-seq_workflow.jpg.webp" width="350">
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/hisat.png" width="700">
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/transcript_assembly.jpg.webp" width="700">
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/merge_transcripts.png" width="900">
+
+---
+
+### RNA-SEQ Analysis
+
+DESeq2 Normalization
+
+---
+
+### Poisson Distribution
+
+Sum of Binomial Random Variables
+
+---
+
+### Poisson Distribution
+
+<img src="images/diff_exp/poisson_dist.png" width="500"> 
+
+---
+
+### Poisson Distribution
+
+<img src="images/diff_exp/genomic_read_count_dist.png" width="500"> 
+	
+---
+
+### Negative Binomial Distribution
+
+---
+
+### RNA-SEQ Analysis
+
+DESeq2 Model
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/msigdb.png" width="5000">
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/string.png" width="900">
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/GSEA.webp" width="900">
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/kegg.png" width="900">
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/novel_transcripts.png" width="900">
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/lncrna.png" width="900">
+
+---
+
 
 
 

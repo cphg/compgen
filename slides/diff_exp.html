@@ -1,6 +1,6 @@
 ---
 layout: reveal_markdown
-title: "Curse of Dimensionality, PCA, NMF, tSNE, uMAP"
+title: "Differential Expression Analysis"
 tags: slides 
 date: 2022-01-22
 ---
@@ -30,7 +30,7 @@ date: 2022-01-22
 ## Microarray Analysis
 
 1. Quality Control
-2. Estimate Expression Level: RMA, GCRMA, DCHIP
+2. Estimate Expression Level: RMA, GCRMA, dChip
 3. Normalize Across Samples: Quantile Normalization, Scaling
 4. Perform Differential Expression Anlaysis: limma
 5. Perform Enirched Pathway and Transcription Factor Analysis
@@ -59,13 +59,34 @@ date: 2022-01-22
 
 ### Microarray Analysis
 
-DCHIP
+1. dChip: Analyzes multiple chips simultaneously  
+2. For array $i$, probe $j$ nd number of probe pairs $J$
+3. $p_{ij} = PM_{ij} - MM_{ij} = \theta_{i} \phi_{j} + e_{ij}$
+4. $\theta_{i}$: relative expression level; $\phi_{j}$: relative affinity
+5. $\sum_{j=1}^{J} \phi_{j}^{2} = J$ (constraint)
+6. $e_{ij} \sim N(0,\sigma^2)$: addative error model
+7. Iteratively fit equations excluding outlier $\theta_{i}$ and $\phi_{j}$
+8. Effective expression estimate $\theta_{i} = \frac{1}{J}\sum_{j} p_{ij} \phi_{j}$ 
+
 
 ---
 
 ### Microarray Analysis
 
-RMA
+1. Problems with dChip (Li-Wong model)
+2. $\log(PM)$, $\log(MM)$ tend to be normally distributed
+3. $MM$ tends to capture significant amount of intended target: lowers sensitivity
+4. $MM$ introduces second "noisey" intensity: increases variance
+
+---
+
+### Microarray Analysis
+
+1. Robust Multiarray Average (RMA):
+
+$\log_{2}(PM_{ij}) = \log_{2}(\theta_{i}) + \log_{2}(\phi_{j}) + b + e_{ij}$
+
+2. Estimate relative $\log_{2} \theta_{i}$ robustly: median polish
 
 ---
 
@@ -79,7 +100,60 @@ RMA
 
 ### Microarray Analysis
 
-limma
+1. GCRMA
+2. Background strongly depends on probe sequence, so modeled as function of sequence ($S_{ij}$) of probes
+3. RMA with sequence dependent background correction
+
+$\log_{2}(PM_{ij}) = \log_{2}(\theta_{i}) + \log_{2}(\phi_{j}) + b(S_{ij},MM_{ij}) + e_{ij}$      
+
+---
+
+### Microarray Analysis
+
+1. Linear Models for Microarray Data (limma)
+2. Assume linear model: $E[\mathbf{y}\_{j}] = \mathbf{X} \alpha\_{j}$
+3. $\mathbf{y}_{j}$ expression values for gene $j$
+4. $\mathbf{X}$ is the design matrix
+5. $\alpha_{j}$ is vector of coefficients
+6. $\mathbf{y}^{T}_{j}$: jth row of expression matrix (log-intensities)
+7. Contrasts: $\beta_{j} = \mathbf{C}^{T} \alpha_{j}$ ($\mathbf{C}$: contrast matix)
+
+---
+
+### Microarray Analysis
+
+1. Significance analysis: moderated t-statistic
+2. Uses borrowed information from ensemble of genes 
+3. Ordinary t-statistic with 
+   1. standard errors shrunk toward common value
+   2. increased degrees of freedom (greater reliability associated with smoothed standard errors) 
+
+---
+
+### Microarray Analysis
+
+1. Linear model for gene $j$ has residual variance $\sigma_{j}^2$ with sample value $s_{j}^2$ and degrees of freedom $f_{j}$
+2. Covariance matrix of estimated $\hat{\beta}\_{j}$ is $\sigma\_{j}^2 \mathbf{C}^T(\mathbf{X}^{T} \mathbf{V}\_{j} \mathbf{X})^{-1} \mathbf{C}$
+3. $\mathbf{V}\_{j}$ is a weight matrix: prior weights, covariance terms introduced by correlation strucuture and interative weights introduced by robust estimation
+4. Unscaled standard deviation ($u_{jk}$): square roots of diagonal elements of $\mathbf{C}^T(\mathbf{X}^{T} \mathbf{V}\_{j} \mathbf{X})^{-1} \mathbf{C}$ 
+
+---
+
+### Microarray Analysis  
+
+1. Ordinary t-statistic for kth contrast and gene $j$: $t_{jk} = \hat{\beta}\_{jk}/(u_{jk} s_{j})$
+2. Empirical Bayes method assumes inverse Chi-square prior for the $\sigma_{j}^2$ with mean $s_{0}^2$ and degrees of freedom $f_{0}$
+3. Posterior values for residual variances given by 
+
+$\tilde{s}\_{j}^2 = \frac{f_{0} s_{0}^{2} + f_{j} s_{j}^{2}}{f_{0} + f_{j}}$
+
+---
+
+### Microarray Analysis 
+
+1. Moderated t-statistic: $\tilde{t}\_{jk} = \frac{\hat{\beta}\_{jk}}{u_{jk} \tilde{s}\_{j}}$
+2. Follows t-distribution with $f_{0} + f_{1}$ degrees of freedom if $\hat{\beta}\_{jk} = 0$
+3. Extra degree of freedom $f_{0}$ represents borrowed information from ensemble of genes for each gene's inference
 
 ---
 

@@ -60,7 +60,7 @@ date: 2022-01-22
 ### Microarray Analysis
 
 1. dChip: Analyzes multiple chips simultaneously  
-2. For array $i$, probe $j$ nd number of probe pairs $J$
+2. For array $i$, probe $j$ and number of probe pairs $J$
 3. $p_{ij} = PM_{ij} - MM_{ij} = \theta_{i} \phi_{j} + e_{ij}$
 4. $\theta_{i}$: relative expression level; $\phi_{j}$: relative affinity
 5. $\sum_{j=1}^{J} \phi_{j}^{2} = J$ (constraint)
@@ -82,7 +82,7 @@ date: 2022-01-22
 
 ### Microarray Analysis
 
-1. Robust Multiarray Average (RMA):
+1. Robust Multiarray Average (RMA) (Li-Wong on log-scale; no MM):
 
 $\log_{2}(PM_{ij}) = \log_{2}(\theta_{i}) + \log_{2}(\phi_{j}) + b + e_{ij}$
 
@@ -91,8 +91,6 @@ $\log_{2}(PM_{ij}) = \log_{2}(\theta_{i}) + \log_{2}(\phi_{j}) + b + e_{ij}$
 ---
 
 ### Microarray Analysis
-
-RMA
 
 <img src="images/diff_exp/rma_background_model.png" width="1000">
 
@@ -210,32 +208,6 @@ $\tilde{s}\_{j}^2 = \frac{f_{0} s_{0}^{2} + f_{j} s_{j}^{2}}{f_{0} + f_{j}}$
 
 ---
 
-### RNA-SEQ Analysis
-
-1. DESeq2: Assumes read count $K_{ij}$ for gene $i$ in sample $j$ is described by a generalized linear model 
-2. $K_{ij} \sim NB(\mu_{ij}, \alpha_{i})$ (Negative Binomial with mean $\mu_{ij}$ and disperion $\alpha_{i}$)
-3. $Var(K_{ij}) = \mu_{ij} + \alpha_{i} \mu_{ij}^2$
-4. $\mu_{ij} = s_{ij} q_{ij}$ where $q_{ij}$ is proportional to gene $i$'s concentraton of cDNA fragments in sample and $s_{ij}$ is a size or normalization factor 
-
----
-
-### RNA-SEQ Analysis
-
-1. Size factor accounts for differences in sequencing depth in a robust manner.
-2. Motivation: if gene $i$ is not differentially expressed between samples $j$ and $j^{'}$, then $E(K\_{ij})/E(K\_{ij^{'}}) = s\_{j}/s\_{j^{'}}$
-3. Generalizing this to multiple samples
-4. Define pseudo-reference: $K_{i}^R = (\prod_{j=1}^{m} K_{ij})^{1/m}$
-5. $s_{ij} = s_{j} = \textrm{median}\_{i} \frac{K_{ij}}{K_{i}^{R}}$
-
----
-
-### RNA-SEQ Analysis
-
-1. Fit generalized linear model to normalized counts
-2. $\log_{2} q_{ij} = \sum_{r} x_{jr} \beta_{ir}$ where $x_{jr}$ are elements of the design matrix
-
----
-
 ### Poisson Distribution
 
 Sum of Bernoulli random variables, $X_{i}$, with probability of equaling 1 and 0 given by $p$ and $1-p$ 
@@ -254,7 +226,7 @@ $Y$ approaches a Poisson distribution.
 
 ### Poisson Distribution
 
-Assume $Y$ is the number of reads mapping to windows across the genome coming from low coverage sequencing of a genome.  
+Assume $Y$ is the number of reads mapping to a window in the genome coming from low coverage sequencing of a genome.  
 
 If the empirical probability of a read mapping to a specific location is $p \ll 1$, 
 
@@ -266,14 +238,14 @@ the Poisson distribution is an excellent approximation of the distribution of $Y
 
 ### Poisson Distribution
 
-<img src="images/diff_exp/poisson_dist.png" width="500"> 
-
+<img src="images/diff_exp/genomic_read_count_dist.png" width="500"> 
+	
 ---
 
 ### Poisson Distribution
 
-<img src="images/diff_exp/genomic_read_count_dist.png" width="500"> 
-	
+<img src="images/diff_exp/poisson_dist.png" width="500"> 
+
 ---
 
 ### Negative Binomial Distribution
@@ -303,7 +275,78 @@ where the variance has a Poisson/"shot noise" term $\mu$ and a overdispersion/"b
 
 ### RNA-SEQ Analysis
 
-DESeq2 Model
+1. DESeq2: Assumes read count $K_{ij}$ for gene $i$ in sample $j$ is described by a generalized linear model 
+2. $K_{ij} \sim NB(\mu_{ij}, \alpha_{i})$ (Negative Binomial with mean $\mu_{ij}$ and disperion $\alpha_{i}$)
+3. $Var(K_{ij}) = \mu_{ij} + \alpha_{i} \mu_{ij}^2$
+4. $\mu_{ij} = s_{ij} q_{ij}$ where $q_{ij}$ is proportional to gene $i$'s concentraton of cDNA fragments in sample $j$ and $s_{ij}$ is a size or normalization factor 
+
+---
+
+### RNA-SEQ Analysis
+
+1. Size factor accounts for differences in sequencing depth in a robust manner
+2. Motivation: if gene $i$ is not differentially expressed between samples $j$ and $j^{'}$, then $E(K\_{ij})/E(K\_{ij^{'}}) = s\_{j}/s\_{j^{'}}$
+3. Generalize this to multiple samples
+4. Define pseudo-reference: $K_{i}^R = (\prod_{j=1}^{m} K_{ij})^{1/m}$
+5. $s_{ij} = s_{j} = \textrm{median}\_{i} \frac{K_{ij}}{K_{i}^{R}}$
+
+---
+
+### RNA-SEQ Analysis
+
+1. Fit generalized linear model to normalized counts
+2. $\log_{2} q_{ij} = \sum_{r} x_{jr} \beta_{ir}$ where $x_{jr}$ are elements of the design matrix
+3. Estmate $\alpha_{i}$ using shared information across genes assuming that genes with similar average expression have similar dispersion
+4. Estimate each gene's dispersion using maximum likelihood
+5. Fit smooth curve of dispersion estimate versus mean of prior distribution
+
+---
+
+### RNA-SEQ Analysis
+
+6. Shrink estimates of gene-wise dispersion toward values predicted by the curve using empirical Bayes approach where size of shrinkage depends on
+   1. estimate of how close true dispersion is to the fit
+   2. degrees of freedom
+7. Final esimtate of $\alpha_{i}$ is given by maximum *a posteriori* (MAP) estimate
+8. Use gene-wise estimate if it is more than 2 residual standard deviations from shrunken estimate
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/DESeq2_Fig1.jpg.webp" width="900"> 
+
+---
+
+### RNA-SEQ Analysis
+
+9. Address strong variance of log fold change (LFC) for genes with low read counts by shrinking LFC estimates toward zero where shrinkage is stronger when available information (low counts, dispersion high or few degrees of freedom) for a gene is lower.
+
+---
+
+### RNA-SEQ Analysis
+
+10. Employ empirical Bayes procedure:
+    1. Perform GLM fits to obtain maximum likelihood estimates (MLEs) for the LFCs
+    2. Fit a zero-centered normal distribution to the observed distribution of MLEs over all genes
+    3. This distribution is used as prior on LFCs in second round of GLM fits
+11. Final estimate of each LFC is given by MAP estimate
+12. A standard error for each LFC estimate is derived from the posterior's curvature at its maximum
+
+---
+
+### RNA-SEQ Analysis
+
+<img src="images/diff_exp/DESeq2_Fig2.jpg.webp" width="500"> 
+
+---
+
+### RNA-SEQ Analysis
+
+13. Assess signficance using a Wald test:
+    1. the shrunken estimate of LFC is divided by its standard error, resulting in a z-statistic 
+    2. which is used to calculate p-values from a standard normal distribution
+14. Correct p-values for multiple hypothesis testing using Benjamini and Hochberg procedure
 
 ---
 

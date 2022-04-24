@@ -222,15 +222,23 @@ lectures:
       - url: slides/dim_red
         title: Lecture slides
       - url: https://dx.doi.org/10.1038/44565
-        title: Learning the parts of objects by non-negative matrix factorization 
+        title: Learning the parts of objects by non-negative matrix factorization
+      - url: https://lvdmaaten.github.io/tsne/
+        title: t-SNE
+      - url: https://umap-learn.readthedocs.io/en/latest/
+        title: UMAP
+      - url: https://doi.org/10.1101/2021.08.25.457696
+        title: Picasso       
   - lecture_number: 19
     date: 04/26/22
     topic: Differential expression analysis
-    details: Normalization, modeling count data
+    details: Mircoarray and Bulk RNA-seq Analysis
     instructor: Stefan Bekiranov
     links:
       - url: slides/diff_exp
         title: Lecture slides
+      - url: https://doi.org/10.1186/s13059-014-0550-8
+        title: "Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2"  
   - lecture_number: 20
     date: 04/28/22
     topic: Spatial omics, Encoding of genomic data

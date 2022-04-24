@@ -212,13 +212,55 @@ $\tilde{s}\_{j}^2 = \frac{f_{0} s_{0}^{2} + f_{j} s_{j}^{2}}{f_{0} + f_{j}}$
 
 ### RNA-SEQ Analysis
 
-DESeq2 Normalization
+1. DESeq2: Assumes read count $K_{ij}$ for gene $i$ in sample $j$ is described by a generalized linear model 
+2. $K_{ij} \sim NB(\mu_{ij}, \alpha_{i})$ (Negative Binomial with mean $\mu_{ij}$ and disperion $\alpha_{i}$)
+3. $Var(K_{ij}) = \mu_{ij} + \alpha_{i} \mu_{ij}^2$
+4. $\mu_{ij} = s_{ij} q_{ij}$ where $q_{ij}$ is proportional to gene $i$'s concentraton of cDNA fragments in sample and $s_{ij}$ is a size or normalization factor 
+
+---
+
+### RNA-SEQ Analysis
+
+1. Size factor accounts for differences in sequencing depth in a robust manner.
+2. Motivation: if gene $i$ is not differentially expressed between samples $j$ and $j^{'}$, then $E(K\_{ij})/E(K\_{ij^{'}}) = s\_{j}/s\_{j^{'}}$
+3. Generalizing this to multiple samples
+4. Define pseudo-reference: $K_{i}^R = (\prod_{j=1}^{m} K_{ij})^{1/m}$
+5. $s_{ij} = s_{j} = \textrm{median}\_{i} \frac{K_{ij}}{K_{i}^{R}}$
+
+---
+
+### RNA-SEQ Analysis
+
+1. Fit generalized linear model to normalized counts
+2. $\log_{2} q_{ij} = \sum_{r} x_{jr} \beta_{ir}$ where $x_{jr}$ are elements of the design matrix
 
 ---
 
 ### Poisson Distribution
 
-Sum of Binomial Random Variables
+Sum of Bernoulli random variables, $X_{i}$, with probability of equaling 1 and 0 given by $p$ and $1-p$ 
+
+$Y = \sum\_{i=1}^{n} X\_{i}$
+
+is distributed as a binomial distribution with 
+
+$\mu = np$ and $\sigma^2 = np(1-p)$.  
+
+For $p \rightarrow 0$ and $n \rightarrow \infty$ such that $np = \lambda$, 
+
+$Y$ approaches a Poisson distribution.
+
+---
+
+### Poisson Distribution
+
+Assume $Y$ is the number of reads mapping to windows across the genome coming from low coverage sequencing of a genome.  
+
+If the empirical probability of a read mapping to a specific location is $p \ll 1$, 
+
+and the number of bases in the window $n \sim 1000$, 
+
+the Poisson distribution is an excellent approximation of the distribution of $Y$.   
 
 ---
 
@@ -235,6 +277,27 @@ Sum of Binomial Random Variables
 ---
 
 ### Negative Binomial Distribution
+
+The negative binomial distribution is a mixture of a Poisson and a gamma distribution where the
+
+Poisson distribution is $p_{P}(k|\lambda) = \frac{\lambda^{k}}{k!} e^{-\lambda}$
+
+and the gamma distribution is $g(\lambda) = \frac{\lambda^{r-1} \beta^{r} e^{-\beta \lambda}}{\Gamma(r)}$
+
+$$\begin{aligned}
+p_{NB}(k) & = \int_{0}^{\infty} p_{P}(k|\lambda) g(\lambda) d \lambda \\\\\\ 
+& = \frac{\Gamma(r+k)}{k! \Gamma(r)} p^{k} (1-p)^{r} \\\\\\
+\end{aligned}$$
+
+---
+
+### Negative Binomial Distribution
+
+Where we have used $\beta = (1-p)/p$. The mean and variance of a random variable $K \sim NB(\mu, \alpha)$ are 
+
+$E(K) = \mu$ and $Var(K) = \mu + \alpha \mu^2$
+
+where the variance has a Poisson/"shot noise" term $\mu$ and a overdispersion/"biological variability" term $\alpha \mu^2$ 
 
 ---
 

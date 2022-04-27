@@ -249,7 +249,7 @@ lectures:
         title: Lecture slides
       - url: null
         title: MERFISH paper
-      - url: https://bmg.med.virginia.edu/events/seminar-series/
+      - url: resources/BMGseminar0428.md
         title: BMG seminar by Siyuan Wang on 4/28
   - lecture_number: 21
     date: 05/03/22

@@ -247,7 +247,7 @@ lectures:
     links:
       - url: null
         title: Lecture slides
-      - url: resources/BMGseminar0428.md
+      - url: resources/BMGseminar0428
         title: BMG seminar by Siyuan Wang on 4/28
       - url: https://www.science.org/doi/10.1126/science.aaa6090
         title: MERFISH Chen 2015 Science paper

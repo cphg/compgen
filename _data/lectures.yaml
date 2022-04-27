@@ -265,8 +265,10 @@ lectures:
     links:
       - url: null
         title: Lecture slides
-      - url: null
-        title: 
+      - url: https://arxiv.org/pdf/0803.0476.pdf
+        title: Louvain method
+      - url: https://academic.oup.com/bioinformatics/article/34/16/2867/4956015
+        title: BART paper
   - lecture_number: 22
     section: Final presentations
     date: 05/05/22

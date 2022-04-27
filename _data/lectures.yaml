@@ -247,10 +247,12 @@ lectures:
     links:
       - url: null
         title: Lecture slides
-      - url: null
-        title: MERFISH paper
       - url: resources/BMGseminar0428.md
         title: BMG seminar by Siyuan Wang on 4/28
+      - url: https://www.science.org/doi/10.1126/science.aaa6090
+        title: MERFISH Chen 2015 Science paper
+     -  url: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02648-4
+        title: Exaggerated false positives by popular differential expression methods when analyzing human population samples
   - lecture_number: 21
     date: 05/03/22
     topic: Clustering, transcriptomic data integration

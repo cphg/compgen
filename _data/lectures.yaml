@@ -245,7 +245,7 @@ lectures:
     details: MERFISH, spatial transcriptomics, simplex encoding, Hamming codes
     instructor: Chongzhi Zang
     links:
-      - url: null
+      - url: slides/transcriptomics5.pdf
         title: Lecture slides
       - url: resources/BMGseminar0428
         title: BMG seminar by Siyuan Wang on 4/28

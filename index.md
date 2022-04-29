@@ -108,7 +108,7 @@ Students are expected to attend class. There is no textbook, but each lecture wi
 
 ## Final presentation
 
-The final presentation should integrate two or more computational methods, algorithms, or concepts from computational genomics. The presentations may focus on a particular application in the student's research area. Each student will give a 10-15 minute oral presentation during one of the last two class sessions. Students should think of the final presentation as roughly equivalent to one homework assignment, in terms of expected preparation.
+The final presentation should cover one or more methods in computational genomics, which could be either a method we covered in class, or something that we did not cover that you want to present to the class. You should show us an introduction with context for the method, the details of the method, and then some research application. The presentations may focus on a particular application in the student's research area. The application could also be a research question in extending the method, if you like. Aim for a 10 minute talk, with a couple of minutes for questions. Students should think of the final presentation as roughly equivalent to one homework assignment, in terms of expected preparation.
 
 ## Office hours
 

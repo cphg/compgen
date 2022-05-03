@@ -265,6 +265,10 @@ lectures:
     links:
       - url: null
         title: Lecture slides
+      - url: https://onlinelibrary.wiley.com/doi/10.1111/j.0006-341X.2005.031032.x
+        title: Tight Clustering Tseng & Wong 2005
+      - url: https://academic.oup.com/bioinformatics/article/25/22/2906/180866
+        title: iCluster Shen et al 2009
       - url: https://arxiv.org/pdf/0803.0476.pdf
         title: Louvain method
       - url: https://academic.oup.com/bioinformatics/article/34/16/2867/4956015

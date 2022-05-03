@@ -270,9 +270,9 @@ lectures:
       - url: https://academic.oup.com/bioinformatics/article/25/22/2906/180866
         title: iCluster Shen et al 2009
       - url: https://arxiv.org/pdf/0803.0476.pdf
-        title: Louvain method
+        title: Louvain method Blondel et al 2008
       - url: https://academic.oup.com/bioinformatics/article/34/16/2867/4956015
-        title: BART paper
+        title: BART Wang et al 2018
   - lecture_number: 22
     section: Final presentations
     date: 05/05/22
